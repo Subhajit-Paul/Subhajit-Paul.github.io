@@ -1,1033 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <title>GetMyProperties.com</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
-    <link href="img/favicon.ico" rel="icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Inter:wght@700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="lib/animate/animate.min.css" rel="stylesheet">
-    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <link href="scss/feedback.scss" rel="stylesheet">
-</head>
-<body>
-    <button type="button" class="btn btn-primary" id="feed"  data-toggle="modal" data-target="#exampleModalCenter">
-        Feedback
-      </button>
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">
-                What rate would you give this article?</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-                <div id="panel" class="panel-container">
-                    <strong>How satisfied are you with our <br/>
-                    customer support performance?</strong>
-                    <div class="ratings-container">
-                      <div class="rating">
-                        <img src="https://i.ibb.co/fYN2rVn/no.png" alt="">
-                        <small>Unhappy</small>
-                      </div>
-              
-                      <div class="rating">
-                        <img src="https://i.ibb.co/3M8Ddsf/neutral.png" alt=""/>
-                        <small>Neutral</small>
-                      </div>
-              
-                      <div class="rating active">
-                        <img src="https://i.ibb.co/VVDYGLZ/yes.png" alt=""/>
-                        <small>Satisfied</small>
-                      </div>
-                    </div>
-                    <button class="btn" id="send">Send Review</button>
-                  </div>
-                  </div>
-            </div>
-          </div>
-        </div>
-    </div>
-    <div id="top"></div>
-    <div class="container-xxl bg-white p-0">
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <div class="container-fluid nav-bar bg-transparent">
-            <nav class="navbar navbar-expand-lg bg-white navbar-light py-0 px-4">
-                <a href="index.html" class="navbar-brand d-flex align-items-center text-center">
-                    <div class="icon p-2 me-2">
-                        <img class="img-fluid" src="img/" alt="Icon" style="width: 20px; height: 20px;">
-                    </div>
-                    <h2 class="m-0 text-primary" style="color: #d64040 !important;">GetMyProperties.com</h2>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
+        <meta name="author" content="">
+        <title>GetMyProperties.com</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" rel="stylesheet">
+    </head>
+    <body>
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarMobile" aria-controls="navbarMobile" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav-left">
+          <ul class="nav navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Home </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="home.html">Rent</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="home.html">Buy</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Home 
+                    loans
                 </a>
-                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav ms-auto">
-                        <a href="#sec01" class="nav-item nav-link">About</a>
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                            <div class="dropdown-menu rounded-0 m-0">
-                                <a href="#sec04" class="dropdown-item">Properties</a>
-                                <a href="property-top.html" class="dropdown-item">Top Listings</a>
-                                <a href="#sec03" class="dropdown-item">Contact Agent</a>
-                            </div>
-                        </div>
-                        <a href="#sec05" class="nav-item nav-link">Testimonial</a>
-                        <a href="#sec06" class="nav-item nav-link">Contact</a>
-                        <a href="login.html" class="nav-item nav-link">Sign in</a>
-                        
-                    </div>
-                    <a href="sell.html" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a>
-                </div>
-            </nav>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Dealer Finder</a>
+            </li>
+          </ul>
         </div>
-        <div class="container-fluid header bg-white p-0">
-            <div class="row g-0 align-items-center flex-column-reverse flex-md-row">
-                <div class="col-md-6 p-5 mt-lg-5" id="landing">
-                    <h1 class="display-5 animated fadeIn mb-4">Find A <span class="text-primary" style="color: #d64040 !important;">Perfect Home</span> To Live With Your Family</h1>
-                    <p class="animated fadeIn mb-4 pb-2">Vero elitr justo clita lorem. Ipsum dolor at sed stet
-                        sit diam no. Kasd rebum ipsum et diam justo clita et kasd rebum sea elitr.</p>
-                </div>
-                <div class="col-md-6 animated fadeIn">
-                    <div class="owl-carousel header-carousel">
-                        <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-1.jpg" alt="">
-                        </div>
-                        <div class="owl-carousel-item">
-                            <img class="img-fluid" src="img/carousel-2.jpg" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <a class="navbar-brand mx-auto" href="#"><div id="logo"><span>GetMyProperties.com</span></div></a>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Manage Rentals</a>
+            </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Advertise</a>
+              </li>
+            <li class="nav-item">
+                  <a class="nav-link" href="#">Help</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Sign in</a>
+            </li>
+          </ul>
         </div>
-        <section class="search">
-        <div class="container mt-2">
-            <div class="row d-flex justify-content-center">
-                <div class="col-md-5">
-                    <div class="card p-3  py-2">
-                        <div class="row g-1 mt-2">
-    <div class="col-md-2">
-        <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample" class="advanced">
-          Filters <i class="fa fa-angle-down"></i>
-        </a>
-    </div>
-            <div class="col-md-7">
-                <input type="text" class="form-control" placeholder="Enter address e.g. street, city and state or zip">
-            </div>
-                <div class="col-md-3">
-                    <button class="btn btn-secondary btn-block">Search</button>
-                </div>
-            </div>
-                
-    <div class="collapse" id="collapseExample">
-      <div class="card card-body">
-         <div class="row">
-                <div>
-                    <label for="metric1">Price range 100000/10000000</label>
-                  </div>
-                  <div>
-                    <input id="metric1" name="metric1" type="range" min="100000" max="10000000" value="7"/>
-                  </div>
-                  
-         </div>
-         <div class="row d-flex">
-         <div class="col-4">
-            <div class="cp_wrapper">
-                <div class="select">
-                    <input type="text" name="selected_option" value="" placeholder="Property" readonly>
-                    <div class="options">
-                        <div class="option" value="option_01">Rent </div>
-                        <div class="option" value="option_02">Buy</div>
-                        <div class="option" value="option_03">Co-living</div>
-                    </div>
-                    <span class="select-icon">
-                        <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.05473 5.78032C5.74791 6.07323 5.24964 6.07323 4.94282 5.78032L0.230113 1.28119C-0.0767041 0.988283 -0.076704 0.512595 0.230113 0.219683C0.53693 -0.0732283 1.0352 -0.0732283 1.34202 0.219683L5.5 4.18922L9.65798 0.222027C9.9648 -0.0708847 10.4631 -0.0708847 10.7699 0.222027C11.0767 0.514938 11.0767 0.990627 10.7699 1.28354L6.05718 5.78266L6.05473 5.78032Z" fill="#000000"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
+        <div class="collapse" id="navbarMobile">
+            <ul class="nav navbar-nav">
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+              <li class="nav-item">
+                    <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="#">Mobile Link</a>
+              </li>
+            </ul>
         </div>
-        <div class="col-4">
-            <div class="cp_wrapper">
-                <div class="select">
-                    <input type="text" name="selected_option" value="" placeholder="Flat Type" readonly>
-                    <div class="options">
-                        <div class="option" value="option_01">1BHK</div>
-                        <div class="option" value="option_02">2BHK</div>
-                        <div class="option" value="option_03">3BHK</div>
-                    </div>
-                    <span class="select-icon">
-                        <svg width="11" height="6" viewBox="0 0 11 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M6.05473 5.78032C5.74791 6.07323 5.24964 6.07323 4.94282 5.78032L0.230113 1.28119C-0.0767041 0.988283 -0.076704 0.512595 0.230113 0.219683C0.53693 -0.0732283 1.0352 -0.0732283 1.34202 0.219683L5.5 4.18922L9.65798 0.222027C9.9648 -0.0708847 10.4631 -0.0708847 10.7699 0.222027C11.0767 0.514938 11.0767 0.990627 10.7699 1.28354L6.05718 5.78266L6.05473 5.78032Z" fill="#000000"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-      </div>
-      <div class="col-2" style="margin-top: 20px; margin-left: 20px">
-        <label class="ui-bookmark">
-            <input type="checkbox">
-            <div class="bookmark">
-              <svg viewBox="0 0 32 32">
-                <g>
-                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                </g>
-              </svg>
-            </div>
-          </label>
-    </div>
-         </div>
-      </div>
+    </nav>
+    <div id="top"></div>
+    <section class="landing">
+                <img class="img-fluid" src="img/background.jpg" alt="background image"></div>
+                    <div class="d-flex justify-content-center h-100">
+                        <div class="search">
+                            <h2>Agents. Tours. Loans. Homes.</h2>
+                            <input type="text" class="search-input" placeholder="search..." name="">
+                            <a href="#" class="search-icon">
+                                <i class="fa fa-search"></i>
+                            </a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                    </div>
     </section>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                    <h1 class="mb-3">Top Cities</h1>
-                    <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/kol.png" alt="Icon">
-                                </div>
-                                <h6>NewTown</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/del.png" alt="Icon">
-                                </div>
-                                <h6>Sapoorji</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/mum.png" alt="Icon">
-                                </div>
-                                <h6>Chinar Park</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/kol.png" alt="Icon">
-                                </div>
-                                <h6>Garia</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/hyderabad-charminar.png" alt="Icon">
-                                </div>
-                                <h6>Taligaunge</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/jaipur.png" alt="Icon">
-                                </div>
-                                <h6>Shyam Bazar</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/bangalore.png" alt="Icon">
-                                </div>
-                                <h6>Salt Lake</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
-                        <a class="cat-item d-block text-center rounded p-3" href="">
-                            <div class="rounded p-4">
-                                <div class="icon mb-3">
-                                    <img class="img-fluid" src="img/chen.png" alt="Icon">
-                                </div>
-                                <h6>Behala</h6>
-                                <span>123 Properties</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="sec01"></div>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="row g-5 align-items-center">
-                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                        <div class="about-img position-relative overflow-hidden p-5 pe-0">
-                            <img class="img-fluid w-100" src="img/about.jpg">
-                        </div>
-                    </div>
-                    <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                        <h1 class="mb-4">#1 Place To Find The Perfect Property</h1>
-                        <p class="mb-4">Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed stet lorem sit clita duo justo magna dolore erat amet</p>
-                        <p><i class="fa fa-check text-primary me-3"style="color: #d64040 !important;"></i>Tempor erat elitr rebum at clita</p>
-                        <p><i class="fa fa-check text-primary me-3"style="color: #d64040 !important;"></i>Aliqu diam amet diam et eos</p>
-                        <p><i class="fa fa-check text-primary me-3"style="color: #d64040 !important;"></i>Clita duo justo magna dolore erat amet</p>
-                        <div class="col-md-3">
-                        <a href="sell.html" class="btn btn-primary px-3 d-none d-lg-flex">Add Property</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="sec04"></div>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="row g-0 gx-5 align-items-end">
-                    <div class="col-lg-6">
-                        <div class="text-start mx-auto mb-5 wow slideInLeft" data-wow-delay="0.1s">
-                            <h1 class="mb-3">Property Listing</h1>
-                            <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit diam justo sed rebum.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 text-start text-lg-end wow slideInRight" data-wow-delay="0.1s">
-                        <ul class="nav nav-pills d-inline-flex justify-content-end mb-5">
-                            <li class="nav-item me-2">
-                                <a class="btn btn-primary active" style="color: #ffffff !important;" data-bs-toggle="pill" href="#tab-1">Hot Deals</a>
-                            </li>
-                            <li class="nav-item me-2">
-                                <a class="btn btn-primary" style="color: #ffffff !important;" data-bs-toggle="pill" href="#tab-2">For Sell</a>
-                            </li>
-                            <li class="nav-item me-0">
-                                <a class="btn btn-primary" style="color: #ffffff !important;" data-bs-toggle="pill" href="#tab-3">For Rent</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="tab-content">
-                    <div id="tab-1" class="tab-pane fade show p-0 active">
-                        <div class="row g-4">
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-1.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Sell</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">5 Days ago </div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text mb-3" style="color: #01668b !important;">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-2.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Rent</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">22 Days ago</div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text-primary mb-3">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-3.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Sell</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">!@ Days ago</div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text-primary mb-3">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-4.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Rent</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">55 Days ago</div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text-primary mb-3">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-5.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Sell</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">13 Days ago</div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text-primary mb-3">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                                <div class="property-item rounded overflow-hidden">
-                                    <div class="position-relative overflow-hidden">
-                                        <a href="product1.html"><img class="img-fluid" src="img/property-6.jpg" alt=""></a>
-                                        <div class="bg-primary rounded text-white position-absolute end-0 top-0 m-4 py-1 px-3" style="background-color: #01668b !important;">For Rent</div>
-                                        <div class="bg-white rounded-top text-white position-absolute start-0 bottom-0 mx-4 pt-1 px-3" style="background-color: #01668b !important;">!0 Days ago</div>
-                                        <div class="bg-white rounded text-white position-absolute start-10 top-0 m-10 py-10 px-30" style="color:#fff">
-                                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Property</a>
-                                            <div class="dropdown-menu rounded-0 m-0">
-                                                <a href="" class="dropdown-item">Properties</a>
-                                                <a href="" class="dropdown-item">Top Listings</a>
-                                                <a href="" class="dropdown-item">Contact Agent</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 pb-0">
-                                        <label class="ui-bookmark">
-                                            <input type="checkbox">
-                                            <div class="bookmark">
-                                              <svg viewBox="0 0 32 32">
-                                                <g>
-                                                  <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                                                </g>
-                                              </svg>
-                                            </div>
-                                          </label>
-                                        <h5 class="text-primary mb-3">$12,345</h5>
-                                        <a class="d-block h5 mb-2" href="">Golden Urban House For Sell</a>
-                                        <p><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</p>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                                        <small class="flex-fill text-center py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                                    </div>
-                                    <div class="d-flex border-top">
-                                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 text-center wow fadeInUp" data-wow-delay="0.1s">
-                                <a class="btn btn-primary py-3 px-5" href="">Browse More Property</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="sec03"></div>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class=" rounded p-3">
-                    <div class="bg-white rounded p-4" style="border: 1px dashed rgba(0, 185, 142, .3)">
-                        <div class="row g-5 align-items-center">
-                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
-                                <img class="img-fluid rounded w-100" src="img/call-to-action.jpg" alt="">
-                            </div>
-                            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
-                                <div class="mb-4">
-                                    <h1 class="mb-3">Contact With Our Certified Agent</h1>
-                                    <p>Eirmod sed ipsum dolor sit rebum magna erat. Tempor lorem kasd vero ipsum sit sit diam justo sed vero dolor duo.</p>
-                                </div>
-                                <a href="" class="btn btn-primary py-3 px-4 me-2"><i class="fa fa-phone-alt me-2"></i>Make A Call</a>
-                                <a href="" class="btn btn-dark py-3 px-4"><i class="fa fa-calendar-alt me-2"></i>Get Appoinment</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                    <h1 class="mb-3">Property Agents</h1>
-                    <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-                </div>
-                <div class="row g-4">
-                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="team-item rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="img/team-1.jpg" alt="">
-                                <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">Full Name</h5>
-                                <small>Designation</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="team-item rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="img/team-2.jpg" alt="">
-                                <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">Full Name</h5>
-                                <small>Designation</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="team-item rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="img/team-3.jpg" alt="">
-                                <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">Full Name</h5>
-                                <small>Designation</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
-                        <div class="team-item rounded overflow-hidden">
-                            <div class="position-relative">
-                                <img class="img-fluid" src="img/team-4.jpg" alt="">
-                                <div class="position-absolute start-50 top-100 translate-middle d-flex align-items-center">
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-facebook-f"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-twitter"></i></a>
-                                    <a class="btn btn-square mx-1" href=""><i class="fab fa-instagram"></i></a>
-                                </div>
-                            </div>
-                            <div class="text-center p-4 mt-3">
-                                <h5 class="fw-bold mb-0">Full Name</h5>
-                                <small>Designation</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="sec05"></div>
-        <div class="container-xxl py-5">
-            <div class="container">
-                <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                    <h1 class="mb-3">Our Clients Say!</h1>
-                    <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-                </div>
-                <div class="owl-carousel testimonial-carousel wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="testimonial-item rounded p-3">
-                        <div class="bg-white border rounded p-4">
-                            <p>Tempor stet labore dolor clita stet diam amet ipsum dolor duo ipsum rebum stet dolor amet diam stet. Est stet ea lorem amet est kasd kasd erat eos</p>
-                            <div class="d-flex align-items-center">
-                                <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-1.jpg" style="width: 45px; height: 45px;">
-                                <div class="ps-3">
-                                    <h6 class="fw-bold mb-1">Client Name</h6>
-                                    <small>Profession</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item rounded p-3">
-                        <div class="bg-white border rounded p-4">
-                            <p>Tempor stet labore dolor clita stet diam amet ipsum dolor duo ipsum rebum stet dolor amet diam stet. Est stet ea lorem amet est kasd kasd erat eos</p>
-                            <div class="d-flex align-items-center">
-                                <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-2.jpg" style="width: 45px; height: 45px;">
-                                <div class="ps-3">
-                                    <h6 class="fw-bold mb-1">Client Name</h6>
-                                    <small>Profession</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item rounded p-3">
-                        <div class="bg-white border rounded p-4">
-                            <p>Tempor stet labore dolor clita stet diam amet ipsum dolor duo ipsum rebum stet dolor amet diam stet. Est stet ea lorem amet est kasd kasd erat eos</p>
-                            <div class="d-flex align-items-center">
-                                <img class="img-fluid flex-shrink-0 rounded" src="img/testimonial-3.jpg" style="width: 45px; height: 45px;">
-                                <div class="ps-3">
-                                    <h6 class="fw-bold mb-1">Client Name</h6>
-                                    <small>Profession</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-            <div class="container py-5">
-                <div class="row g-5">
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="text-white mb-4">Get In Touch</h5>
-                        <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, New York, USA</p>
-                        <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+012 345 67890</p>
-                        <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@example.com</p>
-                        <div class="d-flex pt-2">
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
-                            <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="text-white mb-4">Quick Links</h5>
-                        <a class="btn btn-link text-white-50" href="">About Us</a>
-                        <a class="btn btn-link text-white-50" href="">Contact Us</a>
-                        <a class="btn btn-link text-white-50" href="">Our Services</a>
-                        <a class="btn btn-link text-white-50" href="">Privacy Policy</a>
-                        <a class="btn btn-link text-white-50" href="">Terms & Condition</a>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="text-white mb-4">Photo Gallery</h5>
-                        <div class="row g-2 pt-2">
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-1.jpg" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-2.jpg" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-3.jpg" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-4.jpg" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-5.jpg" alt="">
-                            </div>
-                            <div class="col-4">
-                                <img class="img-fluid rounded bg-light p-1" src="img/property-6.jpg" alt="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-6">
-                        <h5 class="text-white mb-4">Newsletter</h5>
-                        <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
-                        <div class="position-relative mx-auto" style="max-width: 400px;">
-                            <input class="form-control bg-dark w-100 py-3 ps-4 pe-5" type="text" placeholder="Your email">
-                            <button type="button" class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2">SignUp</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="sec06"></div>
-            <div class="container-xxl py-5">
-                <div class="container">
-                    <div class="text-center mx-auto mb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 600px;">
-                        <h1 class="mb-3" style="color:#ffffff;">Contact Us</h1>
-                        <p>Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut dolore lorem kasd vero ipsum sit eirmod sit. Ipsum diam justo sed rebum vero dolor duo.</p>
-                    </div>
-                    <div class="row g-4">
-                        <div class="col-12">
-                            <div class="row gy-4">
-                                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.1s">
-                                    <div class="bg-dark rounded p-3">
-                                        <div class="d-flex align-items-center bg-dark rounded p-3" style="border: 1px dashed rgb(0, 185, 142)">
-                                            <div class="icon me-3" style="width: 45px; height: 45px;">
-                                                <i class="fa fa-map-marker-alt text-primary"></i>
-                                            </div>
-                                            <span>123 Street, New York, USA</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.3s">
-                                    <div class="bg-dark rounded p-3">
-                                        <div class="d-flex align-items-center bg-dark rounded p-3" style="border: 1px dashed rgb(0, 185, 142)">
-                                            <div class="icon me-3" style="width: 45px; height: 45px;">
-                                                <i class="fa fa-envelope-open text-primary"></i>
-                                            </div>
-                                            <span>info@example.com</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-4 wow fadeIn" data-wow-delay="0.5s">
-                                    <div class="bg-dark rounded p-3">
-                                        <div class="d-flex align-items-center bg-dark rounded p-3" style="border: 1px dashed rgb(0, 185, 142)">
-                                            <div class="icon me-3" style="width: 45px; height: 45px;">
-                                                <i class="fa fa-phone-alt text-primary"></i>
-                                            </div>
-                                            <span>+012 345 6789</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <iframe class="position-relative rounded w-100 h-100"
-                                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d373147.1060282642!2d88.06008924283904!3d22.405063604943894!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sGetproperties%20kolkata!5e0!3m2!1sen!2sin!4v1693048628063!5m2!1sen!2sin"
-                                frameborder="0" style="min-height: 400px; border:0;" allowfullscreen="" aria-hidden="false"
-                                tabindex="0"></iframe>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="wow fadeInUp" data-wow-delay="0.5s">
-                                <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
-                                <form>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="name" placeholder="Your Name">
-                                                <label for="name">Your Name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="email" class="form-control" id="email" placeholder="Your Email">
-                                                <label for="email">Your Email</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="subject" placeholder="Subject">
-                                                <label for="subject">Subject</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="form-floating">
-                                                <textarea class="form-control" placeholder="Leave a message here" id="message" style="height: 150px"></textarea>
-                                                <label for="message">Message</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="container">
-                <div class="copyright">
-                    <div class="row">
-                        <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                            &copy; <a class="border-bottom" href="#">GetMyProperties.com</a>, All Right Reserved. 
-							Designed By <a class="border-bottom" href="">Akash</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <div class="signin-box">
+        <h3>
+            Get home recommendations
+        </h3>
+        <p>
+            Sign in for a more personalized experience.
+        </p>
+        <a href="">Sign in</a>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/wow/wow.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/waypoints/waypoints.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-    <script src="js/main.js"></script>
-    <script>const slider = document.getElementById('metric1');
-        const label = document.querySelector('label');
-        slider.addEventListener('input', (event) => {
-          //console.log(event.target.value);
-          const mv = parseInt(event.target.value, 10000000);
-          event.target.style.backgroundSize = `${100000*mv}%`;
-          label.textContent = `Price Range ${event.target.value}/10000000`;
-        });</script>
-
-<script>
-const ratings = document.querySelectorAll(".rating");
-const ratingsContainer = document.querySelector(".ratings-container");
-const sendButton = document.getElementById("send");
-const panel = document.getElementById("panel");
-let selectedRating = "Satisfied";
-
-const removeActive = () => {
-  for (let i = 0; i < ratings.length; i++) {
-    ratings[i].classList.remove("active");
-  }
-};
-
-ratingsContainer.addEventListener("click", (e) => {
-  if (e.target.parentNode.classList.contains("rating")) {
-    removeActive();
-    e.target.parentNode.classList.add("active");
-    selectedRating = e.target.nextElementSibling.innerHTML;
-  }
-});
-
-sendButton.addEventListener("click", (e) => {
-  panel.innerHTML = `
-        <i class="fas fa-heart"></i>
-        <strong>Thank You!</strong>
-        <br>
-        <strong>Feedback: ${selectedRating}</strong>
-        <p>We'll use your feedback to improve our customer support</p>
-    `;
-});
-
-</script>
-<script>
-init__select();
-
-// Select
-function init__select(){
-	let selects = document.querySelectorAll('.select');
-	let options = document.querySelectorAll('.option');
-	let exist_open_select = document.querySelector('.select.open');
-
-	// Open Select with toggle class open
-	selects.forEach(item => {
-		item.addEventListener('click', (e) => {
-			exist_open_select = document.querySelector('.select.open');
-
-			// If Select Already Contains Open, Remove
-			if(e.target.parentElement.classList.contains('open')){
-				e.target.parentElement.classList.remove('open');
-			} else {
-				e.target.parentElement.classList.add('open');
-			}
-
-			// Remove Previous Open Selects
-			exist_open_select ? exist_open_select.classList.remove('open') : null;
-		});
-	});
-	
-	// Update Selected Value
-	options.forEach(option => {
-		option.addEventListener('click', function(elem){
-			let this_select = elem.target.closest('.select');
-			let this_input = this_select.querySelector('input');
-			
-			///////////////////////////////////////////
-			//////// Execute These After Click ////////
-			///////////////////////////////////////////
-
-			// Remove Previous Active Option
-			let alreadyActiveOption = this_select.querySelector('.option.active');
-			alreadyActiveOption ? alreadyActiveOption.classList.remove('active')  : null;
-			alreadyActiveOption ? alreadyActiveOption.removeAttribute('selected') : null;
-
-			// Add Active Option
-			elem.target.classList.add('active');
-			elem.target.setAttribute('selected',true);
-			this_input.setAttribute('value', elem.target.innerText);
-			
-			// Close Select Options
-			exist_open_select.classList.remove('open');
-
-		});
-	});
-
-	// Close if click outside select
-	document.addEventListener('click', e => {
-		// Check if exist open select
-		exist_open_select = document.querySelector('.select.open');
-		if(exist_open_select){
-
-			// Check if Target is inside select
-			let isSelect = exist_open_select.contains(e.target);
-			isSelect ? null : exist_open_select.classList.remove('open')
-		}
-	})
-}
-</script>
+        <div class="slide">
+            <img src="img/carousel-1.jpg" class="slide-image1">
+            <img src="img/carousel-2.jpg" class="slide-image2">
+            <img src="img/carousel-1.jpg" class="slide-image3">
+        </div>
+        <section class="cards">
+            <div class="card">
+                <img src="img/chen.png">
+                <h3>Buy a Home</h3>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat distinctio est maiores hic mollitia, voluptatem at iusto fugit praesentium </p>
+                <a href="#">Browse Home</a>
+            </div>
+            <div class="card">
+                <img src="img/kol.png">
+                <h3>Sell a Home</h3>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat distinctio est maiores hic mollitia, voluptatem at iusto fugit praesentium </p>
+                <a href="#">See more options </a>
+            </div>
+            <div class="card">
+                <img src="img/chen.png">
+                <h3>Rent a Home</h3>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quaerat distinctio est maiores hic mollitia, voluptatem at iusto fugit praesentium </p>
+                <a href="#">Rent a Home</a>
+            </div>
+        </section>
+        <footer>
+       <div class="site-footer">
+        <div class="row d-flex justify-content-center">
+        <a href="">About</a>
+        <a href="">Zestimates</a>
+        <a href="">Research</a>
+        <a href="">Careers</a>
+        <a href="">Help</a>
+        <a href="">Advertise</a>
+        <a href="">Fair Housing Guide</a>
+        <a href="">Term of use</a>
+        <a href="">Privacy portal</a>
+        <a href="">Cookie preference</a>
+        <a href="">Blog</a>
+        <a href="">AI</a>
+        <a href="">Mobile Apps</a>
+    </div>
+        <div class="row d d-flex justify-content-center">
+            <a href="" class="link1">Do not sell and share my personal information -></a>
+        </div>
+       </div>
+        <div class="row d d-flex justify-content-center" >
+            <span class=link2>Zillow Group is committed to ensuring digital accessibility for individuals with disabilities. We are continuously working to improve the accessibility of our web experience for everyone, and we welcome feedback and accommodation requests. If you wish to report an issue or seek an accommodation, please<br><a href="">let us know.</a></span>
+        <span class="link3">Zillow, Inc. holds real estate brokerage <a href="">licenses</a> in multiple states. Zillow (Canada), Inc. holds real estate brokerage <a href="">licenses</a> in multiple provinces.</span>
+        </div>
+        <div class="row d d-flex justify-content-center" id="undll">
+            <a href="" class="undl">§ 442-H New York Standard Operating Procedures</a>
+            <a href="" class="undl">§ New York Fair Housing Notice</a>
+            <a href="" class="undl">TREC: Information about brokerage services, Consumer protection notice</a>
+            <a class="undl-sec">California DRE #1522444</a>
+        </div>
+        <div class="row d d-flex justify-content-center" >
+            <a href="" id="link4">Contact GetMyProperties.com,Brokerage</a>
+        </div>
+        <div class="row d d-flex justify-content-center" >
+            <span class="txt">For listings in Canada, the trademarks REALTOR®, REALTORS®, and the REALTOR® logo are controlled by The Canadian Real Estate Association (CREA) and identify real estate professionals who are members of CREA. The trademarks MLS®, Multiple Listing Service® and the associated logos are owned by CREA and identify the quality of services provided by real estate professionals who are members of CREA. Used under license</span>
+        </div>
+       </footer>
 </body>
-
 </html>
-
-
-
-
+  
