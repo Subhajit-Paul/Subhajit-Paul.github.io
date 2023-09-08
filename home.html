@@ -11,14 +11,18 @@
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js"></script>
     </head>
     <body>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
         <div id="header">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-dark">
                     <div class="navbar-brand d-block d-lg-none" href="#">
-                        <a href="#"><h2 class="logo"><strong>GetMyProperties.com</strong></h2></a>
+                        <a href="#"><div class="modal-dialog modal-xl">...</div></a>
                     </div>
                     <button class="navbar-toggler navbar_toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -54,54 +58,185 @@
                                 <div class="col-lg-3 col-md-3 col-sm-8 p-0" id="input">
                                     <input type="text" class="form-control search-slt"  placeholder="City, Neighborhood, ZIP, Address">
                                 </div>
-                                    <select class="form-control search-slt" id="search">
-                                        <option hidden>Property Type</option>
-                                        <option value="">
-                                          <p>Residential</p>
-                                        </option>
-                                        <option value="">
-                                            <p>Commercial</p>
-                                        </option>
-
-                                    </select>
-                                    <select class="form-control search-slt" id="search">
-                                        <option hidden>Budget</option>
-                                        <option value="">
-                                          <p>5000₹ - 10000₹</p>
-                                        </option>
-                                        <option value="">
-                                            <p>10000₹ - 20000₹</p>
-                                        </option>
-                                        <option value="">
-                                            <p>30000₹ - 50000₹</p>
-                                        </option>
-                                        <option value="">
-                                            <p>50000₹ above</p>
-                                        </option>
-                                    </select>
-                                    <select class="form-control search-slt" id="search">
-                                        <option hidden>Requirements</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                        <option value="5">Five</option>
-                                        <option value="6">Six</option>
-                                        <option value="7">Seven</option>
-                                        <option value="8">Eight</option>
-                                      </select>
-                                    <select class="form-control search-slt" id="search">
-                                        <option hidden>Facilities</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
-                                        <option value="4">Four</option>
-                                        <option value="5">Five</option>
-                                        <option value="6">Six</option>
-                                        <option value="7">Seven</option>
-                                        <option value="8">Eight</option>
-                                    </select>
-                                    <div class="col-lg-3 col-md-3 col-sm-4 p-0" >
+                                <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                                <div class="container">
+                                    <div class="select-btn">
+                                        <span class="btn-text">property Type</span>
+                                        <span class="arrow-dwn">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                    <ul class="list-items">
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">Commercial</span>
+                                        </li>
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">Residential</span>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                                <div class="container">
+                                    <div class="select-btn2">
+                                        <span class="btn-text2">Budget</span>
+                                        <span class="arrow-dwn">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                    <ul class="list-items">
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">5K - 10K</span>
+                                        </li>
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">10K - 20K</span>
+                                        </li>
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">20K - 30K</span>
+                                        </li>
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">30K -50K</span>
+                                        </li>
+                                        <li class="item">
+                                            <span class="checkbox">
+                                                <i class="fa-solid fa-check check-icon"></i>
+                                            </span>
+                                            <span class="item-text">50K above</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-8 p-0">
+                                        <div class="container">
+                                            <div class="select-btn1">
+                                                <span class="btn-text1">Requirements</span>
+                                                <span class="arrow-dwn">
+                                                    <i class="fa-solid fa-chevron-down"></i>
+                                                </span>
+                                            </div>
+                                            <ul class="list-items">
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">HTML & CSS</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Bootstrap</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">JavaScript</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                
+                                    </div>
+                                       
+                                    <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                                        <div class="container">
+                                            <div class="select-btn3">
+                                                <span class="btn-text3">Facilities</span>
+                                                <span class="arrow-dwn">
+                                                    <i class="fa-solid fa-chevron-down"></i>
+                                                </span>
+                                            </div>
+                                            <ul class="list-items">
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Car Parking (Bike, Car, Cycle)</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Pet Friendly (Dog, Cat  etc)</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Ulilities (24 Hour water, Electricity, Gas, Internet)</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Laundry</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Kitchen Appliances (Diswasher, Washing Machine, Chimney, Water Purifier, Microwave, Oven, Refrigerator, TV)</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Air Conditioner</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Balcony</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Gym, Swimming Pool, Club House</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Security</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Lift</span>
+                                                </li>
+                                                <li class="item">
+                                                    <span class="checkbox">
+                                                        <i class="fa-solid fa-check check-icon"></i>
+                                                    </span>
+                                                    <span class="item-text">Public Transportation (Metro, Bus Auto, Taxi Stand, Train)</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                
+                                    </div>
+                                    <div class="col-lg-2 col-md-3 col-sm-4 p-0" >
                                     <button type="btn" class=" wrn-btn">Save Search</button>
                                 </div>
                             </div>
@@ -117,11 +252,13 @@
             <div class="col-lg-3 col-md-5 col-sm-8" >
                 <div class="property-item rounded overflow-hidden">
                     <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
                         <div class="image-slider">
                             <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
                             <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
                             <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
                         </div>
+                    </button>
                         <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
                         <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
                             <input type="checkbox" class="checkbox" id="Give-It-An-Id">
@@ -145,6 +282,247 @@
                             </div>
                         </div></div>
                     </div>
+                    <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h2 class="logo">GetMyProperties.com</h2>
+                                    <a href="" class="header-element"><i class="fa-regular fa-heart"> </i> Save</a>
+                                    <a href="" class="header-element"><i class="fa-solid fa-share" style="color: #0010f0;"> </i> share</a>
+                                    <a href="" class="header-element"><i class="fa-solid fa-ban"> </i> Hide</a>
+                                    <a class="header-element" href="">Report a problem with this listing</a>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="wrapper">
+                                        <div class="images">
+                                          <img src="https://source.unsplash.com/1600x900/?rainforest">
+                                          <img src="https://source.unsplash.com/1600x900/?trees">
+                                          <img src="https://source.unsplash.com/1600x900/?rocks">
+                                          <img src="https://source.unsplash.com/1600x900/?mountains">
+                                          <img src="https://source.unsplash.com/1600x900/?water">
+                                          <img src="https://source.unsplash.com/1600x900/?nature">
+                                          <img src="https://source.unsplash.com/1600x900/?rainforest">
+                                          <img src="https://source.unsplash.com/1600x900/?trees">
+                                          <img src="https://source.unsplash.com/1600x900/?rocks">
+                                          <img src="https://source.unsplash.com/1600x900/?mountains">
+                                          <img src="https://source.unsplash.com/1600x900/?water">
+                                          <img src="https://source.unsplash.com/1600x900/?nature">
+                                        </div>
+                                      </div>
+                                      <div class="details">
+                                        <h3><strong>2,000₹<span style="font-size: 12px;">/month</span>    <span style="font-size: 13px; font-weight: 100;"> <strong>2</strong>bd | <strong>1</strong>ba | <strong>1000</strong> sqft</span></strong></h3>
+                                        <p>Saltlake sec-5, street name,ZIP code</p>
+                                        <strong>🔴 House for Rent</strong> 
+                                        <div class="row border-bottom">
+                                            <div class="col-md-7">
+                                                <button type="btn" class="btn-1">Request a tour</button>
+                                            </div>
+                                            <div class="col-md-7" id="button">
+                                                <button type="btn" class="btn-2">Apply now</button>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="stack-tab-container">
+                                        <div class="tab-bar">
+                                            <div class="left-arrow">
+                                                <i class="fa-solid fa-chevron-left"></i>
+                                              </div>
+                                          <ul class="tabs">
+                                            <li><a class="tab active" href="#top">overview</a></li>
+                                            <li><a class="tab" href="#section1">Fact and features</a></li>
+                                            <li><a class="tab" href="#section2">Policies</a></li>
+                                            <li><a class="tab" href="#section3">Nearby schools</a></li>
+                                            <li><a class="tab" href="#section4">Map</a></li>
+                                            <li><a class="tab" href="#section5">Nearby homes</a></li>
+                                            <li><a class="tab" href="#section6">Contact</a></li>
+                                          </ul>
+                                        </div>
+                                        <div class="right-arrow active">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                          </div>
+                                </div>
+                                <div class="description">
+                                    <div id="top"></div>
+                                    <div class="overview">
+                                        <h4>
+                                           <strong> Building Overview </strong>
+                                        </h4>
+                                        <p>
+                                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia minima dolores, laudantium ad repellendus in? Eveniet placeat eius numquam aliquam temporibus iure tempora, obcaecati hic dolorem. Quia quisquam voluptatibus necessitatibus.
+                                        </p>
+                                        <div class="highlight">
+                                        <span>Flat Style Home</span>
+                                        <span>New housing community</span>
+                                        <span>Outdoor pool</span>
+                                        <span>Modern Finish</span>
+                                    </div>
+                                    <h5 class="ques"><strong>Listed by management company</strong></h5>
+                                    <p><strong>Leasing Agent</strong></p>
+                                    <p>GetMyProperties.com</p>
+                                    <p class="agent">verified Sourse</p>
+                                    <p class="agent">+91 555 555 5555</p>
+                                    <button type="btn" class="question">Ask a Question</button>
+                                    </div>
+                                    <div id="section1"></div>
+                                    <div class="feature">
+                                        <h4><strong>Fact and Features</strong></h4>
+                                        <h5><strong>Key Features</strong></h5>
+                                        <ul>
+                                            <li>in-unit dryer, in-unit washer</li>
+                                            <li>Air conditioning available</li>
+                                            <li>Detached garage, garage parking, other parking</li>
+                                            <li>Barbecue, patio</li>
+                                        </ul>
+                                        <h4><strong>Building Amenities</strong></h4>
+                                        <h5><strong>Community rooms</strong></h5>
+                                        <ul>
+                                            <li>Clubhouse</li>
+                                            <li>Fitness center</li>
+                                        </ul>
+                                        <h5>others</h5>
+                                        <ul>
+                                            <li>Swimming pool</li>
+                                        </ul>
+                                        <h5><strong>Outdoor common areas</strong></h5>
+                                        <ul>
+                                            <li>Barbecue</li>
+                                            <li>Patio</li>
+                                        </ul>
+                                        <h5><strong>Security</strong></h5>
+                                        <ul>
+                                            <li>Controlled access</li>
+                                        </ul>
+                                        <h5><strong>Services & Facilities</strong></h5>
+                                        <ul>
+                                            <li>Onsite management</li>
+                                            <li>Package service</li>
+                                        </ul>
+                                        <h5><strong>Appliances</strong></h5>
+                                        <ul>
+                                            <li>Dishwasher</li>
+                                            <li>Dryer</li>
+                                            <li>Microwave oven</li>
+                                            <li>Refrigerator</li>
+                                            <li>Washer</li>
+                                        </ul>
+                                        <h5><strong>Flooring</strong></h5>
+                                        <ul>
+                                            <li>Carpet</li>
+                                        </ul>
+                                        <h5><strong>Internet/Satellite</strong></h5>
+                                        <ul>
+                                            <li>Cable</li>
+                                            <li>High-speed internet</li>
+                                        </ul>
+                                        <h5><strong>Other</strong></h5>
+                                        <ul>
+                                            <li>Patio or Balcony</li>
+                                        </ul>
+                                        <h5><strong>Special features</strong></h5>
+                                        <ul>
+                                            <li>Availability 24 Hours</li>
+                                            <li>Efficient Appliances</li>
+                                            <li>Electronic Thermostat</li>
+                                            <li>Fire Pit</li>
+                                            <li>Free Weights</li>
+                                            <li>Garage</li>
+                                            <li>Starbucks Coffee</li>
+                                            <li>Window Coverings</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <script>
+                        const tabs = document.querySelectorAll(".stack-tab-container a.tab");
+const scrollRightArrow = document.querySelector(
+  ".stack-tab-container .right-arrow"
+);
+const scrollLeftArrow = document.querySelector(
+  ".stack-tab-container .left-arrow"
+);
+const tabList = document.querySelector(".stack-tab-container ul.tabs");
+const leftArrowContainer = document.querySelector(
+  ".stack-tab-container .left-arrow"
+);
+const rightArrowContainer = document.querySelector(
+  ".stack-tab-container .right-arrow"
+);
+
+// Function to remove "active" class from all tabs
+const removeActiveClasses = () => {
+  tabs.forEach((tab) => {
+    tab.classList.remove("active");
+  });
+};
+
+//Function to activate the left scroll button
+const manageLeftbtn = () => {
+  if (tabList.scrollLeft >= 20) {
+    leftArrowContainer.classList.add("active");
+  } else {
+    leftArrowContainer.classList.remove("active");
+  }
+
+  let maxScroll = tabList.scrollWidth - tabList.clientWidth - 20;
+  if (tabList.scrollLeft >= maxScroll) {
+    rightArrowContainer.classList.remove("active");
+  } else {
+    rightArrowContainer.classList.add("active");
+  }
+};
+
+// Add "active" class to clicked tab and remove from others
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    event.preventDefault();
+    removeActiveClasses();
+    tab.classList.add("active");
+  });
+});
+
+// Scroll the tab list to the right
+scrollRightArrow.addEventListener("click", () => {
+  tabList.scrollLeft += 300;
+  manageLeftbtn();
+});
+
+// Scroll the tab list to the left
+scrollLeftArrow.addEventListener("click", () => {
+  tabList.scrollLeft -= 300;
+  manageLeftbtn();
+});
+
+// Listen to scroll event to activate the buttons
+tabList.addEventListener("scroll", manageLeftbtn);
+
+// Adding the dragging functionality
+let drag = false;
+const dragging = (e) => {
+  // Add the event parameter
+  if (!drag) return;
+  tabList.classList.add("dragging");
+  tabList.scrollLeft -= e.movementX;
+};
+
+tabList.addEventListener("mousedown", () => {
+  drag = true;
+  tabList.addEventListener("mousemove", dragging); // Add mousemove listener here
+});
+
+document.addEventListener("mouseup", () => {
+  drag = false;
+  tabList.removeEventListener("mousemove", dragging); // Remove mousemove listener here
+  tabList.classList.remove("dragging");
+});
+
+                    </script>
+
                     <div class="d-flex border-top">
                         <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
                         <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
@@ -519,29 +897,109 @@
 
     function showSlide(n) {
         if (n < 0) {
-            currentSlide = slides.length - 1;
-        } else if (n >= slides.length) {
+            currentSlide = slides.length - 3; // Subtract 3 for 3 images per slide
+        } else if (n >= slides.length - 2) { // -2 because 3 images per slide
             currentSlide = 0;
         }
-        slider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        slider.style.transform = `translateX(-${currentSlide * (100 )}%)`;
     }
-
+ 
     function nextSlide() {
         currentSlide++;
         showSlide(currentSlide);
     }
-
+ 
     function autoSlide() {
-        currentSlide++;
-        showSlide(currentSlide);
+        nextSlide();
     }
 
     // Set an interval to automatically slide the images
     setInterval(autoSlide, intervalTime);
-
+ 
+ 
     // Show the initial slide
     showSlide(currentSlide);
+
 </script>
+
+<script>
+const selectBtn = document.querySelector(".select-btn");
+const items = document.querySelectorAll(".item");
+const btnText = document.querySelector(".btn-text");
+
+let selectedItem = null;
+
+items.forEach(item => {
+  item.addEventListener("click", () => {
+    // Remove the "checked" class from the previously selected item
+    if (selectedItem) {
+      selectedItem.classList.remove("checked");
+    }
+
+    // Add the "checked" class to the clicked item
+    item.classList.add("checked");
+    selectedItem = item;
+
+    // Update the button text
+    btnText.innerText = `${item.innerText} Selected`;
+  });
+});
+
+// Initialize button text
+btnText.innerText = "Select Language";
+
+selectBtn.addEventListener("click", () => {
+  selectBtn.classList.toggle("open");
+});
+</script>
+
+
+<!-- First Dropdown -->
+
+
+<!-- Second Dropdown -->
+<script>
+const selectBtn2 = document.querySelector(".select-btn2");
+const items2 = document.querySelectorAll(".item");
+const btnText2 = document.querySelector(".btn-text2");
+
+let selectedItem2 = null;
+
+items2.forEach(item => {
+  item.addEventListener("click", () => {
+    // Remove the "checked" class from the previously selected item
+    if (selectedItem2) {
+      selectedItem2.classList.remove("checked");
+    }
+
+    // Add the "checked" class to the clicked item
+    item.classList.add("checked");
+    selectedItem2 = item;
+
+    // Update the button text
+    btnText2.innerText = `${item.innerText} Selected`;
+  });
+});
+
+// Initialize button text for the second dropdown
+btnText2.innerText = "Select Option";
+
+selectBtn2.addEventListener("click", () => {
+  selectBtn2.classList.toggle("open");
+});
+</script>
+<script>
+    $(".images img").click(function () {
+  $(this).addClass("zoom");
+});
+
+$(".images img").mouseleave(function () {
+  $(this).removeClass("zoom");
+});
+</script>
+    
+
+
 
 </body>
 </html>
