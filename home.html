@@ -13,8 +13,55 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-tooltip@0.7.0/dist/leaflet-tooltip.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-tooltip@0.7.0/dist/leaflet-tooltip.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href=" https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+       
     </head>
     <body>
+        <button type="button" class="btn btn-primary" id="feed"  data-toggle="modal" data-target="#exampleModalCenter">
+            Feedback
+          </button>
+          <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">
+                What rate would you give this article?</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div id="panel" class="panel-container">
+                    <strong>How satisfied are you with our <br/>
+                    customer support performance?</strong>
+                    <div class="ratings-container">
+                      <div class="rating">
+                        <img src="https://i.ibb.co/fYN2rVn/no.png" alt="">
+                        <small>Unhappy</small>
+                      </div>
+              
+                      <div class="rating">
+                        <img src="https://i.ibb.co/3M8Ddsf/neutral.png" alt=""/>
+                        <small>Neutral</small>
+                      </div>
+              
+                      <div class="rating active">
+                        <img src="https://i.ibb.co/VVDYGLZ/yes.png" alt=""/>
+                        <small>Satisfied</small>
+                      </div>
+                    </div>
+                    <button class="btn" id="send">Send Review</button>
+                  </div>
+                  </div>
+            </div>
+          </div>
+        </div>
+    </div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -22,27 +69,41 @@
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-dark">
                     <div class="navbar-brand d-block d-lg-none" href="#">
-                        <a href="#"><div class="modal-dialog modal-xl">...</div></a>
+                        <a href="#"><div class="modal-dialog modal-xl"><strong>GetMyProperties</strong></div></a>
                     </div>
                     <button class="navbar-toggler navbar_toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="left">
+                                       <li> <a href="#">
+                                            <i class="fa fa-facebook" aria-hidden="true"></i> 
+                                       </a> </li>
+                                       <li><a href="#"> 
+                                           <i class="fa fa-twitter" aria-hidden="true"></i> 
+                                       </a> 
+                                       <li><a href="#"> 
+                                           <i class="fa fa-google-plus" aria-hidden="true"></i> 
+                                       </a> </li>
+                                       <li><a href="#"> 
+                                           <i class="fa fa-linkedin" aria-hidden="true"></i>
+                                       </a>
+                                    </ul>
                         <div class="navbar-brand d-none d-lg-block" href="#">
                             <a href="#"><h2 class="logo center-logo"><strong>GetMyProperties.com</strong></h2></a>
                         </div>
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Manage Rental</a>
+                                <a class="nav-link" href="#">About Us</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Advertise</a>
+                                <a class="nav-link" href="#">Manage Rental</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Help</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Sign In</a>
+                                <a class="nav-link" href="login.html">Sign In</a>
                             </li>
                         </ul>
                     </div>
@@ -55,10 +116,10 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="row">
-                                <div class="col-lg-3 col-md-3 col-sm-8 p-0" id="input">
+                                <div class="col-lg-3 col-md-2 " id="input">
                                     <input type="text" class="form-control search-slt"  placeholder="City, Neighborhood, ZIP, Address">
                                 </div>
-                                <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                                <div class="col-lg-3 col-md-2 col-sm-1" >
                                 <div class="container">
                                     <div class="select-btn">
                                         <span class="btn-text">property Type</span>
@@ -83,7 +144,7 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                            <div class="col-lg-2 col-md-3 col-sm-4" >
                                 <div class="container">
                                     <div class="select-btn2">
                                         <span class="btn-text2">Budget</span>
@@ -125,7 +186,7 @@
                                     </ul>
                                 </div>
                             </div>
-                                    <div class="col-lg-2 col-md-3 col-sm-8 p-0">
+                                    <div class="col-lg-2 col-md-3 col-sm-4">
                                         <div class="container">
                                             <div class="select-btn1">
                                                 <span class="btn-text1">Requirements</span>
@@ -157,7 +218,7 @@
                                 
                                     </div>
                                        
-                                    <div class="col-lg-2 col-md-3 col-sm-8 p-0" >
+                                    <div class="col-lg-2 col-md-3 col-sm-4" >
                                         <div class="container">
                                             <div class="select-btn3">
                                                 <span class="btn-text3">Facilities</span>
@@ -245,7 +306,57 @@
                 </form>
             </div>
         </section>
-    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3721428.76450039!2d87.85113775!3d24.37407435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1693670992915!5m2!1sen!2sin" width="720" height="660" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <div id="map"></div>
+        <script>
+            // Initialize the map
+            var map = L.map('map').setView([51.505, -0.09], 13);
+    
+            // Add a base map (you can choose from various tile layers)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+    
+            // Create an array of marker objects with house details
+            var markers = [
+                {
+                    latlng: [51.5, -0.09],
+                    title: 'House 1',
+                    description: 'This is house 1.',
+                    location: '123 Main Street',
+                    area: '200 sq. ft.',
+                    contact: 'Phone: (123) 456-7890',
+                },
+                {
+                    latlng: [51.51, -0.1],
+                    title: 'House 2',
+                    description: 'This is house 2.',
+                    location: '456 Elm Street',
+                    area: '250 sq. ft.',
+                    contact: 'Phone: (456) 789-1234',
+                },
+                // Add more houses as needed
+            ];
+    
+            // Add markers to the map with tooltips containing house details
+            markers.forEach(function(marker) {
+                var tooltipContent = `
+                    <div class="custom-tooltip">
+                        <h3>${marker.title}</h3>
+                        <p>${marker.description}</p>
+                        <p>Location: ${marker.location}</p>
+                        <p>Area: ${marker.area}</p>
+                        <p>Contact: ${marker.contact}</p>
+                    </div>
+                `;
+                var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' }).bindPopup(tooltipContent);
+                
+                // Open a page when the marker is clicked
+                markerObj.on('click', function() {
+                    window.location.href = 'your-page-url'; // Replace with your desired page URL
+                });
+            });
+        </script>
 
 <div class="tab-content">
         <div class="row g-3" id="prop">
@@ -282,6 +393,24 @@
                             </div>
                         </div></div>
                     </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
                     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
@@ -313,7 +442,7 @@
                                         </div>
                                       </div>
                                       <div class="details">
-                                        <h3><strong>2,000₹<span style="font-size: 12px;">/month</span>    <span style="font-size: 13px; font-weight: 100;"> <strong>2</strong>bd | <strong>1</strong>ba | <strong>1000</strong> sqft</span></strong></h3>
+                                        <h3><strong>INR 2,000<span style="font-size: 12px;">/month</span>    <span style="font-size: 13px; font-weight: 100;"> <strong>2</strong>bd | <strong>1</strong>ba | <strong>1000</strong> sqft</span></strong></h3>
                                         <p>Saltlake sec-5, street name,ZIP code</p>
                                         <strong>🔴 House for Rent</strong> 
                                         <div class="row border-bottom">
@@ -523,371 +652,366 @@ document.addEventListener("mouseup", () => {
 
                     </script>
 
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
+               
+<div class="col-lg-3 col-md-5 col-sm-8" >
+    <div class="property-item rounded overflow-hidden">
+        <div class="position-relative overflow-hidden">
+        <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+            <div class="image-slider">
+                <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
             </div>
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
+        </button>
+            <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+            <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                <div class="svg-container">
+                    <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                        </path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                        </path>
+                    </svg>
+                    <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="10,10 20,20"></polygon>
+                        <polygon points="10,50 20,50"></polygon>
+                        <polygon points="20,80 30,70"></polygon>
+                        <polygon points="90,10 80,20"></polygon>
+                        <polygon points="90,50 80,50"></polygon>
+                        <polygon points="80,80 70,70"></polygon>
+                    </svg>
                 </div>
-            </div>
-        <div class="row g-3" id="prop">
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
-        <div class="row g-3" id="prop">
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
-        <div class="row g-3" id="prop">
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-5 col-sm-8" >
-                <div class="property-item rounded overflow-hidden">
-                    <div class="position-relative overflow-hidden">
-                        <div class="image-slider">
-                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
-                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
-                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
-                        </div>
-                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
-                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
-                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
-                            <div class="svg-container">
-                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
-                                    </path>
-                                </svg>
-                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
-                                    </path>
-                                </svg>
-                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
-                                    <polygon points="10,10 20,20"></polygon>
-                                    <polygon points="10,50 20,50"></polygon>
-                                    <polygon points="20,80 30,70"></polygon>
-                                    <polygon points="90,10 80,20"></polygon>
-                                    <polygon points="90,50 80,50"></polygon>
-                                    <polygon points="80,80 70,70"></polygon>
-                                </svg>
-                            </div>
-                        </div></div>
-                    </div>
-                    <div class="d-flex border-top">
-                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;"> 120,345₹</h5>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>123 Street, New York, USA</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
-                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
-                    </div>
-                    
-                    <div class="d-flex border-top">
-                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
-                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
-                    </div>
-                </div>
-            </div>
+            </div></div>
         </div>
+        <div class="d-flex border-top">
+            <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+            <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+        </div>
+        
+        <div class="d-flex border-top">
+            <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+            <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+            <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+        </div>
+        
+        <div class="d-flex border-top">
+            <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+            <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+            <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+        </div>
+    </div>
+</div>
+        <div class="row g-3" id="prop">
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div></div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div></div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
+        <div class="row g-3" id="prop">
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div></div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
+        <div class="row g-3" id="prop">
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div></div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-5 col-sm-8" >
+                <div class="property-item rounded overflow-hidden">
+                    <div class="position-relative overflow-hidden">
+                    <button type="button" class="btn" data-toggle="modal" data-target="#largeModal">
+                        <div class="image-slider">
+                            <img class="img-fluid" src="img/property-1.jpg" alt="Image 1">
+                            <img class="img-fluid" src="img/property-2.jpg" alt="Image 2">
+                            <img class="img-fluid" src="img/property-3.jpg" alt="Image 3">
+                        </div>
+                    </button>
+                        <div class=" rounded text-white position-absolute start-0 top-0 m-4 py-0 px-3" style="background-color: rgba(0, 0, 0, 0.5) !important; color: #fff !important; font-weight: 700; border-radius: 10px;" >5 Days Ago</div>
+                        <div class=" rounded text-white position-absolute end-0 top-0 m-4 py-0 px-3" ><div class="heart-container" title="Like">
+                            <input type="checkbox" class="checkbox" id="Give-It-An-Id">
+                            <div class="svg-container">
+                                <svg viewBox="0 0 24 24" class="svg-outline" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z">
+                                    </path>
+                                </svg>
+                                <svg viewBox="0 0 24 24" class="svg-filled" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z">
+                                    </path>
+                                </svg>
+                                <svg class="svg-celebrate" width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+                                    <polygon points="10,10 20,20"></polygon>
+                                    <polygon points="10,50 20,50"></polygon>
+                                    <polygon points="20,80 30,70"></polygon>
+                                    <polygon points="90,10 80,20"></polygon>
+                                    <polygon points="90,50 80,50"></polygon>
+                                    <polygon points="80,80 70,70"></polygon>
+                                </svg>
+                            </div>
+                        </div></div>
+                    </div>
+                    <div class="d-flex border-top">
+                        <h5 class="text mb-3 flex-fill text-center border-end py-2" style="color: #01668b !important; font-weight: 700;">INR 120,345</h5>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-map-marker-alt text-primary me-2"></i>USA</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-ruler-combined text-primary me-2"></i>1000 Sqft</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bed text-primary me-2"></i>3 Bed</small>
+                        <small class="flex-fill text-center border-end py-2"><i class="fa fa-bath text-primary me-2"></i>2 Bath</small>
+                    </div>
+                    
+                    <div class="d-flex border-top">
+                        <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
+                        <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                    </div>
+                </div>
+            </div>
 </div>
 <script>
     let currentSlide = 0;
@@ -946,7 +1070,7 @@ items.forEach(item => {
 });
 
 // Initialize button text
-btnText.innerText = "Property Type";
+btnText.innerText = "Select Language";
 
 selectBtn.addEventListener("click", () => {
   selectBtn.classList.toggle("open");
@@ -997,6 +1121,38 @@ $(".images img").mouseleave(function () {
   $(this).removeClass("zoom");
 });
 </script>
+<script>
+    const ratings = document.querySelectorAll(".rating");
+    const ratingsContainer = document.querySelector(".ratings-container");
+    const sendButton = document.getElementById("send");
+    const panel = document.getElementById("panel");
+    let selectedRating = "Satisfied";
+    
+    const removeActive = () => {
+      for (let i = 0; i < ratings.length; i++) {
+        ratings[i].classList.remove("active");
+      }
+    };
+    
+    ratingsContainer.addEventListener("click", (e) => {
+      if (e.target.parentNode.classList.contains("rating")) {
+        removeActive();
+        e.target.parentNode.classList.add("active");
+        selectedRating = e.target.nextElementSibling.innerHTML;
+      }
+    });
+    
+    sendButton.addEventListener("click", (e) => {
+      panel.innerHTML = `
+            <i class="fas fa-heart"></i>
+            <strong>Thank You!</strong>
+            <br>
+            <strong>Feedback: ${selectedRating}</strong>
+            <p>We'll use your feedback to improve our customer support</p>
+        `;
+    });
+    
+    </script>
     
 
 
