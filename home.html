@@ -104,6 +104,9 @@
                                 <a class="nav-link" href="#">Help</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" href="sell.html">Sell Property</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" href="login.html">Sign In</a>
                             </li>
                         </ul>
@@ -145,38 +148,38 @@
                                     </ul>
                                 </div>
                                 <div class="container" id="dropdown">
-                                    <div class="select-btn2">
-                                        <span class="btn-text2">Budget</span>
+                                    <div class="select-btn1">
+                                        <span class="btn-text1">Budget</span>
                                         <span class="arrow-dwn">
                                             <i class="fa-solid fa-chevron-down"></i>
                                         </span>
                                     </div>
                                     <ul class="list-items">
-                                        <li class="item">
+                                        <li class="item1">
                                             <span class="checkbox">
                                                 <i class="fa-solid fa-check check-icon"></i>
                                             </span>
                                             <span class="item-text">5K - 10K</span>
                                         </li>
-                                        <li class="item">
+                                        <li class="item1">
                                             <span class="checkbox">
                                                 <i class="fa-solid fa-check check-icon"></i>
                                             </span>
                                             <span class="item-text">10K - 20K</span>
                                         </li>
-                                        <li class="item">
+                                        <li class="item1">
                                             <span class="checkbox">
                                                 <i class="fa-solid fa-check check-icon"></i>
                                             </span>
                                             <span class="item-text">20K - 30K</span>
                                         </li>
-                                        <li class="item">
+                                        <li class="item1">
                                             <span class="checkbox">
                                                 <i class="fa-solid fa-check check-icon"></i>
                                             </span>
                                             <span class="item-text">30K -50K</span>
                                         </li>
-                                        <li class="item">
+                                        <li class="item1">
                                             <span class="checkbox">
                                                 <i class="fa-solid fa-check check-icon"></i>
                                             </span>
@@ -185,8 +188,8 @@
                                     </ul>
                                 </div>
                                         <div class="container" id="dropdown">
-                                            <div class="select-btn1">
-                                                <span class="btn-text1">Requirements</span>
+                                            <div class="select-btn2">
+                                                <span class="btn-text">Requirements</span>
                                                 <span class="arrow-dwn">
                                                     <i class="fa-solid fa-chevron-down"></i>
                                                 </span>
@@ -299,12 +302,75 @@
                 </form>
             </div>
         </section>
-
+       
+            
+            <!-- Second Dropdown -->
+            <script>
+                const selectBtn = document.querySelector(".select-btn");
+                const items = document.querySelectorAll(".item");
+                const btnText = document.querySelector(".btn-text");
+                
+                let selectedItem = null;
+                
+                items.forEach(item => {
+                  item.addEventListener("click", () => {
+                    // Remove the "checked" class from the previously selected item
+                    if (selectedItem) {
+                      selectedItem.classList.remove("checked");
+                    }
+                
+                    // Add the "checked" class to the clicked item
+                    item.classList.add("checked");
+                    selectedItem = item;
+                
+                    // Update the button text
+                    btnText.innerText = `${item.innerText} `;
+                  });
+                });
+                
+                // Initialize button text
+                btnText.innerText = "Propety Type";
+                
+                selectBtn.addEventListener("click", () => {
+                  selectBtn.classList.toggle("open");
+                });
+                </script>
+               <script>
+                const selectBtn1 = document.querySelector("#dropdown .select-btn1");
+                const items1 = document.querySelectorAll("#dropdown .item1");
+                const btnText1 = document.querySelector("#dropdown .btn-text1");
+            
+                let selectedItem1 = null;
+            
+                items1.forEach(item1 => {
+                    item1.addEventListener("click", () => {
+                        // Remove the "checked" class from the previously selected item
+                        if (selectedItem1) {
+                            selectedItem1.classList.remove("checked");
+                        }
+            
+                        // Add the "checked" class to the clicked item
+                        item1.classList.add("checked");
+                        selectedItem1 = item1;
+            
+                        // Update the button text
+                        btnText1.innerText = `${item1.innerText} `;
+                    });
+                });
+            
+                // Initialize button text
+                btnText1.innerText = "Budget";
+            
+                selectBtn1.addEventListener("click", () => {
+                    selectBtn1.classList.toggle("open");
+                });
+            </script>
+            
         <div id="map"></div>
         <script>
             // Initialize the map
             var map = L.map('map').setView([51.505, -0.09], 13);
-    
+            
             // Add a base map (you can choose from various tile layers)
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -334,7 +400,7 @@
             // Add markers to the map with tooltips containing house details
             markers.forEach(function(marker) {
                 var tooltipContent = `
-                    <div class="custom-tooltip">
+                    <div class="custom-tooltip" >
                         <h3>${marker.title}</h3>
                         <p>${marker.description}</p>
                         <p>Location: ${marker.location}</p>
@@ -342,12 +408,13 @@
                         <p>Contact: ${marker.contact}</p>
                     </div>
                 `;
-                var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' }).bindPopup(tooltipContent);
+                var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' }) ;
                 
                 // Open a page when the marker is clicked
                 markerObj.on('click', function() {
-                    window.location.href = '#largeModal'; // Replace with your desired page URL
-                });
+    $('#largeModal').modal('show');
+});
+
             });
         </script>
 
@@ -410,7 +477,7 @@
                                 <div class="modal-header">
                                     <h2 class="logo">GetMyProperties.com</h2>
                                     <div class="head-item">
-                                    <a href="" class="header-element"><i class="fa-solid fa-heart"> </i>Save</a>
+                                    <a href="" class="header-element"><i class="fa-regular fa-heart" style="color:#0010f0"></i> </i>Save</a>
                                     <a href="" class="header-element"><i class="fa-solid fa-share" style="color: #0010f0;"> </i> share</a>
                                     <a href="" class="header-element"><i class="fa-solid fa-ban"> </i> Hide</a>
                                     <a class="header-element" href="">Report a problem</a>
@@ -939,111 +1006,6 @@ document.addEventListener("mouseup", () => {
     showSlide(currentSlide);
 
 </script>
-
-<script>
-const selectBtn = document.querySelector(".select-btn");
-const items = document.querySelectorAll(".item");
-const btnText = document.querySelector(".btn-text");
-
-let selectedItem = null;
-
-items.forEach(item => {
-  item.addEventListener("click", () => {
-    // Remove the "checked" class from the previously selected item
-    if (selectedItem) {
-      selectedItem.classList.remove("checked");
-    }
-
-    // Add the "checked" class to the clicked item
-    item.classList.add("checked");
-    selectedItem = item;
-
-    // Update the button text
-    btnText.innerText = `${item.innerText} `;
-  });
-});
-
-// Initialize button text
-btnText.innerText = "Propety Type";
-
-selectBtn.addEventListener("click", () => {
-  selectBtn.classList.toggle("open");
-});
-</script>
-<!-- First Dropdown -->
-<!-- Second Dropdown -->
-<script>
-const selectBtn2 = document.querySelector(".select-btn2");
-const items2 = document.querySelectorAll(".item");
-const btnText2 = document.querySelector(".btn-text2");
-
-let selectedItem2 = null;
-
-items2.forEach(item => {
-  item.addEventListener("click", () => {
-    // Remove the "checked" class from the previously selected item
-    if (selectedItem2) {
-      selectedItem2.classList.remove("checked");
-    }
-
-    // Add the "checked" class to the clicked item
-    item.classList.add("checked");
-    selectedItem2 = item;
-
-    // Update the button text
-    btnText2.innerText = `${item.innerText} `;
-  });
-});
-
-// Initialize button text for the second dropdown
-btnText2.innerText = "Budget";
-
-selectBtn2.addEventListener("click", () => {
-  selectBtn2.classList.toggle("open");
-});
-</script>
-<script>
-    $(".images img").click(function () {
-  $(this).addClass("zoom");
-});
-
-$(".images img").mouseleave(function () {
-  $(this).removeClass("zoom");
-});
-</script>
-<script>
-    const ratings = document.querySelectorAll(".rating");
-    const ratingsContainer = document.querySelector(".ratings-container");
-    const sendButton = document.getElementById("send");
-    const panel = document.getElementById("panel");
-    let selectedRating = "Satisfied";
-    
-    const removeActive = () => {
-      for (let i = 0; i < ratings.length; i++) {
-        ratings[i].classList.remove("active");
-      }
-    };
-    
-    ratingsContainer.addEventListener("click", (e) => {
-      if (e.target.parentNode.classList.contains("rating")) {
-        removeActive();
-        e.target.parentNode.classList.add("active");
-        selectedRating = e.target.nextElementSibling.innerHTML;
-      }
-    });
-    
-    sendButton.addEventListener("click", (e) => {
-      panel.innerHTML = `
-            <i class="fas fa-heart"></i>
-            <strong>Thank You!</strong>
-            <br>
-            <strong>Feedback: ${selectedRating}</strong>
-            <p>We'll use your feedback to improve our customer support</p>
-        `;
-    });
-    
-    </script>
-    
 
 
 </main>
