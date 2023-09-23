@@ -152,7 +152,13 @@ body {
   padding: 20px;
   border-radius: 10px;
 }
-
+.nav-item span{
+  padding:2px;
+  font-size: 10px;
+  color: #fff;
+  border-radius: 3px;
+  background-color: #03bd69;
+}
 .navbar a {
   text-decoration: none;
 }
@@ -753,7 +759,7 @@ ul.navbar-nav li.nav-item a.nav-link:hover {
   display: none;
 }
 .property-item {
-  box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;;
+  box-shadow: rgba(0, 0, 0, 0.19) 10px 5px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
 .property-item .border-top {
