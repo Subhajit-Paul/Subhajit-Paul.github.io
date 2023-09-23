@@ -919,7 +919,7 @@ body{
   justify-content: space-between;
   padding: 0 10px;
   border-radius: 8px;
-  width: 180px;
+  width: 190px;
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -950,7 +950,7 @@ body{
   padding: 0 10px;
   border-radius: 8px;
   cursor: pointer;
-  width: 170px;
+  width: 190px;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
@@ -1000,7 +1000,7 @@ body{
   justify-content: space-between;
   padding: 0 10px;
   border-radius: 8px;
-  width: 180px;
+  width: 190px;
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -1030,7 +1030,7 @@ body{
   justify-content: space-between;
   padding: 0 10px;
   border-radius: 8px;
-  width:170px;
+  width:190px;
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -1063,7 +1063,7 @@ body{
 #toggleMapButton{
   position: fixed;
   bottom: 50px;
-  margin-left: 100px;
+  margin-left: 120px;
   margin-right:4px;
   z-index: 100;
   background-color: #cfe1ec;
@@ -1079,7 +1079,7 @@ body{
   display: block;
   position: fixed;
   bottom: 50px;
-  margin-left: 180px;
+  margin-left: 200px;
   z-index: 100;
   background-color: #cfe1ec;
   color: #000;
@@ -1095,7 +1095,7 @@ body{
   top: 0px;
   font-size: 21px;
   margin-bottom: 10px;
-  left: 40px;
+  left: 70px;
   height: calc(2.4rem) !important;
   width: 300px;
 }

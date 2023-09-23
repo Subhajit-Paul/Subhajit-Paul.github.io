@@ -70,7 +70,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-                <h1 style="margin-top:20px ;">Sort by result</h1>
+                <h3 style="margin-top:50px ;">Sort by result</h3>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -519,17 +519,13 @@
     </div>
 `;
 
-        var markerObj = L.marker(marker.latlng.addTo(map).bindTooltip(tooltipContent, {
-        icon: L.divIcon({
-            className: 'custom-marker', // Apply the custom marker style
-            html: '<div>1</div>', // You can use any content or leave it empty
-        }),
-        // Open a page when the marker is clicked
-        markerObj.on('click', function () {
-            $('#largeModal').modal('show');
+var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' }).bindPopup(tooltipContent);
+            
+            // Open a page when the marker is clicked
+            markerObj.on('click', function() {
+                window.location.href = 'index.html'; // Replace with your desired page URL
+            });
         });
-    });
-
     // Function to toggle map visibility
     function toggleMapVisibility() {
         if (isMobileView()) {
