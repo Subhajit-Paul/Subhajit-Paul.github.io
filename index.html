@@ -25,6 +25,9 @@
         <button type="button" class="btn btn-primary" id="feed"  data-toggle="modal" data-target="#exampleModalCenter">
             Feedback
           </button>
+          <button type="btn" id="toggleMapButton2"  data-toggle="modal" data-target="#exampleModalCenter2">
+            Sort
+          </button>
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -59,6 +62,31 @@
                   </div>
                   
                   </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+                <h1 style="margin-top:20px ;">Sort by result</h1>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+               <ul>
+                <li><a href="" style="margin-left: 100px;">Verified Source</a></li>
+                <li><a href="" style="margin-left: 70px;">Payment (High to Low)</a></li>
+                <li><a href="" style="margin-left: 70px;">Payment (Low to High)</a></li>
+                <li><a href="" style="margin-left: 120px;">Newest</a></li>
+                <li><a href="" style="margin-left: 110px;">Bedrooms</a></li>
+                <li><a href="" style="margin-left: 110px;">Bathrooms</a></li>
+                <li><a href="" style="margin-left: 110px;">Square Feet</a></li>
+                <li><a href="" style="margin-left: 120px;">Lot size</a></li>
+                <li><a href="" style="margin-left: 120px;">Default</a></li>
+               </ul>
             </div>
           </div>
         </div>
@@ -251,7 +279,7 @@
                                 
                                         <div class="container" id="dropdown">
                                             <div class="select-btn3">
-                                                <span class="btn-text3">Facilities</span>
+                                                <span class="btn-text3" style="font-size: 17px;">Facilities</span>
                                                 <span class="arrow-dwn">
                                                     <i class="fa-solid fa-chevron-down"></i>
                                                 </span>
@@ -491,8 +519,11 @@
     </div>
 `;
 
-        var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' });
-
+        var markerObj = L.marker(marker.latlng.addTo(map).bindTooltip(tooltipContent, {
+        icon: L.divIcon({
+            className: 'custom-marker', // Apply the custom marker style
+            html: '<div>1</div>', // You can use any content or leave it empty
+        }),
         // Open a page when the marker is clicked
         markerObj.on('click', function () {
             $('#largeModal').modal('show');
@@ -505,7 +536,7 @@
             var mapDiv = document.getElementById('map');
             if (mapDiv.style.display === 'none') {
                 mapDiv.style.display = 'block';
-                $('#toggleMapButton').text('Hide Map');
+                $('#toggleMapButton').text('List').append ('<i class="fa-solid fa-list" aria-hidden="true"></i>');
             } else {
                 mapDiv.style.display = 'none';
                 $('#toggleMapButton').text('Show Map');
