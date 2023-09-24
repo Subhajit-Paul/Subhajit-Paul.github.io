@@ -83,6 +83,13 @@
             box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px !important;
             border-radius: 20px;
         }
+    @media (max-width: 480px) {
+        .btn.btn-primary.px-5.d-lg-flex {
+            display: flex;
+        }
+    }
+</style>
+
         </style>
          <div id="header">
             <div class="container">
@@ -109,9 +116,8 @@
                                        </a>
                                     </ul>
                         <div class="navbar-brand d-none d-lg-block" href="#">
-                            <a href="home.html"><h2 class="logo center-logo"><strong>GetMyProperties.com</strong></h2></a>
+                            <a href="index.html"><h2 class="logo center-logo"><strong>GetMyProperties.com</strong></h2></a>
                         </div>
-                        
                     </div>
                 </nav>
             </div>
@@ -160,7 +166,7 @@
   
                             <textarea name="message" rows="3" class="form-control" id="message" placeholder="Comment (Optional)"></textarea>
   
-                            <button type="submit" class="btn btn-primary px-3 d-lg-flex">Post a Property</button>
+                            <button type="submit" class="btn btn-primary px-5 d-lg-flex">Post a Property</button>
                         </form>
                     </div>
   

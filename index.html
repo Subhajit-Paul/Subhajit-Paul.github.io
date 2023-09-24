@@ -28,6 +28,9 @@
           <button type="btn" id="toggleMapButton2"  data-toggle="modal" data-target="#exampleModalCenter2">
             Sort
           </button>
+          <button type="btn" class="dropdown-button" data-toggle="modal" data-target="#exampleModalCenter3">More Filter <span class="arrow-dwn">
+            <i class="fa-solid fa-chevron-down"></i>
+        </span></button>
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -70,22 +73,22 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-                <h3 style="margin-top:50px ;">Sort by result</h3>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <h3 style="margin-top:50px; margin-left: 130px;">Sort by result</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top:20px;margin-right:10px ;">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
                <ul>
-                <li><a href="" style="margin-left: 100px;">Verified Source</a></li>
-                <li><a href="" style="margin-left: 70px;">Payment (High to Low)</a></li>
-                <li><a href="" style="margin-left: 70px;">Payment (Low to High)</a></li>
-                <li><a href="" style="margin-left: 120px;">Newest</a></li>
-                <li><a href="" style="margin-left: 110px;">Bedrooms</a></li>
-                <li><a href="" style="margin-left: 110px;">Bathrooms</a></li>
-                <li><a href="" style="margin-left: 110px;">Square Feet</a></li>
-                <li><a href="" style="margin-left: 120px;">Lot size</a></li>
-                <li><a href="" style="margin-left: 120px;">Default</a></li>
+                <li><a href="" style="margin-left: 120px;">Verified Source</a></li>
+                <li><a href="" style="margin-left: 90px;">Payment (High to Low)</a></li>
+                <li><a href="" style="margin-left: 90px;">Payment (Low to High)</a></li>
+                <li><a href="" style="margin-left: 140px;">Newest</a></li>
+                <li><a href="" style="margin-left: 130px;">Bedrooms</a></li>
+                <li><a href="" style="margin-left: 130px;">Bathrooms</a></li>
+                <li><a href="" style="margin-left: 130px;">Square Feet</a></li>
+                <li><a href="" style="margin-left: 140px;">Lot size</a></li>
+                <li><a href="" style="margin-left: 140px;">Default</a></li>
                </ul>
             </div>
           </div>
@@ -346,8 +349,159 @@
                                                     <span class="item-text">Public Transportation</span>
                                                 </li>
                                             </ul>
+                                            
                                         </div>
-                                
+                                        <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                              <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h3 style="margin-top: 40px;">More Filters</h3>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 40px;">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="dropdown-content" id="dropdown-content">
+                                                        <!-- Minimum Price Dropdown -->
+                                                        <div class="pricing">
+                                                        <label class="heading" for="min-price">Minimum Price:</label>
+                                                        <select id="min-price">
+                                                            <option value="5000">5000</option>
+                                                            <option value="8000">8000</option>
+                                                            <!-- Add more options here -->
+                                                        </select>
+                                                
+                                                        <!-- Maximum Price Dropdown -->
+                                                        <label class="heading" for="max-price">Maximum Price:</label>
+                                                        <select id="max-price">
+                                                            <option value="5000">5000</option>
+                                                            <option value="8000">8000</option>
+                                                            <!-- Add more options here -->
+                                                        </select>
+                                                    </div>
+                                                        <!-- Number of Bedrooms Dropdown -->
+                                                        <label class="heading" for="bedrooms">Number of Bedrooms:</label>
+                                                        <select id="bedrooms">
+                                                            <option value="Any">Any</option>
+                                                            <option value="1+">1+</option>
+                                                            <option value="2+">2+</option>
+                                                            <!-- Add more options here -->
+                                                        </select>
+                                                
+                                                        <!-- Number of Bathrooms Dropdown -->
+                                                        <label class="heading" for="bathrooms">Number of Bathrooms:</label>
+                                                        <select id="bathrooms">
+                                                            <option value="Any">Any</option>
+                                                            <option value="1+">1+</option>
+                                                            <option value="1.5+">1.5+</option>
+                                                            <!-- Add more options here -->
+                                                        </select>
+                                                        <label id="am">Views:</label>
+                                                        <div>
+                                                            <div class="amentity">
+                                                            <input type="checkbox" id="City" value="City">
+                                                            <label class="cbx" for="City">City</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Mountain" value="Mountain">
+                                                            <label class="cbx" for="Mountain">Mountain</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Park" value="Park">
+                                                            <label class="cbx" for="Park">Park</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Water" value="Water">
+                                                            <label class="cbx" for="Water">Water</label>
+                                                        </div>
+                                                        <!-- Amenities Checkboxes -->
+                                                        <label id="am">Amenities:</label>
+                                                        <div>
+                                                            <div class="amentity">
+                                                            <input type="checkbox" id="lift" value="Lift">
+                                                            <label class="cbx" for="lift">Lift</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="water-availability" value="Water availability">
+                                                            <label class="cbx" for="water-availability">Water availability</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Security Deposit" value="Security Deposit">
+                                                            <label class="cbx" for="Security Deposit">Security Deposit</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Pet Friendly" value="Pet Friendly">
+                                                            <label class="cbx" for="Pet Friendly">Pet Friendly</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Laundry Services" value="Laundry Services">
+                                                            <label class="cbx" for="Laundry Services">Laundry Services</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Dishwasher" value="Dishwasher">
+                                                            <label class="cbx" for="Dishwasher">Dishwasher</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Washing Machine" value="Washing Machine">
+                                                            <label class="cbx" for="Washing Machine">Washing Machine</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Chimney" value="Chimney">
+                                                            <label class="cbx" for="Chimney">Chimney</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Water Filter" value="Water Filter">
+                                                            <label class="cbx" for="Water Filter">Water Filter</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Microwave" value="Microwave">
+                                                            <label class="cbx" for="Microwave">Microwave</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Fridge" value="Fridge">
+                                                            <label class="cbx" for="Fridge">Fridge</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="TV" value="TV">
+                                                            <label class="cbx" for="TV">TV</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="AC" value="AC">
+                                                            <label class="cbx" for="AC">AC</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Balcony" value="Balcony">
+                                                            <label class="cbx" for="Balcony">Balcony</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Gym" value="Gym">
+                                                            <label class="cbx" for="Gym">Gym</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Swimming Pool" value="Swimming Pool">
+                                                            <label class="cbx" for="Swimming Pool">Swimming Pool</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Club House" value="Club House">
+                                                            <label class="cbx" for="Club House">Club House</label>
+                                                        </div>
+                                                        <div class="amentity">
+                                                            <input type="checkbox" id="Security" value="Security">
+                                                            <label class="cbx" for="Security">Security</label>
+                                                            <!-- Add more checkboxes here -->
+                                                        </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                    <div class="foot">
+                                                        <button type="btn" class="reset">Reset all Filters</button>
+                                                        <button type="btn" class="save">Apply</button>
+                                                    </div>
+                                                </div>
+                                               
+                                              </div>
+                                            </div>
+                                            </div>
                                     <div class="col-lg-2 col-md-3 col-sm-4 p-0" >
                                     <button type="btn" class="wrn-btn">Save Search</button>
                                 </div>
@@ -357,7 +511,6 @@
                 </form>
             </div>
         </section>
-       
             <!-- Second Dropdown -->
             <script>
                 const selectBtn = document.querySelector(".select-btn");
@@ -523,7 +676,7 @@ var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, {
             
             // Open a page when the marker is clicked
             markerObj.on('click', function() {
-                window.location.href = 'index.html'; // Replace with your desired page URL
+                $('#largeModal').modal('show'); // Replace with your desired page URL
             });
         });
     // Function to toggle map visibility
@@ -548,9 +701,6 @@ var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, {
         document.getElementById('map').style.display = 'none';
     }
 </script>
-
-
-
 <div class="tab-content">
         <div class="row g-3" id="prop">
             <div class="col-lg-3 col-md-5 col-sm-8" >
