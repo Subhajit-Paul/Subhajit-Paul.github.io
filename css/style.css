@@ -446,7 +446,8 @@ ul.navbar-nav li.nav-item a.nav-link:hover {
  display: block;
 }
 .list-items{
-  position: relative;
+  position: absolute;
+  z-index: 100;
   margin-top: 15px;
   border-radius: 8px;
   padding: 16px;
@@ -746,18 +747,20 @@ ul.navbar-nav li.nav-item a.nav-link:hover {
   border-radius:0;
 }
 .wrn-btn{
-  position: fixed;
-  top: 95px;
-  left: 1260px;
-  width: 120px;
+  position: relative;
+  float: right;
+  top:-60px;
+  margin-right: 40px;
+  display: flex;
+  width: 110px;
+  padding:10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   background-color: #4030f0;
   color: #fff;
   border: none;
-  font-size: 16px;
-  font-weight: 400;
-  text-transform: capitalize;
-  height: calc(3rem + 2px) !important;
-  border-radius:10px;
+  font-size: 17px;
 }
 .btn{
   display: none;
@@ -801,6 +804,8 @@ ul.navbar-nav li.nav-item a.nav-link:hover {
 }
 #map{
  position: relative;
+ z-index: 1;
+ margin-top: -50px;
   margin-left: 50px;
   padding: none;
   width: 700px;
@@ -922,7 +927,7 @@ body{
   justify-content: space-between;
   padding: 0 10px;
   border-radius: 8px;
-  width: 190px;
+  width: 135px;
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -980,17 +985,15 @@ body{
 }
 .dropdown-button{
   position: relative;
-  margin: 0;
-  z-index: 100;
-  top: 170px;
-  left: 220px;
+  top:-60px;
+  left: 140px;
   display: flex;
   height: 40px;
-  font-size: 17px;
-  width: 190px;
   align-items: center;
   justify-content: space-between;
-  border-radius: 10px;
+  padding: 0 10px;
+  border-radius: 8px;
+  width: 120px;
   border: none;
   cursor: pointer;
   background-color: #fff;
@@ -1100,12 +1103,19 @@ margin-left: 30px;
 }
 .wrn-btn{
   position: relative;
-  top: 0px;
-  font-size: 21px;
-  margin-bottom: 10px;
-  left: 70px;
-  height: calc(2.4rem) !important;
-  width: 300px;
+  float: right;
+  top:-110px;
+  margin-right: 0px;
+  display: flex;
+  width: 100px;
+  padding:10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  background-color: #4030f0;
+  color: #fff;
+  border: none;
+  font-size: 15px;
 }
 .search-slt{
   display: block;
@@ -1124,7 +1134,8 @@ margin-left: 30px;
 }
 .tab-content{
   position: relative;
-  top:-10px;
+  top:-100px;
+  
   left:0px;
 }
 #prop{
@@ -1266,31 +1277,68 @@ margin-left: 30px;
     text-decoration: none ;
   }
   .modal-body{
-    height: 85vh;
-    overflow: hidden;
+    max-height: 85vh;
+    overflow-y: hidden;
   }
   .modal-body .wrapper {
-      display: flex;
-      flex-direction: row;
-      justify-content: start;
-      margin: 0rem auto;
-      height: 180px;
-      overflow-y: hidden;
-      overflow-x: scroll;
+      max-width: 90%;
+      max-height: 30%;
+      overflow: hidden;
+      position: relative;
   }
 
   .modal-body .images {
     position: relative;
-    flex-basis: 42rem;
+    display: flex;
+  transition: transform 0.3s ease;
+  }
+  .controls {
+    text-align: center;
+    margin-top: 10px;
   }
   
-  .modal-body .images img {
-    position: relative;
-    width: 20.75rem;
-    height: auto;
-    opacity: 0.7;
-    transition: 0.4s ease;
+ .btnn {
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 10px;
+    cursor: pointer;
+    outline: none;
   }
+  
+ .btnn:hover {
+    background: #0056b3;
+  }
+  
+.radio-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.radio-buttons input[type="radio"] {
+  display: none;
+}
+
+.radio-buttons label {
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-color: #007BFF;
+  border-radius: 50%;
+  margin: 0 5px;
+  cursor: pointer;
+}
+
+.radio-buttons label:hover {
+  background-color: #0056b3;
+}
+
+.radio-buttons input[type="radio"]:checked + label {
+  background-color: #0056b3;
+}
+
   .modal-body .details{
     position: fixed;
     float: right;
@@ -1376,7 +1424,7 @@ margin-left: 30px;
     overflow: hidden;
   }
   .modal-body {
-    overflow-y:auto;
+    overflow-y:hidden;
   }
   .stack-tab-container .right-arrow.active,
   .stack-tab-container .left-arrow.active {
@@ -1407,6 +1455,7 @@ margin-left: 30px;
     position: relative;
     float: right;
     top:250px;
+    padding-bottom: 100px;
     left: 15px;
     width: 88vw;  
     height: 30vh;
