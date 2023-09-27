@@ -952,6 +952,9 @@ body{
 .select-btn1{
   display: none;
 }
+#exampleModalCenter2{
+  overflow-y: auto;
+}
 #exampleModalCenter2 .modal-body ul{
   position: relative;
   left: -20px;
@@ -998,6 +1001,9 @@ body{
   cursor: pointer;
   background-color: #fff;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+#exampleModalCenter3 .modal-body{
+ overflow-y: auto;
 }
 .dropdown-content .heading, #am{
   color:#007bff;

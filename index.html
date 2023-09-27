@@ -22,12 +22,15 @@
        
     </head>
     <body>
+        <!-- Feedback button -->
         <button type="button" class="btn btn-primary" id="feed"  data-toggle="modal" data-target="#exampleModalCenter">
             Feedback
           </button>
+          <!-- Sort button for mobile view -->
           <button type="btn" id="toggleMapButton2"  data-toggle="modal" data-target="#exampleModalCenter2">
             Sort
           </button>
+          <!-- Feedback modal -->
           <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -66,6 +69,7 @@
           </div>
         </div>
     </div>
+    <!--  Sort modal for mobile view  -->
     <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
@@ -94,6 +98,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!--  website header  -->
         <div id="header">
             <div class="container">
                 <nav class="navbar navbar-expand-lg navbar-dark">
@@ -105,21 +110,21 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="left">
-                                       <li> <a href="#">
+                                       <li> <a href="https://www.facebook.com/getmyprops/">
                                             <i class="fa fa-facebook" aria-hidden="true"></i> 
                                        </a> </li>
-                                       <li><a href="#"> 
+                                       <li><a href="https://twitter.com/getmyprops"> 
                                            <i class="fa fa-twitter" aria-hidden="true"></i> 
                                        </a> 
-                                       <li><a href="#"> 
-                                           <i class="fa fa-google-plus" aria-hidden="true"></i> 
+                                       <li><a href="https://www.instagram.com/getmyprops/"> 
+                                           <i class="fa fa-instagram" aria-hidden="true"></i> 
                                        </a> </li>
-                                       <li><a href="#"> 
+                                       <li><a href="https://www.linkedin.com/company/getmyprops/"> 
                                            <i class="fa fa-linkedin" aria-hidden="true"></i>
                                        </a>
                                     </ul>
                         <div class="navbar-brand d-none d-lg-block" href="#">
-                            <a href="index.html"><h2 class="logo center-logo"><strong>GetMyProperties.com</strong></h2></a>
+                            <a href="home.html"><h2 class="logo center-logo"><strong>GetMyProperties.com</strong></h2></a>
                         </div>
                         <ul class="navbar-nav">
                             <li class="nav-item">
@@ -140,6 +145,7 @@
             </div>
         </div>
         <main>
+            <!--  Search section  -->
         <section class="search-sec">
             <div class="container">
                 <form action="#" method="post" novalidate="novalidate">
@@ -353,18 +359,20 @@
                                             
                                         </div>
                                         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+                                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                                        <!--  More filters button for mobile view  -->
                                         <div class="container">
                                             <button type="button" class="dropdown-button" data-toggle="modal" data-target="#exampleModalCenter3">More Filter <span class="arrow-dwn">
                                                 <i class="fa-solid fa-chevron-down"></i>
                                             </span></button>
-                                            <div class="modal" id="exampleModalCenter3" tabindex="1000" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+                                            <!--  More filters modal for mobile view  -->
+                                            <div class="modal" id="exampleModalCenter3" tabindex="100" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                   <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h3 style="margin-top: 40px;">More Filters</h3>
-                                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 40px;">
+                                                      <button type="btn" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 40px;">
                                                         <span aria-hidden="true">&times;</span>
                                                       </button>
                                                     </div>
@@ -521,7 +529,7 @@
             </div>
         </section>
 
-            <!-- Second Dropdown -->
+            <!-- js for dropdowns -->
             <script>
                 const selectBtn = document.querySelector(".select-btn");
                 const items = document.querySelectorAll(".item");
@@ -531,21 +539,15 @@
                 
                 items.forEach(item => {
                   item.addEventListener("click", () => {
-                    // Remove the "checked" class from the previously selected item
                     if (selectedItem) {
                       selectedItem.classList.remove("checked");
                     }
                 
-                    // Add the "checked" class to the clicked item
                     item.classList.add("checked");
                     selectedItem = item;
-                
-                    // Update the button text
                     btnText.innerText = `${item.innerText} `;
                   });
                 });
-                
-                // Initialize button text
                 btnText.innerText = "Propety Type";
                 
                 selectBtn.addEventListener("click", () => {
@@ -561,7 +563,6 @@
             
                 items1.forEach(item1 => {
                     item1.addEventListener("click", () => {
-                        // Remove the "checked" class from the previously selected item
                         if (selectedItem1) {
                             selectedItem1.classList.remove("checked");
                         }
@@ -636,6 +637,7 @@
                     selectBtn3.classList.toggle("open");
                 });
             </script>
+            <!-- map div -->
         <div id="map"></div>
         <button id="toggleMapButton">Show Map</button>
        <script>
@@ -682,7 +684,7 @@
     </div>
 `;
 
-var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' }).bindPopup(tooltipContent);
+var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, { className: 'custom-tooltip' });
             
             // Open a page when the marker is clicked
             markerObj.on('click', function() {
@@ -711,6 +713,7 @@ var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, {
         document.getElementById('map').style.display = 'none';
     }
 </script>
+<!-- property section -->
 <div class="tab-content">
         <div class="row g-3" id="prop">
             <div class="col-lg-3 col-md-5 col-sm-8" >
@@ -758,10 +761,12 @@ var markerObj = L.marker(marker.latlng).addTo(map).bindTooltip(tooltipContent, {
                     <div class="d-flex border-top">
                         <small class="flex-fill text-center border-end py-2"><a href="tel: 91+ 1111111111" ><i class="fa fa-phone-alt text-primary me-2"></i>Dealer</a></small>
                         <small class="flex-fill text-center border-end py-2"> <a href="https://wa.me/917319292532/?text=Hi"> <i class="bi bi-whatsapp text-primary me-2"></i>Send Message</a></small>
-                        <small class="flex-fill text-center py-2"><a href="mailto: example@gmail.com"><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
+                        <small class="flex-fill text-center py-2"><a href="mailto: help@getmyproperties.com
+                            "><i class="fa fa-envelope-open text-primary me-2"></i>example@gmail.com</a></small>
                     </div>
                 </div>
             </div>
+            <!-- property modal -->
                     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="largeModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
@@ -1001,7 +1006,7 @@ document.addEventListener("mouseup", () => {
 
                     </script>
 
-               
+               <!-- property section -->
 <div class="col-lg-3 col-md-5 col-sm-8" >
     <div class="property-item rounded overflow-hidden">
         <div class="position-relative overflow-hidden">
