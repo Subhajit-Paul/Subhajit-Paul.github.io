@@ -98,12 +98,13 @@
                         <div class="fakeButtons fakeClose"></div>
                         <div class="fakeButtons fakeMinimize"></div>
                         <div class="fakeButtons fakeZoom"></div>
+                        <h5 class="userid">paul@ubuntu: /home/paul/</h5>
                       </div>
                       <div class="fakeScreen">
-                        <p class="line1">$ yo gulp-webapp<span class="cursor1">_</span></p>
-                        <p class="line2">Out of the box I include HTML5 Boilerplate, jQuery, and a gulpfile.js to build your app.<span class="cursor2">_</span></p>
-                        <p class="line3">[?] What more would you like? (Press space to select)<span class="cursor3">_</span></p>
-                        <p class="line4">><span class="cursor4">_</span></p>
+                        <div class="typed-strings"><p>$ whoiam</p></div><span class="typed line1"></span><br><br>
+                        <div class="typed-strings"><p>> Since 2020, I have delved myself into the ocean of Machine Learning. I have designed many feature extraction techniques and efficient architectures of DL models in production.</p></div><span class="typed line2"></span><br><br>
+                        <div class="typed-strings"><p>> My ignition point is to develop deep learning models from scratch and put them in production. Recently I am busy developing Platforms to solve problems with the help of LLMs.</p></div><span class="typed line3"></span><br><br>
+                        <div class="typed-strings"><p>> I have a keen interest in Indian History, Politics, Constitution</p></div><span class="typed line4"></span>
                       </div>
                 </div>
             </div>
@@ -113,6 +114,13 @@
             var typed = new Typed('#namechanger', {
             strings: ['Subhajit Paul', 'শুভজিৎ পাল', 'Think', 'Research', 'Create...'],
             typeSpeed: 70,
+            });
+
+            document.querySelectorAll('.typed').forEach(function(el) {
+                    new Typed(el, {
+                    stringsElement: el.previousElementSibling,
+                    typeSpeed: 40,
+                })
             });
         </script>
         <script src="https://kit.fontawesome.com/73e85c51f5.js" crossorigin="anonymous"></script>
