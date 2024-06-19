@@ -1,90 +1,587 @@
-<svg fill="none" viewBox="0 0 800 400" width="800" height="400" xmlns="http://www.w3.org/2000/svg">
+<svg fill="none" viewBox="0 0 800 2000" width="800" height="2000" xmlns="http://www.w3.org/2000/svg">
 	<foreignObject width="100%" height="100%">
 		<div xmlns="http://www.w3.org/1999/xhtml">
-			<style>
-				@keyframes rotate {
-					0% {
-						transform: rotate(3deg);
-					}
-					100% {
-						transform: rotate(-3deg);
-					}
-				}
-
-				@keyframes gradientBackground {
-					0% {
-						background-position: 0% 50%;
-					}
-					50% {
-						background-position: 100% 50%;
-					}
-					100% {
-						background-position: 0% 50%;
-					}
-				}
-
-				@keyframes fadeIn {
-					0% {
-						opacity: 0;
-					}
-					66% {
-						opacity: 0;
-					}
-					100% {
-						opacity: 1;
-					}
-				}
-
-				.container {
-					font-family:
-						system-ui,
-						-apple-system,
-						'Segoe UI',
-						Roboto,
-						Helvetica,
-						Arial,
-						sans-serif,
-						'Apple Color Emoji',
-						'Segoe UI Emoji';
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-					margin: 0;
-					width: 100%;
-					height: 400px;
-					background: linear-gradient(-45deg, #fc5c7d, #6a82fb, #05dfd7);
-					background-size: 600% 400%;
-					animation: gradientBackground 10s ease infinite;
-					border-radius: 10px;
-					color: white;
-					text-align: center;
-				}
-
-				h1 {
-					font-size: 50px;
-					line-height: 1.3;
-					letter-spacing: 5px;
-					text-transform: uppercase;
-					text-shadow:
-						0 1px 0 #efefef,
-						0 2px 0 #efefef,
-						0 3px 0 #efefef,
-						0 4px 0 #efefef,
-						0 12px 5px rgba(0, 0, 0, 0.1);
-					animation: rotate ease-in-out 1s infinite alternate;
-				}
-
-				p {
-					font-size: 20px;
-					text-shadow: 0 1px 0 #efefef;
-					animation: 5s ease 0s normal forwards 1 fadeIn;
-				}
-			</style>
-			<div class="container">
-				<h1>Made with HTML &amp; CSS<br/>not an animated GIF</h1>
-				<p>Click to see the source</p>
-			</div>
-		</div>
-	</foreignObject>
+      <style>
+        .card-container {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 2rem;
+          padding: 2rem;
+          perspective: 1000px;
+          }
+          .card {
+          background-color: "#D7BCFF";
+          border: 1px solid #666;
+          border-radius: 10px;
+          padding: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100px;
+          height: 100px;
+          transition: transform 0.3s, box-shadow 0.3s;
+          transform-style: preserve-3d;
+          }
+          .card:hover {
+          transform: translateY(-10px) rotateX(15deg) rotateY(15deg);
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+          }
+          .card img {
+          max-width: 100%;
+          max-height: 100%;
+          backface-visibility: hidden;
+          }
+          .animated-container {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          z-index: 0;
+          width: 100%;
+          height: 200px;
+          overflow: hidden;
+          }
+          .animated-element {
+          width: 100px;
+          height: 100px;
+          background: radial-gradient(circle at 75% 30%, #fff 5%, #fff 10%, #764ba2 60%);
+          border-radius: 50%;
+          position: relative;
+          animation: float 6s ease-in-out infinite;
+          }
+          .animated-element::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle at 25% 30%, #fff 5%, #fff 10%, #667eea 60%);
+          border-radius: 50%;
+          animation: float 6s ease-in-out infinite reverse;
+          }
+          @keyframes float {
+          0% {
+          transform: translate(100%, -100%) rotate(0deg);
+          }
+          100% {
+          transform: translate(-100%, 100%) rotate(360deg);
+          }
+          }
+          footer {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: #fff;
+          padding: 2rem 1rem;
+          font-family: 'Poppins', sans-serif;
+          position: relative;
+          overflow: hidden;
+          }
+          .gradient-border {
+          border: 2px solid transparent;
+          border-image: linear-gradient(to right, #667eea, #764ba2) 1;
+          }
+          .footer-content {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          max-width: 1200px;
+          margin: 0 auto;
+          z-index: 1;
+          }
+          .footer-left h3 {
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+          font-weight: 700;
+          letter-spacing: 1px;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          }
+          .social-links-footer {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          }
+          .social-links-footer li {
+          margin-right: 1.5rem;
+          }
+          .social-links-footer a {
+          color: #fff;
+          font-size: 2rem;
+          transition: transform 0.3s ease;
+          }
+          .social-links-footer a:hover {
+          transform: scale(1.2);
+          }
+          .footer-right p {
+          margin: 0.5rem 0;
+          font-size: 1.2rem;
+          }
+          .made-with-love {
+          display: flex;
+          align-items: center;
+          }
+          .made-with-love .fa-heart {
+          color: #e25555;
+          margin: 0 0.5rem;
+          animation: beat 1s infinite;
+          }
+          .footer-right a {
+          color: #fff;
+          text-decoration: none;
+          transition: color 0.3s ease;
+          }
+          .footer-right a:hover {
+          color: #e25555;
+          }
+          .dino-container {
+          position: absolute;
+          bottom: -20px;
+          right: -50px;
+          z-index: 0;
+          }
+          .dino-img {
+          max-width: 200px;
+          height: auto;
+          animation: dino-walk 3s infinite;
+          }
+          @keyframes beat {
+          0% {
+          transform: scale(1);
+          }
+          50% {
+          transform: scale(1.2);
+          }
+          100% {
+          transform: scale(1);
+          }
+          }
+          @keyframes dino-walk {
+          0% {
+          transform: translateX(0);
+          }
+          50% {
+          transform: translateX(50px);
+          }
+          100% {
+          transform: translateX(0);
+          }
+          }
+          @media (max-width: 768px) {
+          .footer-content {
+          flex-direction: column;
+          text-align: center;
+          }
+          .footer-left,
+          .footer-right {
+          margin-bottom: 1rem;
+          }
+          .dino-container {
+          position: static;
+          text-align: center;
+          margin-top: 2rem;
+          }
+          }
+          .header {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          }
+          .profile-pic {
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+          animation: glow 3s infinite alternate;
+          }
+          @keyframes glow {
+          0% {
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+          }
+          100% {
+          box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+          }
+          }
+          h1 {
+          font-size: 3rem;
+          margin-top: 1rem;
+          text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+          }
+          p {
+          max-width: 600px;
+          font-size: 1.2rem;
+          line-height: 1.5;
+          text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+          }
+          hr {
+          width: 50%;
+          border: none;
+          border-top: 2px solid rgba(255, 255, 255, 0.2);
+          margin: 2rem auto;
+          }
+          @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+          body {
+          background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+          color: #ffffff;
+          font-family: 'Poppins', sans-serif;
+          text-align: center;
+          overflow: hidden;
+          }
+          .about-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          margin-top: 30px;
+          }
+          .about-content {
+          max-width: 800px;
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          padding: 40px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+          }
+          .about-content:hover {
+          transform: translateY(-10px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          }
+          h3 {
+          font-size: 2rem;
+          margin-bottom: 20px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          position: relative;
+          }
+          .skills {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+          margin: 10px 0;
+          }
+          .skills span {
+          background-color: #e0f7fa;
+          color: #00796b;
+          padding: 5px 10px;
+          border-radius: 5px;
+          font-size: 14px;
+          }
+          li::before {
+          content: "🔥";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #ff9a9e;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+          .contact-info {
+          font-size: 1.2rem;
+          margin-bottom: 20px;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+          .fun-fact {
+          font-size: 1.2rem;
+          font-style: italic;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          }
+          .social-links a {
+          display: inline-block;
+          margin: 0 10px;
+          transition: all 0.3s ease;
+          }
+          .social-links a:hover {
+          transform: translateY(-5px);
+          }
+          .social-links img {
+          width: 40px;
+          height: 40px;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+          }
+          .a {
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          flex-wrap: wrap;
+          padding: 40px 0;
+          }
+          .b {
+          width: 400px;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border-radius: 20px;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+          overflow: hidden;
+          transition: transform 0.3s ease;
+          }
+          .b:hover {
+          transform: translateY(-10px);
+          }
+          .c {
+          padding: 30px;
+          text-align: center;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          color: #fff;
+          }
+          .d {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          object-fit: cover;
+          filter: brightness(1.2);
+          transition: transform 0.3s ease;
+          }
+          .d:hover {
+          transform: scale(1.1);
+          }
+          .e {
+          font-family: 'Poppins', sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          margin-top: 20px;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          }
+          .f {
+          padding: 30px;
+          background-color: #fff;
+          color: #333;
+          text-align: center;
+          }
+          .f p {
+          font-family: 'Roboto', sans-serif;
+          font-size: 16px;
+          line-height: 1.6;
+          margin-bottom: 30px;
+          }
+          .g {
+          display: inline-block;
+          background-color: #764ba2;
+          color: #fff;
+          padding: 12px 25px;
+          text-decoration: none;
+          border-radius: 25px;
+          font-family: 'Montserrat', sans-serif;
+          box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+          transition: all 0.3s ease;
+          }
+          .g:hover {
+          background-color: #667eea;
+          box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+          }
+      </style>
+      <div class="header">
+        <img src="https://subhajit-paul.vercel.app/img/dp.jpeg" alt="Profile Picture" class="profile-pic">
+        <h1>Hi 👋, I'm Ignitor</h1>
+        <h3>Finding Global Minima</h3>
+        <p>
+          Hi, I am ignitor, sometime people call me Subhajit Paul. 
+          <br>
+          I'm a passionate developer, machine learning enthusiast, and lifelong learner.
+          <br>
+          I believe in the power of technology to make the world a better place.
+        </p>
+        <hr>
+      </div>
+      <div align="center">
+      <a href="https://subhajit-paul.vercel.app/about">
+        <img src="https://img.shields.io/badge/My%20Profile-100000?style=for-the-badge&logo=About.me&logoColor=white" alt="My Profile">
+      </a>
+      <a href="https://subhajit-paul.vercel.app/">
+        <img src="https://img.shields.io/badge/My%20Blog-0078D4?style=for-the-badge&logo=NextJS&logoColor=white" alt="My Blog">
+      </a>
+      <a href="https://www.buymeacoffee.com/subhajitpaul">
+        <img src="https://img.shields.io/badge/Buy%20Me%20a%20Coffee-FFDD00?style=for-the-badge&logo=Buy-Me-A-Coffee&logoColor=black" alt="Buy Me a Coffee">
+      </a>
+      </div>
+      <hr>
+      <h1>🔭 I'm currently creating </h1>
+      <div class="a">
+        <div class="b">
+          <div class="c">
+            <img src="https://subhajit-paul.vercel.app/img/data.png" alt="Project Antaheen" class="d">
+            <h2 class="e">A Platform For AI Solutions</h2>
+          </div>
+          <div class="f">
+            <p>Explore the realm of artificial intelligence and discover innovative solutions</p>
+            <a href="https://subhajit-paul.vercel.app/ml" class="g">Visit Project Antaheen</a>
+          </div>
+        </div>
+        <div class="b">
+          <div class="c">
+            <img src="https://intkishaloy.vercel.app/img/intkishaloy.dark.1.png" alt="intকিশলয়.in" class="d">
+            <h2 class="e">A Free Education Platform</h2>
+          </div>
+          <div class="f">
+            <p>Unlock your potential and embark on a journey of knowledge with our free education platform.</p>
+            <a href="https://intkishaloy.vercel.app" class="g">Visit intকিশলয় Platform</a>
+          </div>
+        </div>
+      </div>
+      <div class="about-container">
+        <div class="about-content">
+          <h3>💬 Ask me about</h3>
+          <div class="skills">
+            <span>Machine Learning</span>
+            <span>Deep Learning</span>
+            <span>NextJS</span>
+            <span>Django</span>
+            <span>MongoDB</span>
+            <span>AWS</span>
+            <span>Deployment in Production</span>
+          </div>
+          <h3>📫 How to reach me</h3>
+          <a href="mailto:test.dev.paul@gmail.com" class="contact-info"><i class="fa-solid fa-envelope-circle-check"></i> test.dev.paul@gmail.com</a>
+          <h3>Let's Connect</h3>
+          <div class="social-links">
+            <a href="https://linkedin.com/in/stochasticgradientdescent" target="_blank">
+              <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn">
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=61555425317196" target="_blank">
+              <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook-alt.svg" alt="Facebook">
+            </a>
+            <a href="https://x.com/thesubhajitpaul" target="_blank">
+              <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="X/Twitter">
+            </a>
+          </div>
+        </div>
+      </div>
+      <h3 align="left">Technical Stack</h3>
+      <div class="card-container">
+          <a href="https://www.arduino.cc/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://cdn.worldvectorlogo.com/logos/arduino-1.svg" alt="Arduino">
+          </a>
+          <a href="https://aws.amazon.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS">
+          </a>
+          <a href="https://getbootstrap.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bootstrap/bootstrap-plain-wordmark.svg" alt="Bootstrap">
+          </a>
+          <a href="https://www.cprogramming.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/c/c-original.svg" alt="C">
+          </a>
+          <a href="https://www.w3schools.com/cpp/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/cplusplus/cplusplus-original.svg" alt="C++">
+          </a>
+          <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="CSS3">
+          </a>
+          <a href="https://www.djangoproject.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://cdn.worldvectorlogo.com/logos/django.svg" alt="Django">
+          </a>
+          <a href="https://www.docker.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original-wordmark.svg" alt="Docker">
+          </a>
+          <a href="https://expressjs.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="Express.js">
+          </a>
+          <a href="https://firebase.google.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/firebase/firebase-icon.svg" alt="Firebase">
+          </a>
+          <a href="https://flask.palletsprojects.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/pocoo_flask/pocoo_flask-icon.svg" alt="Flask">
+          </a>
+          <a href="https://git-scm.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/git-scm/git-scm-icon.svg" alt="Git">
+          </a>
+          <a href="https://graphql.org" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/graphql/graphql-icon.svg" alt="GraphQL">
+          </a>
+          <a href="https://heroku.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/heroku/heroku-icon.svg" alt="Heroku">
+          </a>
+          <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="HTML5">
+          </a>
+          <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="JavaScript">
+          </a>
+          <a href="https://www.linux.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/linux/linux-original.svg" alt="Linux">
+          </a>
+          <a href="https://www.mongodb.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="MongoDB">
+          </a>
+          <a href="https://www.mysql.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="MySQL">
+          </a>
+          <a href="https://nextjs.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://cdn.worldvectorlogo.com/logos/nextjs-2.svg" alt="Next.js">
+          </a>
+          <a href="https://www.nginx.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nginx/nginx-original.svg" alt="Nginx">
+          </a>
+          <a href="https://nodejs.org" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="Node.js">
+          </a>
+          <a href="https://opencv.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/opencv/opencv-icon.svg" alt="OpenCV">
+          </a>
+          <a href="https://pandas.pydata.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/2ae2a900d2f041da66e950e4d48052658d850630/icons/pandas/pandas-original.svg" alt="Pandas">
+          </a>
+          <a href="https://www.postgresql.org" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="PostgreSQL">
+          </a>
+          <a href="https://postman.com" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="Postman">
+          </a>
+          <a href="https://www.python.org" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python">
+          </a>
+          <a href="https://pytorch.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/pytorch/pytorch-icon.svg" alt="PyTorch">
+          </a>
+          <a href="https://reactjs.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="React">
+          </a>
+          <a href="https://reactnative.dev/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://reactnative.dev/img/header_logo.svg" alt="React Native">
+          </a>
+          <a href="https://realm.io/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/bestofjs/bestofjs-webui/8665e8c267a0215f3159df28b33c365198101df5/public/logos/realm.svg" alt="Realm">
+          </a>
+          <a href="https://redis.io" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/redis/redis-original-wordmark.svg" alt="Redis">
+          </a>
+          <a href="https://scikit-learn.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg" alt="Scikit-learn">
+          </a>
+          <a href="https://seaborn.pydata.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://seaborn.pydata.org/_images/logo-mark-lightbg.svg" alt="Seaborn">
+          </a>
+          <a href="https://tailwindcss.com/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="Tailwind CSS">
+          </a>
+          <a href="https://www.tensorflow.org" target="_blank" rel="noreferrer" class="card">
+              <img src="https://www.vectorlogo.zone/logos/tensorflow/tensorflow-icon.svg" alt="TensorFlow">
+          </a>
+          <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer" class="card">
+              <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript">
+          </a>
+      </div>
+      <div align="center">
+          <img src="https://github-readme-stats.vercel.app/api/top-langs?username=subhajit-paul&show_icons=true&locale=en&layout=compact&theme=radical" alt="Top Languages">
+      </div>
+      <footer class="gradient-border">
+        <div class="footer-content">
+          <div class="footer-left">
+            <h3>Let's Connect!</h3>
+            <ul class="social-links-footer">
+              <li><a href="https://linkedin.com/in/stochasticgradientdescent" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a></li>
+              <li><a href="https://twitter.com/thesubhajitpaul" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></li>
+              <li><a href="https://github.com/subhajit-paul" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a></li>
+              <li><a href="mailto:test.dev.paul@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a></li>
+            </ul>
+          </div>
+          <div class="footer-right">
+            <p><span class="made-with-love">Made with <i class="fas fa-heart"></i> by&nbsp;<a href="https://github.com/subhajit-paule">Subhajit Paul</a></span></p>
+            <p>&copy; <span>2024</span> All rights reserved.</p>
+          </div>
+        </div>
+        <div class="animated-container">
+          <div class="animated-element"></div>
+        </div>
+      </footer>
+    </div>
+  </foreignObject>
 </svg>
