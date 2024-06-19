@@ -115,26 +115,26 @@
         }
         }
 			</style>
-	    <footer class="gradient-border">
-        <div class="footer-content">
-          <div class="footer-left">
-            <h3>Let's Connect!</h3>
-            <ul class="social-links-footer">
-              <li><a href="https://linkedin.com/in/stochasticgradientdescent" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a></li>
-              <li><a href="https://twitter.com/thesubhajitpaul" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></li>
-              <li><a href="https://github.com/subhajit-paul" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a></li>
-              <li><a href="mailto:test.dev.paul@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a></li>
-            </ul>
-          </div>
-          <div class="footer-right">
-            <p><span class="made-with-love">Made with <i class="fas fa-heart"></i> by&nbsp;<a href="https://github.com/subhajit-paule">Subhajit Paul</a></span></p>
-            <p>&copy; <span>2024</span> All rights reserved.</p>
-          </div>
-        </div>
-        <div class="animated-container">
-          <div class="animated-element"></div>
-        </div>
-      </footer>
+	   <footer class="gradient-border">
+		  <div class="footer-content">
+		    <div class="footer-left">
+		      <h3>Let's Connect!</h3>
+		      <ul class="social-links-footer">
+		        <li><a href="https://linkedin.com/in/stochasticgradientdescent" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a></li>
+		        <li><a href="https://twitter.com/thesubhajitpaul" target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></li>
+		        <li><a href="https://github.com/subhajit-paul" target="_blank" rel="noopener noreferrer"><i class="fab fa-github"></i></a></li>
+		        <li><a href="mailto:test.dev.paul@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a></li>
+		      </ul>
+		    </div>
+		    <div class="footer-right">
+		      <p><span class="made-with-love">Made with <i class="fas fa-heart"></i> by&nbsp;<a href="https://github.com/subhajit-paul">Subhajit Paul</a></span></p>
+		      <p>&copy; <span>2024</span> All rights reserved.</p>
+		    </div>
+		  </div>
+		  <div class="animated-container">
+		    <div class="animated-element"></div>
+		  </div>
+		</footer>
     </div>
   </foreignObject>
 </svg>
