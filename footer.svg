@@ -60,7 +60,7 @@
                 }
                 .footer-left h3 {
                 font-size: 1.8rem;
-                margin-bottom: 1rem;
+                margin-bottom: 2rem;
                 font-weight: 700;
                 letter-spacing: 1px;
                 text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
@@ -84,6 +84,7 @@
                 }
                 .footer-right p {
                 margin: 0.5rem 0;
+                margin-bottom: 1rem;
                 font-size: 1.2rem;
                 }
                 .made-with-love {
@@ -117,7 +118,7 @@
                     </div>
                     <div class="footer-right">
                         <p><span class="made-with-love">Made with <i class="fas fa-heart"></i> by <a href="https://github.com/subhajit-paul">Subhajit Paul</a></span></p>
-                        <p>&copy; <span>2024</span> All rights reserved.</p>
+                        <p>©️ <span>2024</span> All rights reserved.</p>
                     </div>
                 </div>
                 <div class="animated-container">
