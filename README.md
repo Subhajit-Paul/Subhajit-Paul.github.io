@@ -95,7 +95,7 @@
 
 ## 🏆 Achievements
 <div align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=Subhajit-Paul&theme=darkhub&no-frame=true&margin-w=10&row=1">
+  <img src="https://github-profile-trophy.vercel.app/?username=Subhajit-Paul&theme=darkhub&no-frame=true&margin-w=5&row=2">
 </div>
 
 ---
