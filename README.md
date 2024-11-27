@@ -5,7 +5,7 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/ML%20Researcher-%230d1117?style=for-the-badge&logo=python&logoColor=FFA500">
-  <img src="https://img.shields.io/badge/Biryani%20Hunter-%23FF6F00?style=for-the-badge&logo=food&logoColor=white">
+  <img src="https://img.shields.io/badge/Biryani%20Hunter-%23FF6F00?style=for-the-badge&logo=counterstrike&logoColor=white">
 </div>
 
 ---
@@ -72,13 +72,13 @@
 ## 📂 My Projects
 <div align="center">
   <a href="https://github.com/sg61189/SRC" target="_blank">
-    <img src="https://img.shields.io/badge/LLM%20Joining%20ML-%23FFFFFF?style=for-the-badge&logo=circuitverse&logoColor=orange">
+    <img src="https://img.shields.io/badge/LLM%20Joining%20ML-%23FFA500?style=for-the-badge&logo=circuitverse&logoColor=grey">
   </a>
   <a href="https://github.com/Subhajit-Paul/EMOTION_CLASSIFIER_XAI" target="_blank">
-    <img src="https://img.shields.io/badge/Explainable%20AI-%23FFFFFF?style=for-the-badge&logo=pyg&logoColor=orange">
+    <img src="https://img.shields.io/badge/Explainable%20AI-%23FFA500?style=for-the-badge&logo=pyg&logoColor=grey">
   </a>
   <a href="https://subhajit-paul.vercel.app/ml/llm" target="_blank">
-    <img src="https://img.shields.io/badge/LLM-%23FFFFFF?style=for-the-badge&logo=pytorch&logoColor=orange">
+    <img src="https://img.shields.io/badge/গল্পকথা-%23FFA500?style=for-the-badge&logo=pytorch&logoColor=grey">
   </a>
 </div>
 
@@ -95,7 +95,7 @@
 
 ## 🏆 Achievements
 <div align="center">
-  <img src="https://github-profile-trophy.vercel.app/?username=Subhajit-Paul&theme=darkhub&no-frame=true&margin-w=5&row=2">
+  <img src="https://github-profile-trophy.vercel.app/?username=Subhajit-Paul&theme=ryo-ma&no-frame=true&margin-w=10">
 </div>
 
 ---
