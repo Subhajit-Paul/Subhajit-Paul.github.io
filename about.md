@@ -3,7 +3,7 @@ layout: default
 title:  whoami
 ---
 
-<img class="profile-picture" src="{{site.baseurl}}/{{site.profile-picture}}">
+<img class="profile-picture" src="{{site.baseurl}}/{{site.profile-picture}}" alt="Subhajit Paul Engineer">
 
 ## About Me
 
