@@ -3,23 +3,17 @@ layout: default
 ---
 
 <div class="page-subtitle">
-  {% for tag in page.tags %} {% if page.tags.first == tag %}
-  <b>[</b>
-  {% endif %}
-  <a href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
-  {% if page.tags.last == tag %}
-  <b>]</b>
-  {% else %} , {% endif %} {% if page.image %}
-  <img
-    class="post-image"
-    src="{{ site.baseurl }}/assets/images/{{ page.image }}"
-    alt="{{ page.title }}"
-  />
-  {% endif %}
-  <h1>{{ page.title }}</h1>
-  <p class="post-meta">Published on {{ page.date | date: "%d %B %Y" }}</p>
-
-  {% endfor %}
+    {% for tag in page.tags %}
+        {% if page.tags.first == tag %}
+            <b>[</b>
+        {% endif %}
+        <a href="{{ site.baseurl }}/tags/#{{ tag }}" title="{{ tag }}">{{ tag }}</a>
+        {% if page.tags.last == tag %}
+            <b>]</b>
+        {% else %}
+            ,
+        {% endif %}
+    {% endfor %}
 </div>
 
 {{content}}
