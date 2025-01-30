@@ -14,6 +14,7 @@
     content="blog, {{ site.author }}, {{ site.title }}, jekyll"
   />
   <meta name="author" content="{{ site.author }}" />
+  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | truncatewords: 20 }}{% else %}{{ site.subtitle }}{% endif %}" />
 
   <meta name="description" content="{{ desc }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,12 +29,13 @@
 
   <!-- For Facebook -->
   <meta property="og:title" content="{{ title }}" />
-  <meta property="og:image" itemprop="image" content="{{ favicon_location }}" />
   <meta property="og:description" content="{{ desc }}" />
-
+  <meta property="og:image" content="{% if page.image %}{{ site.url }}/assets/images/{{ page.image }}{% else %}{{ site.url }}/default-preview.jpg{% endif %}" />
+  
+  
   <!-- For Twitter -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="{{ title }}" />
   <meta name="twitter:description" content="{{ desc }}" />
-  <meta name="twitter:image" content="{{ favicon_location }}" />
+  <meta property="twitter:image" content="{% if page.image %}{{ site.url }}/assets/images/{{ page.image }}{% else %}{{ site.url }}/default-preview.jpg{% endif %}" />
 </head>
