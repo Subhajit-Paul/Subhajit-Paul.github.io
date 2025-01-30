@@ -29,14 +29,24 @@ hr {
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
-code {
-    background-color: #f6f8fa;
-    color: #24292f;
-    padding: 0.2em 0.4em;
-    border-radius: 6px;
+pre code {
+    background-color: #4f6172; /* Light gray background like GitHub */
+    color: #ffffff; /* Text color */
+    padding: 0.4em 0.6em; /* Add more padding for the code block */
     font-size: 85%;
     font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    word-wrap: break-word; /* Ensure long lines break properly */
+    overflow-x: auto; /* Prevent overflow of wide content */
 }
+
+pre {
+    background-color: #4f6172; /* Background for the entire code block */
+    padding: 16px; /* Some padding around the whole block */
+    border-radius: 6px; /* Rounded corners for the whole block */
+    border: 1px solid #d0d7de; /* Border around the entire code block */
+    word-wrap: break-word; /* Ensure that long lines inside pre elements break as well */
+}
+
 
 // divs
 
