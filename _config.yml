@@ -1,0 +1,24 @@
+title: Subhajit
+author: ghumkature
+subtitle: Navigating the Struggles and Triumphs of an Aspiring Engineer
+
+url: "https://subhajit-paul.vercel.app/about"
+baseurl: "/"
+
+footer_only_homepage: true
+footer_url: "https://github.com/Subhajit-Paul"
+footer_text: "Theme by ghumkature"
+
+profile-picture: assets/profile.png
+favicon_location: assets/favicon.ico
+
+permalink: /:year-:month-:day-:title/
+sass:
+    style: compressed
+    sass_dir: css
+
+navbar:
+ - name: "About"
+   link: "about"
+ - name: "Resume"
+   absolute-link: "https://subhajit-paul.vercel.app/about"
