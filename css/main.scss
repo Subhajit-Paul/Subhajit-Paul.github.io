@@ -30,8 +30,12 @@ hr {
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 code {
-    background-color: #d8e7ff;
-    color: #002b72;
+    background-color: #f6f8fa;
+    color: #24292f;
+    padding: 0.2em 0.4em;
+    border-radius: 6px;
+    font-size: 85%;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 }
 
 // divs
@@ -234,7 +238,7 @@ code {
     }
 
     .color-red {
-        color: #FF0F00;
+        color: #112A46;
     }
     .color-orange {
         color: #eb9800;
