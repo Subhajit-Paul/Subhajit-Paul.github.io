@@ -1,13 +1,13 @@
-title: Subhajit
-author: ghumkature
-subtitle: Navigating the Struggles and Triumphs of an Aspiring Engineer
+title: Subhajit Paul
+author: Subhajit Paul
+subtitle: Exploring the Intersection of Formal Verification and Generative AI
 
 url: "https://subhajit-paul.github.io"
 baseurl: "/"
 
 footer_only_homepage: true
 footer_url: "https://github.com/Subhajit-Paul"
-footer_text: "Theme by ghumkature"
+footer_text: "Research at ISI Kolkata | Formal Verification & AI"
 
 profile-picture: assets/profile.png
 favicon_location: assets/favicon.ico
@@ -20,5 +20,9 @@ sass:
 navbar:
  - name: "About"
    link: "about"
+ - name: "Research"
+   link: "publications"
+ - name: "Download CV"
+   link: "cv"
  - name: "Portfolio"
    absolute-link: "https://subhajit-paul.vercel.app/about"
