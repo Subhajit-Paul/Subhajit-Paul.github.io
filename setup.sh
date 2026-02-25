@@ -1207,6 +1207,69 @@ alias lg='lazygit'
 alias gundo='git reset --soft HEAD~1'
 # Show what changed in last commit
 alias glast='git show --stat HEAD'
+alias py-gitignore='cat > .gitignore << "EOF"
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Type check
+.mypy_cache/
+.pyre/
+
+# Jupyter
+.ipynb_checkpoints
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data / artifacts
+data/
+artifacts/
+checkpoints/
+
+# Docker
+docker-compose.override.yml
+
+# Secrets
+secrets.json
+*.pem
+*.key
+
+# Local configs
+local_settings.py
+settings_local.py
+EOF'
 
 # Python 
 alias py='python3'
@@ -1216,6 +1279,72 @@ alias uvsync='uv venv && source .venv/bin/activate && uv sync'
 alias uvrun='uv run'
 alias uvpkg='uv pip list'
 alias uvfreeze='uv pip freeze > requirements.txt && echo "requirements.txt written"'
+alias pyenv-template='cat > .env << "EOF"
+# ===============================
+# Application
+# ===============================
+APP_NAME=app
+APP_ENV=development
+DEBUG=true
+LOG_LEVEL=info
+
+# ===============================
+# Server
+# ===============================
+HOST=127.0.0.1
+PORT=8000
+
+# ===============================
+# Database
+# ===============================
+DATABASE_URL=
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+
+# ===============================
+# Security / Secrets
+# ===============================
+SECRET_KEY=
+JWT_SECRET=
+ENCRYPTION_KEY=
+
+# ===============================
+# API Keys
+# ===============================
+OPENAI_API_KEY=
+STRIPE_API_KEY=
+SENDGRID_API_KEY=
+SENTRY_DSN=
+
+# ===============================
+# Cache / Queue
+# ===============================
+REDIS_URL=redis://localhost:6379
+CELERY_BROKER_URL=redis://localhost:6379/0
+
+# ===============================
+# Storage
+# ===============================
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=
+S3_BUCKET=
+
+# ===============================
+# Paths
+# ===============================
+DATA_DIR=./data
+LOG_DIR=./logs
+
+# ===============================
+# Feature Flags
+# ===============================
+ENABLE_METRICS=false
+ENABLE_TRACING=false
+EOF'
 
 # Docker
 alias dps='docker ps'
@@ -1713,6 +1842,7 @@ printf "   %-18s %s\n" "zshrcs"           "--> reload .zshrc live"
 printf "   %-18s %s\n" "tip"              "--> random shell/tool tip"
 echo ""
 echo -e "  ${BOLD}${CYAN}Remaining steps (after shell loads):${NC}"
+echo -e "  ${BOLD}${CYAN}Close This Window and Then Reopen ${NC}"
 echo -e "   1. ${BOLD}p10k configure${NC}         - Powerlevel10k setup wizard"
 echo -e "   2. ${BOLD}nvim${NC}                   - auto-install NVChad plugins on first launch"
 echo -e "   3. Set terminal font:  ${BOLD}JetBrainsMono Nerd Font${NC}  or  ${BOLD}MesloLGS NF${NC}"
