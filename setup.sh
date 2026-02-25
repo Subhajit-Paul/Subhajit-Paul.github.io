@@ -5,6 +5,26 @@
 #
 #  Supports: Ubuntu/Debian · Arch/Manjaro · Fedora/RHEL
 # =============================================================================
+
+# ─── Bash Guard ──────────────────────────────────────────────────────────────
+# curl ... | sh runs under /bin/sh (dash on Ubuntu) which lacks pipefail.
+# Re-exec under bash automatically, installing it first if missing.
+if [ -z "${BASH_VERSION:-}" ]; then
+  if command -v bash >/dev/null 2>&1; then
+    exec bash "$0" "$@"
+  else
+    echo "[setup] bash not found. Installing bash first..."
+    if   command -v apt-get >/dev/null 2>&1; then apt-get update -qq && apt-get install -y bash
+    elif command -v dnf     >/dev/null 2>&1; then dnf install -y bash
+    elif command -v pacman  >/dev/null 2>&1; then pacman -Sy --noconfirm bash
+    else
+      echo "[setup] ERROR: Cannot install bash automatically. Please install bash and re-run." >&2
+      exit 1
+    fi
+    exec bash "$0" "$@"
+  fi
+fi
+
 set -euo pipefail
 
 # ─── Colors & Logging ────────────────────────────────────────────────────────
