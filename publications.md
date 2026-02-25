@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Publications
+description: "Research contributions by Subhajit Paul at the intersection of Formal Verification, Generative AI, and Electronic Design Automation."
+image: "/assets/publications-bg.jpg"
 ---
 <div class="page-subtitle">Research contributions at the intersection of Formal Verification and Generative AI</div>
 

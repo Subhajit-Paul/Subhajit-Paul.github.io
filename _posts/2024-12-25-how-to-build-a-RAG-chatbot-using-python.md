@@ -2,6 +2,8 @@
 layout: post
 title: How to build an LLM-powered chatbot in Python
 subtitle: Practical Retrieval-Augmented Generation with Streamlit and LangChain
+description: "Learn how to build a Retrieval-Augmented Generation (RAG) chatbot using Python, Streamlit, LangChain, and ChromaDB to eliminate LLM hallucinations."
+image: "/assets/rag-chatbot.jpg"
 tags: [langchain, streamlit, LLM, RAG]
 ---
 

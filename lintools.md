@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Linux Tools
+description: "Linux development environment setup scripts and tools maintained by Subhajit Paul."
+image: "/assets/linux-tools-bg.jpg"
 ---
 
 I maintain a few scripts to automate the setup of my development environments. These are designed to be run on fresh Linux installations or via Docker.

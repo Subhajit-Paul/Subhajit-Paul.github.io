@@ -17,8 +17,4 @@
   <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}" />
   <link rel="icon" type="image/ico" href="{{ site.favicon_location | relative_url }}" />
   <link rel="shortcut-icon" type="image/ico" href="{{ site.favicon_location | relative_url }}" />
-
-  <!-- Social Media Previews -->
-  <meta property="og:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/profile.png' | absolute_url }}{% endif %}" />
-  <meta name="twitter:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/profile.png' | absolute_url }}{% endif %}" />
 </head>

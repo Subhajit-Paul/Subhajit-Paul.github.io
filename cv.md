@@ -1,6 +1,8 @@
 ---
 layout: default
 title: Curriculum Vitae
+description: "Download the Curriculum Vitae of Subhajit Paul. View professional experience, education, and research background."
+image: "/assets/cv-bg.jpg"
 ---
 <div style="text-align: center; margin: 2em 0;">
     <a href="{{ '/assets/CV-SUBHAJIT-PAUL.pdf' | relative_url }}" 

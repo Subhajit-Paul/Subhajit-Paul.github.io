@@ -2,6 +2,8 @@
 layout: post
 title: How to setup Ollama locally?
 subtitle: Running Large Language Models in Your Own Room
+description: "A comprehensive guide on running powerful Large Language Models like Llama 3 on your local machine using Ollama."
+image: "/assets/ollama-local.jpg"
 tags: [LLM, OLLAMA, LLAMA3.3]
 ---
 

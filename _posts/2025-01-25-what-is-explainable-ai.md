@@ -2,6 +2,8 @@
 layout: post
 title: What is Explainable AI?
 subtitle: Making "Black Box" Medical AI Understandable for Doctors
+description: "Understand the 'Black Box' problem in AI and why Explainable AI (XAI) is critical for medical diagnoses and critical systems."
+image: "/assets/explainable-ai.jpg"
 tags: [pytorch, CNN, XAI]
 ---
 

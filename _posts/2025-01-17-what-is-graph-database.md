@@ -2,6 +2,8 @@
 layout: post
 title: Building a Graph-Based Database for AI
 subtitle: Beyond Vector Search - Connecting Knowledge through Semantic Networks
+description: "Explore how GraphRAG and semantic networks solve complex queries that traditional vector-based RAG struggles with."
+image: "/assets/graph-database.jpg"
 tags: [langchain, LLM, GRAPHRAG, RAG]
 ---
 

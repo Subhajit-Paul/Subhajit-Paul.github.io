@@ -2,6 +2,8 @@
 layout: post
 title: LLM Memory What and How??!!
 subtitle: Without memory, every conversation is a first conversation. Memory is what transforms a language model into an intelligent agent
+description: "Dive into how memory works in Large Language Models (LLMs) and how it transforms text generators into intelligent, context-aware agents."
+image: "/assets/llm-memory.jpg"
 tags: [LLM, Memory, graph]
 ---
 
