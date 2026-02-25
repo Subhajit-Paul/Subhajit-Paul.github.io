@@ -27,6 +27,30 @@ fi
 
 set -euo pipefail
 
+# ─── Environment Sanitization ────────────────────────────────────────────────
+# Minimal containers (Docker, CI) often leave USER, HOME, SHELL unset.
+# Derive safe fallbacks before any other code runs.
+
+# USER: try id, fall back to whoami, fall back to root
+if [ -z "${USER:-}" ]; then
+  USER=$(id -un 2>/dev/null || whoami 2>/dev/null || echo "root")
+  export USER
+fi
+
+# HOME: try getent passwd, fall back to /root or /home/$USER
+if [ -z "${HOME:-}" ] || [ ! -d "${HOME:-}" ]; then
+  HOME=$(getent passwd "$USER" 2>/dev/null | cut -d: -f6) \
+    || HOME=$(eval echo "~$USER" 2>/dev/null) \
+    || HOME="/home/$USER"
+  # If we're root, force /root
+  [ "$USER" = "root" ] && HOME="/root"
+  export HOME
+fi
+
+# SHELL: safe default — we're running under bash right now
+SHELL="${SHELL:-$(command -v bash)}"
+export SHELL
+
 # ─── Colors & Logging ────────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
@@ -247,8 +271,16 @@ else
   skip "zsh"
 fi
 
-if [ "$SHELL" != "$(which zsh)" ]; then
-  chsh -s "$(which zsh)" "$USER" && success "Default shell → Zsh (re-login required)."
+if [ "${SHELL}" != "$(command -v zsh)" ]; then
+  if [ "${USER}" = "root" ]; then
+    info "Running as root — skipping chsh (set shell manually if needed)."
+  elif command_exists chsh; then
+    chsh -s "$(command -v zsh)" "${USER}" \
+      && success "Default shell → Zsh (re-login required)." \
+      || warn "chsh failed (common in containers) — run manually: chsh -s $(command -v zsh)"
+  else
+    warn "chsh not found — run manually: chsh -s $(command -v zsh)"
+  fi
 else
   skip "Zsh default shell"
 fi
@@ -369,7 +401,7 @@ fi
 # bat → batcat symlink on Debian/Ubuntu
 if command_exists batcat && ! command_exists bat; then
   mkdir -p "$HOME/.local/bin"
-  ln -sf "$(which batcat)" "$HOME/.local/bin/bat"
+  ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
   success "Symlink: bat → batcat"
 fi
 
