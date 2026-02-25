@@ -122,7 +122,7 @@ prompt_choices() {
   SELECTED=()
 
   echo ""
-  echo -e "${BOLD}${CYAN}  ┌─ ${title} ─┐${NC}"
+  echo -e "${BOLD}${CYAN}  -- ${title} --${NC}"
   for i in "${!options[@]}"; do
     printf "  ${YELLOW}[%2d]${NC} %s\n" "$((i+1))" "${options[$i]}"
   done
@@ -389,7 +389,7 @@ else
   skip "JetBrainsMono Nerd Font"
 fi
 
-fc-cache -fq && success "Font cache refreshed."
+fc-cache -fv && success "Font cache refreshed."
 
 # CLI Essentials
 header "Installing CLI Essentials"
@@ -1566,6 +1566,9 @@ success ".tmux.conf written."
 
 # .gitconfig
 cat > "$DOTFILES/git/.gitconfig" <<'GITCONFIG'
+[user]
+  name = Subhajit Paul
+  email = paulsubhajit78242548@gmail.com
 [core]
   editor = nvim
   pager = bat
@@ -1649,13 +1652,10 @@ README
 header "Linking Configs"
 
 # .zshrc - back up OMZ default, link ours
-if [ ! -f "$HOME/.zshrc" ] || grep -q "# Path to your oh-my-zsh installation" "$HOME/.zshrc" 2>/dev/null; then
-  [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc.bak.$(date +%s)"
-  ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
-  success ".zshrc : ~/dotfiles/zsh/.zshrc"
-else
-  skip ".zshrc (already customised - merge ~/dotfiles/zsh/.zshrc manually)"
-fi
+[ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc.bak.$(date +%s)"
+ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+success ".zshrc : ~/dotfiles/zsh/.zshrc"
+
 
 # .tmux.conf
 if [ ! -f "$HOME/.tmux.conf" ]; then
