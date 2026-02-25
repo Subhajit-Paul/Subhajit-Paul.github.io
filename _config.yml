@@ -19,6 +19,7 @@ sass:
     
 include:
   - setup.sh
+  - debian.up
 
 navbar:
  - name: "About"
