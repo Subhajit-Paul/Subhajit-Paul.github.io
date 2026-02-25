@@ -191,7 +191,7 @@ OPTIONAL_TOOLS=("LazyGit" "ffmpeg" "git-lfs" "ripgrep-all (rga)" "fastfetch" "ba
 prompt_choices "Extra CLI Tools" "${OPTIONAL_TOOLS[@]}"
 OPT_TOOLS_SEL=("${SELECTED[@]:-}")
 
-OPTIONAL_APPS=("Brave Browser" "Docker Engine (CE)" "Steam" "LibreOffice Suite" "VLC")
+OPTIONAL_APPS=("Brave Browser" "Docker Engine (CE)" "Steam" "LibreOffice Suite" "VLC" "Zoom" "OBS Studio" "Ollama")
 prompt_choices "Extra Applications" "${OPTIONAL_APPS[@]}"
 OPT_APPS_SEL=("${SELECTED[@]:-}")
 
@@ -856,6 +856,73 @@ if is_selected 4; then
     success "VLC installed."
   else
     skip "VLC"
+  fi
+fi
+
+# [5] Zoom
+if is_selected 5; then
+  if ! command_exists zoom && ! command_exists zoom-client; then
+    info "Installing Zoom..."
+
+    case "$PKG_MANAGER" in
+      apt)
+        tmp="$(mktemp -d)"
+        curl -L https://zoom.us/client/latest/zoom_amd64.deb -o "$tmp/zoom.deb"
+        sudo apt install -y "$tmp/zoom.deb"
+        rm -rf "$tmp"
+        ;;
+      pacman)
+        aur_install zoom
+        ;;
+      dnf)
+        tmp="$(mktemp -d)"
+        curl -L https://zoom.us/client/latest/zoom_x86_64.rpm -o "$tmp/zoom.rpm"
+        sudo dnf install -y "$tmp/zoom.rpm"
+        rm -rf "$tmp"
+        ;;
+    esac
+
+    success "Zoom installed."
+  else
+    skip "Zoom"
+  fi
+fi
+
+# [6] OBS Studio
+if is_selected 6; then
+  if ! command_exists obs && ! command_exists obs-studio; then
+    info "Installing OBS Studio..."
+
+    case "$PKG_MANAGER" in
+      apt)
+        sudo add-apt-repository -y ppa:obsproject/obs-studio
+        sudo apt-get update -qq
+        pkg_install obs-studio
+        ;;
+      pacman)
+        pkg_install obs-studio
+        ;;
+      dnf)
+        pkg_install obs-studio
+        ;;
+    esac
+
+    success "OBS Studio installed."
+  else
+    skip "OBS Studio"
+  fi
+fi
+
+# [7] Ollama
+if is_selected 7; then
+  if ! command_exists ollama; then
+    info "Installing Ollama..."
+
+    curl -fsSL https://ollama.com/install.sh | sh
+
+    success "Ollama installed."
+  else
+    skip "Ollama"
   fi
 fi
 
