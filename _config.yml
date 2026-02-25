@@ -16,6 +16,9 @@ permalink: /:year-:month-:day-:title/
 sass:
     style: compressed
     sass_dir: css
+    
+include:
+  - setup.sh
 
 navbar:
  - name: "About"
