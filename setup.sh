@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 # =============================================================================
-#  setup.sh — Subhajit Paul's Linux Setup Script
-#  Usage: curl -LsSf https://subhajit-paul.github.io/setup.sh | sh
+#  setup.sh - Subhajit Paul's Linux Setup Script
+#  Usage: curl -LsSf https://subhajit-paul.github.io/setup.sh | bash
 #
-#  Supports: Ubuntu/Debian · Arch/Manjaro · Fedora/RHEL
+#  Supports: Debian (based) · Arch (Based) · Fedora/RHEL
 # =============================================================================
 
-# ─── Bash Guard ──────────────────────────────────────────────────────────────
-# curl ... | sh runs under /bin/sh (dash on Ubuntu) which lacks pipefail.
-# Re-exec under bash automatically, installing it first if missing.
 if [ -z "${BASH_VERSION:-}" ]; then
   if command -v bash >/dev/null 2>&1; then
     exec bash "$0" "$@"
@@ -27,7 +24,7 @@ fi
 
 set -euo pipefail
 
-# ─── Environment Sanitization ────────────────────────────────────────────────
+# Environment Sanitization
 # Minimal containers (Docker, CI) often leave USER, HOME, SHELL unset.
 # Derive safe fallbacks before any other code runs.
 
@@ -47,11 +44,11 @@ if [ -z "${HOME:-}" ] || [ ! -d "${HOME:-}" ]; then
   export HOME
 fi
 
-# SHELL: safe default — we're running under bash right now
+# SHELL: safe default - we're running under bash right now
 SHELL="${SHELL:-$(command -v bash)}"
 export SHELL
 
-# ─── Colors & Logging ────────────────────────────────────────────────────────
+# Colors & Logging 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
 
@@ -60,53 +57,62 @@ success() { echo -e "${GREEN}[✓]${NC} $*"; }
 warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
 error()   { echo -e "${RED}[✗]${NC} $*"; exit 1; }
 header()  { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
-skip()    { echo -e "${YELLOW}[→]${NC} $* already installed, skipping."; }
+skip()    { echo -e "${YELLOW}[:]${NC} $* already installed, skipping."; }
 
 command_exists() { command -v "$1" &>/dev/null; }
 
-# ─── Banner ──────────────────────────────────────────────────────────────────
 print_banner() {
-  # Get terminal width, fall back to 80
-  local tw
-  tw=$(tput cols 2>/dev/null || echo 80)
 
-  # Center-pad a single line of text (strips ANSI for length calc)
-  center() {
-    local text="$1"
-    local visible
-    # Strip ANSI escape codes to measure printable width
-    visible=$(echo -e "$text" | sed 's/\x1b\[[0-9;]*m//g')
-    local len=${#visible}
-    local pad=$(( (tw - len) / 2 ))
-    [ $pad -lt 0 ] && pad=0
-    printf "%${pad}s%b\n" "" "$text"
-  }
+local tw
+tw=$(tput cols 2>/dev/null || echo 80)
 
-  local logo=(
-    "███████╗███████╗████████╗██╗   ██╗██████╗ "
-    "██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗"
-    "███████╗█████╗     ██║   ██║   ██║██████╔╝"
-    "╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝ "
-    "███████║███████╗   ██║   ╚██████╔╝██║     "
-    "╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     "
-  )
-
-  echo ""
-  echo -e "${BOLD}${CYAN}"
-  for line in "${logo[@]}"; do
-    center "$line"
-  done
-  center "Subhajit Paul's Linux Setup Script"
-  echo ""
-  center "──────────────────────────────────────────"
-  center "🐙 github.com/Subhajit-Paul"
-  center "🌐 subhajit-paul.github.io"
-  center "──────────────────────────────────────────"
-  echo -e "${NC}"
+center() {
+local text="$1"
+local visible
+visible=$(echo -e "$text" | sed 's/\x1b[[0-9;]*m//g')
+local len=${#visible}
+local pad=$(( (tw - len) / 2 ))
+[ $pad -lt 0 ] && pad=0
+printf "%${pad}s%b\n" "" "$text"
 }
+
+local logo=(
+"\e[38;5;49m ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗    ███████╗███████╗████████╗██╗   ██╗██████╗ ${NC}"
+"\e[38;5;43m ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝    ██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗${NC}"
+"\e[38;5;37m ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝     ███████╗█████╗     ██║   ██║   ██║██████╔╝${NC}"
+"\e[38;5;31m ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗     ╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝ ${NC}"
+"\e[38;5;25m ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗    ███████║███████╗   ██║   ╚██████╔╝██║     ${NC}"
+"\e[38;5;19m ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝    ╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ${NC}"
+)
+
+echo
+echo -e "${BOLD}${CYAN}"
+
+center "─────────────────────────────────────────────────────────────────────────────────────────"
+echo
+
+for line in "${logo[@]}"; do
+center "$line"
+done
+
+echo
+center "${BOLD}Subhajit Paul's Linux Setup Script${NC}${CYAN}"
+
+echo
+center "github.com/Subhajit-Paul"
+center "subhajit-paul.github.io"
+
+echo
+center "─────────────────────────────────────────────────────────────────────────────────────────"
+
+echo -e "${NC}"
+echo
+}
+
 print_banner
 
-# ─── Interactive Multi-Select Menu ───────────────────────────────────────────
+
+# Interactive Multi-Select Menu 
 # Sets SELECTED=() with 0-based indices of chosen options.
 # Reads from /dev/tty directly so it works even when stdin is a curl pipe.
 SELECTED=()
@@ -124,7 +130,7 @@ prompt_choices() {
   echo -e "  ${BLUE}Enter numbers separated by spaces, ${BOLD}a${NC}${BLUE} = all, Enter = skip:${NC}"
   printf "  ${BOLD}> ${NC}"
 
-  # Always read from /dev/tty — works whether piped (curl|bash) or run directly
+  # Always read from /dev/tty - works whether piped (curl|bash) or run directly
   if [ ! -e /dev/tty ]; then
     echo ""
     warn "/dev/tty not available. Skipping optional selections."
@@ -152,7 +158,7 @@ is_selected() {
   return 1
 }
 
-# ─── OS Detection ────────────────────────────────────────────────────────────
+# OS Detection 
 header "Detecting Operating System"
 
 detect_os() {
@@ -173,12 +179,12 @@ detect_os() {
       else error "Unsupported OS: '$OS_ID'"
       fi ;;
   esac
-  success "OS: ${BOLD}${OS_ID}${NC}  →  package manager: ${BOLD}${PKG_MANAGER}${NC}"
+  success "OS: ${BOLD}${OS_ID}${NC}  :  package manager: ${BOLD}${PKG_MANAGER}${NC}"
 }
 
 detect_os
 
-# ─── Upfront Optional Selections ─────────────────────────────────────────────
+# Upfront Optional Selections
 header "Optional Tool Selection"
 
 OPTIONAL_TOOLS=("LazyGit" "ffmpeg" "git-lfs" "ripgrep-all (rga)" "fastfetch" "bandwhich (network monitor)")
@@ -189,7 +195,7 @@ OPTIONAL_APPS=("Brave Browser" "Docker Engine (CE)" "Steam" "LibreOffice Suite" 
 prompt_choices "Extra Applications" "${OPTIONAL_APPS[@]}"
 OPT_APPS_SEL=("${SELECTED[@]:-}")
 
-# ─── Package Manager Helpers ─────────────────────────────────────────────────
+# Package Manager Helpers
 pkg_update() {
   info "Updating package index..."
   case "$PKG_MANAGER" in
@@ -223,7 +229,7 @@ enable_rpmfusion() {
   fi
 }
 
-# ─── Base Dependencies ───────────────────────────────────────────────────────
+# Base Dependencies
 header "Installing Base Dependencies"
 
 pkg_update
@@ -261,7 +267,7 @@ esac
 
 success "Base dependencies installed."
 
-# ─── Zsh ─────────────────────────────────────────────────────────────────────
+# Zsh
 header "Setting Up Zsh"
 
 if ! command_exists zsh; then
@@ -276,29 +282,29 @@ if [ "${SHELL}" != "${ZSH_BIN}" ]; then
     # Root: just write directly to /etc/passwd via usermod, no password needed
     if command_exists usermod; then
       usermod -s "${ZSH_BIN}" root \
-        && success "Default shell → Zsh." \
-        || warn "usermod failed — run manually: sudo usermod -s ${ZSH_BIN} root"
+        && success "Default shell : Zsh." \
+        || warn "usermod failed - run manually: sudo usermod -s ${ZSH_BIN} root"
     else
-      warn "usermod not found — run manually: chsh -s ${ZSH_BIN}"
+      warn "usermod not found - run manually: chsh -s ${ZSH_BIN}"
     fi
   elif command_exists usermod; then
     # usermod requires no password prompt, just sudo (already active)
     sudo usermod -s "${ZSH_BIN}" "${USER}" \
-      && success "Default shell → Zsh (re-login required)." \
-      || warn "usermod failed — run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
+      && success "Default shell : Zsh (re-login required)." \
+      || warn "usermod failed - run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
   elif command_exists chsh; then
     # Fallback: sudo chsh avoids the interactive password prompt
     sudo chsh -s "${ZSH_BIN}" "${USER}" \
-      && success "Default shell → Zsh (re-login required)." \
-      || warn "chsh failed — run manually: sudo chsh -s ${ZSH_BIN} ${USER}"
+      && success "Default shell : Zsh (re-login required)." \
+      || warn "chsh failed - run manually: sudo chsh -s ${ZSH_BIN} ${USER}"
   else
-    warn "Neither usermod nor chsh found — run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
+    warn "Neither usermod nor chsh found - run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
   fi
 else
   skip "Zsh default shell"
 fi
 
-# ─── Oh My Zsh ───────────────────────────────────────────────────────────────
+# Oh My Zsh
 header "Installing Oh My Zsh"
 
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -311,7 +317,7 @@ fi
 
 OMZ_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 
-# ─── Powerlevel10k ───────────────────────────────────────────────────────────
+# Powerlevel10k
 header "Installing Powerlevel10k"
 
 P10K_DIR="${OMZ_CUSTOM}/themes/powerlevel10k"
@@ -322,7 +328,7 @@ else
   skip "Powerlevel10k"
 fi
 
-# ─── OMZ Plugins ─────────────────────────────────────────────────────────────
+# OMZ Plugins
 header "Installing Oh My Zsh Plugins"
 
 install_omz_plugin() {
@@ -342,7 +348,7 @@ install_omz_plugin "zsh-syntax-highlighting" "https://github.com/zsh-users/zsh-s
 install_omz_plugin "zsh-completions"        "https://github.com/zsh-users/zsh-completions"
 install_omz_plugin "you-should-use"         "https://github.com/MichaelAquilina/zsh-you-should-use"
 
-# ─── Nerd Fonts ──────────────────────────────────────────────────────────────
+# Nerd Fonts
 header "Installing Nerd Fonts"
 
 FONT_DIR="$HOME/.local/share/fonts"
@@ -359,14 +365,14 @@ install_font() {
   fi
 }
 
-# MesloLGS NF — required for Powerlevel10k glyphs
+# MesloLGS NF - required for Powerlevel10k glyphs
 P10K_BASE="https://github.com/romkatv/powerlevel10k-media/raw/master"
 install_font "MesloLGS NF Regular.ttf"     "${P10K_BASE}/MesloLGS%20NF%20Regular.ttf"
 install_font "MesloLGS NF Bold.ttf"        "${P10K_BASE}/MesloLGS%20NF%20Bold.ttf"
 install_font "MesloLGS NF Italic.ttf"      "${P10K_BASE}/MesloLGS%20NF%20Italic.ttf"
 install_font "MesloLGS NF Bold Italic.ttf" "${P10K_BASE}/MesloLGS%20NF%20Bold%20Italic.ttf"
 
-# JetBrainsMono Nerd Font — primary coding font
+# JetBrainsMono Nerd Font - primary coding font
 info "Installing JetBrainsMono Nerd Font..."
 if ! find "$FONT_DIR" -name "JetBrainsMonoNerdFont*" 2>/dev/null | grep -q .; then
   JB_VER=$(curl -s "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
@@ -385,7 +391,7 @@ fi
 
 fc-cache -fq && success "Font cache refreshed."
 
-# ─── CLI Essentials ──────────────────────────────────────────────────────────
+# CLI Essentials
 header "Installing CLI Essentials"
 
 # fzf
@@ -411,11 +417,12 @@ if ! command_exists bat && ! command_exists batcat; then
 else
   skip "bat"
 fi
-# bat → batcat symlink on Debian/Ubuntu
+
+# bat : batcat symlink on Debian/Ubuntu
 if command_exists batcat && ! command_exists bat; then
   mkdir -p "$HOME/.local/bin"
   ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
-  success "Symlink: bat → batcat"
+  success "Symlink: bat : batcat"
 fi
 
 # tmux
@@ -448,7 +455,7 @@ else
   skip "zoxide"
 fi
 
-# ─── Optional CLI Tools ───────────────────────────────────────────────────────
+# Optional CLI Tools
 header "Installing Selected Optional Tools"
 
 SELECTED=("${OPT_TOOLS_SEL[@]:-}")
@@ -573,7 +580,7 @@ if is_selected 5; then
   fi
 fi
 
-# ─── Neovim + NVChad ─────────────────────────────────────────────────────────
+# Neovim + NVChad
 header "Installing Neovim + NVChad"
 
 if ! command_exists nvim; then
@@ -597,12 +604,12 @@ if [ ! -d "$NVIM_CONFIG" ] || [ -z "$(ls -A "$NVIM_CONFIG" 2>/dev/null)" ]; then
   info "Setting up NVChad starter..."
   rm -rf "$NVIM_CONFIG"
   git clone https://github.com/NvChad/starter "$NVIM_CONFIG"
-  success "NVChad config at ~/.config/nvim — run 'nvim' once to auto-install plugins."
+  success "NVChad config at ~/.config/nvim - run 'nvim' once to auto-install plugins."
 else
   skip "NVChad (nvim config already exists)"
 fi
 
-# ─── VS Code ─────────────────────────────────────────────────────────────────
+# VS Code
 header "Installing VS Code"
 
 if ! command_exists code; then
@@ -636,7 +643,7 @@ else
   skip "VS Code"
 fi
 
-# ─── Language Runtimes ───────────────────────────────────────────────────────
+# Language Runtimes
 
 # uv (Python)
 header "Installing uv (Python toolchain)"
@@ -670,7 +677,7 @@ if command_exists nvm; then
     success "Node.js LTS installed & set as default."
   }
 else
-  warn "nvm not in current session — Node.js installs on next login."
+  warn "nvm not in current session - Node.js installs on next login."
 fi
 
 # Rust
@@ -716,15 +723,15 @@ else
   skip "Java (already: $(java -version 2>&1 | head -1))"
 fi
 
-# ─── C/C++ Toolchain ─────────────────────────────────────────────────────────
+# C/C++ Toolchain
 header "Verifying C/C++ Toolchain"
 for tool in gcc g++ clang cmake make; do
   command_exists "$tool" \
-    && success "$tool → $(command -v "$tool")" \
-    || { warn "$tool missing — installing..."; pkg_install "$tool"; }
+    && success "$tool : $(command -v "$tool")" \
+    || { warn "$tool missing - installing..."; pkg_install "$tool"; }
 done
 
-# ─── Optional Apps ───────────────────────────────────────────────────────────
+# Optional Apps 
 header "Installing Selected Optional Apps"
 
 SELECTED=("${OPT_APPS_SEL[@]:-}")
@@ -762,7 +769,7 @@ REPO
   fi
 fi
 
-# [1] Docker Engine (CE — no Desktop)
+# [1] Docker Engine
 if is_selected 1; then
   if ! command_exists docker; then
     info "Installing Docker Engine (CE)..."
@@ -852,39 +859,39 @@ if is_selected 4; then
   fi
 fi
 
-# ─── Dotfiles + Scripts + .zshrc ─────────────────────────────────────────────
+# Dotfiles + Scripts + .zshrc
 header "Writing Dotfiles & Configs"
 
 DOTFILES="$HOME/dotfiles"
 mkdir -p "$DOTFILES/zsh" "$DOTFILES/nvim/.config/nvim" \
          "$DOTFILES/tmux" "$DOTFILES/git" "$DOTFILES/scripts/bin"
 
-# ── volfix — restart audio stack ─────────────────────────────────────────
+# volfix - restart audio stack
 cat > "$DOTFILES/scripts/bin/volfix" <<'VOLFIX'
 #!/usr/bin/env bash
-# volfix — restart audio daemon (PipeWire or PulseAudio)
+# volfix - restart audio daemon (PipeWire or PulseAudio)
 if command -v pipewire &>/dev/null; then
   echo "Restarting PipeWire..."
   systemctl --user restart pipewire pipewire-pulse wireplumber
-  echo "✓ PipeWire restarted."
+  echo "PipeWire restarted."
 elif command -v pulseaudio &>/dev/null; then
   echo "Restarting PulseAudio..."
   pulseaudio -k 2>/dev/null; sleep 1; pulseaudio --start
-  echo "✓ PulseAudio restarted."
+  echo "PulseAudio restarted."
 else
-  echo "✗ No audio daemon found." && exit 1
+  echo "No audio daemon found." && exit 1
 fi
 VOLFIX
 chmod +x "$DOTFILES/scripts/bin/volfix"
 success "volfix script created."
 
-# ── String Operation Binaries ─────────────────────────────────────────────
+# String Operation Binaries
 info "Writing string operation utilities..."
 
-# charcount — count characters in stdin or file
+# charcount - count characters in stdin or file
 cat > "$DOTFILES/scripts/bin/charcount" <<'SCRIPT'
 #!/usr/bin/env bash
-# charcount — count characters (excluding or including newlines)
+# charcount - count characters (excluding or including newlines)
 # Usage:  charcount [file]   |   echo "hello" | charcount
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 input=$([ -n "${1:-}" ] && cat "$1" || cat)
@@ -897,10 +904,10 @@ printf "  Without spaces        : %d\n" "$no_spaces"
 printf "  Without newlines      : %d\n" "$no_newlines"
 SCRIPT
 
-# wordcount — count words in stdin or file
+# wordcount - count words in stdin or file
 cat > "$DOTFILES/scripts/bin/wordcount" <<'SCRIPT'
 #!/usr/bin/env bash
-# wordcount — count words, unique words, average word length
+# wordcount - count words, unique words, average word length
 # Usage:  wordcount [file]   |   echo "hello world" | wordcount
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 input=$([ -n "${1:-}" ] && cat "$1" || cat)
@@ -915,10 +922,10 @@ printf "  Unique words    : %d\n" "$unique"
 printf "  Avg word length : %s chars\n" "$avg"
 SCRIPT
 
-# sentcount — count sentences
+# sentcount - count sentences
 cat > "$DOTFILES/scripts/bin/sentcount" <<'SCRIPT'
 #!/usr/bin/env bash
-# sentcount — count sentences (splits on . ! ? followed by space or end)
+# sentcount - count sentences (splits on . ! ? followed by space or end)
 # Usage:  sentcount [file]   |   echo "Hello. World!" | sentcount
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 input=$([ -n "${1:-}" ] && cat "$1" || cat)
@@ -939,10 +946,10 @@ printf "  Total words           : %d\n" "$words"
 printf "  Avg words/sentence    : %s\n" "$avg_words"
 SCRIPT
 
-# paracount — count paragraphs (blank-line separated)
+# paracount - count paragraphs
 cat > "$DOTFILES/scripts/bin/paracount" <<'SCRIPT'
 #!/usr/bin/env bash
-# paracount — count paragraphs (separated by blank lines)
+# paracount - count paragraphs (separated by blank lines)
 # Usage:  paracount [file]   |   cat essay.txt | paracount
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 input=$([ -n "${1:-}" ] && cat "$1" || cat)
@@ -961,10 +968,10 @@ printf "  Lines       : %d\n" "$lines"
 printf "  Words       : %d\n" "$words"
 SCRIPT
 
-# replaceone — replace FIRST occurrence of a pattern in a file (in-place or stdout)
+# replaceone - replace FIRST occurrence of a pattern in a file (in-place or stdout)
 cat > "$DOTFILES/scripts/bin/replaceone" <<'SCRIPT'
 #!/usr/bin/env bash
-# replaceone — replace FIRST occurrence of OLD with NEW
+# replaceone - replace FIRST occurrence of OLD with NEW
 # Usage:
 #   replaceone "old" "new" file.txt          # edits file in-place
 #   echo "hello world" | replaceone "o" "0"  # reads from stdin
@@ -985,7 +992,7 @@ text = open(path).read()
 result = re.sub(re.escape(old), new, text, count=1)
 open(path, 'w').write(result)
 changed = text != result
-print(('\033[0;32m✓ Replaced first occurrence\033[0m') if changed else '\033[1;33m! Pattern not found\033[0m')
+print(('\033[0;32m Replaced first occurrence\033[0m') if changed else '\033[1;33m! Pattern not found\033[0m')
 " "$old" "$new" "$file"
 else
   # Stdin mode
@@ -1003,10 +1010,10 @@ print(re.sub(re.escape(old), new, text, count=1), end='')
 fi
 SCRIPT
 
-# replaceall — replace ALL occurrences of a pattern in a file (in-place or stdout)
+# replaceall - replace ALL occurrences of a pattern in a file (in-place or stdout)
 cat > "$DOTFILES/scripts/bin/replaceall" <<'SCRIPT'
 #!/usr/bin/env bash
-# replaceall — replace ALL occurrences of OLD with NEW
+# replaceall - replace ALL occurrences of OLD with NEW
 # Usage:
 #   replaceall "old" "new" file.txt          # edits file in-place, shows count
 #   echo "hello world" | replaceall "l" "L"  # reads from stdin
@@ -1027,7 +1034,7 @@ count = len(re.findall(re.escape(old), text))
 result = re.sub(re.escape(old), new, text)
 open(path, 'w').write(result)
 if count:
-    print(f'\033[0;32m✓ Replaced {count} occurrence(s)\033[0m')
+    print(f'\033[0;32m Replaced {count} occurrence(s)\033[0m')
 else:
     print('\033[1;33m! Pattern not found\033[0m')
 " "$old" "$new" "$file"
@@ -1058,18 +1065,17 @@ chmod +x \
 
 success "String operation utilities created."
 
-# ── .zshrc ────────────────────────────────────────────────────────────────
+# .zshrc 
 cat > "$DOTFILES/zsh/.zshrc" <<'ZSHRC'
-# ────────────────────────────────────────────────────────────────────────────
-#  ~/.zshrc  —  managed via ~/dotfiles
-# ────────────────────────────────────────────────────────────────────────────
 
-# Powerlevel10k instant prompt — keep near top
+#  ~/.zshrc  -  managed via ~/dotfiles
+
+# Powerlevel10k instant prompt - keep near top
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# ── Oh My Zsh ──────────────────────────────────────────────────────────────
+# Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
@@ -1090,22 +1096,22 @@ plugins=(
 
 source "$ZSH/oh-my-zsh.sh"
 
-# ── PATH ───────────────────────────────────────────────────────────────────
+# PATH
 export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/dotfiles/scripts/bin:$PATH"
 
-# ── nvm ────────────────────────────────────────────────────────────────────
+# nvm
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ]          && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# ── uv + cargo ─────────────────────────────────────────────────────────────
+# uv + cargo
 [ -f "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
 [ -f "$HOME/.cargo/env" ]     && source "$HOME/.cargo/env"
 
-# ── zoxide ─────────────────────────────────────────────────────────────────
+# zoxide
 eval "$(zoxide init zsh --cmd cd)"
 
-# ── fzf ────────────────────────────────────────────────────────────────────
+# fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_COMMAND='rg --files --hidden --follow --glob "!.git"'
 export FZF_DEFAULT_OPTS="
@@ -1117,15 +1123,13 @@ export FZF_DEFAULT_OPTS="
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
 
-# ── Editor ─────────────────────────────────────────────────────────────────
+# Editor
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  ALIASES
-# ─────────────────────────────────────────────────────────────────────────────
 
-# ── Navigation ─────────────────────────────────────────────────────────────
+# Navigation
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -1134,12 +1138,12 @@ alias la='ls -A --color=auto'
 alias l='ls --color=auto'
 alias cls='clear'
 
-# ── Editors ────────────────────────────────────────────────────────────────
+# Editors
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
 
-# ── System ─────────────────────────────────────────────────────────────────
+# System
 alias top='btop'
 alias mem='free -h'
 alias df='df -h'
@@ -1150,11 +1154,10 @@ alias path='echo $PATH | tr ":" "\n"'
 alias weather='curl wttr.in'
 alias ff='fastfetch'
 
-# Power — say it like you mean it
 alias stfu='sudo shutdown -h now'
 alias fkof='sudo reboot'
 
-# ── Distro-aware system update ─────────────────────────────────────────────
+# Distro-aware system update
 if command -v apt &>/dev/null; then
   alias update='sudo apt update && sudo apt upgrade -y'
 elif command -v pacman &>/dev/null; then
@@ -1163,7 +1166,7 @@ elif command -v dnf &>/dev/null; then
   alias update='sudo dnf upgrade -y'
 fi
 
-# ── bat (handles batcat vs bat across distros) ─────────────────────────────
+# bat (handles batcat vs bat across distros)
 if command -v batcat &>/dev/null; then
   alias b='batcat'
   alias cat='batcat --paging=never'
@@ -1177,14 +1180,14 @@ elif command -v bat &>/dev/null; then
 fi
 export BAT_THEME="Catppuccin Mocha"
 
-# bat global aliases — pipe any command's help through bat for colour
+# bat global aliases - pipe any command's help through bat for colour
 alias -g -- -h='-h 2>&1 | batcat --language=help --style=plain'
 alias -g -- --help='--help 2>&1 | batcat --language=help --style=plain'
 
-# ── fzf file finder with bat preview ──────────────────────────────────────
+# fzf file finder with bat preview
 alias f="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
 
-# ── Git ────────────────────────────────────────────────────────────────────
+# Git
 alias gs='git status'
 alias ga='git add'
 alias gaa='git add .'
@@ -1205,52 +1208,52 @@ alias gundo='git reset --soft HEAD~1'
 # Show what changed in last commit
 alias glast='git show --stat HEAD'
 
-# ── Python / venv ──────────────────────────────────────────────────────────
+# Python 
 alias py='python3'
 alias so='source .venv/bin/activate'
 alias deac='deactivate'
 alias uvsync='uv venv && source .venv/bin/activate && uv sync'
 alias uvrun='uv run'
 alias uvpkg='uv pip list'
-alias uvfreeze='uv pip freeze > requirements.txt && echo "✓ requirements.txt written"'
+alias uvfreeze='uv pip freeze > requirements.txt && echo "requirements.txt written"'
 
-# ── Docker ─────────────────────────────────────────────────────────────────
+# Docker
 alias dps='docker ps'
 alias dpsa='docker ps -a'
 alias dimg='docker images'
 alias dex='docker exec -it'
 alias dlogs='docker logs -f'
 alias dstop='docker stop $(docker ps -q)'
-# Nuke all containers + images (destructive — use with intent)
+# Nuke all containers + images
 alias deldok='docker ps -aq | xargs -r docker rm && docker images -q | xargs -r docker rmi'
 # Add user to docker group (run once after Docker install, then re-login)
 alias dok='sudo groupadd docker 2>/dev/null; sudo usermod -aG docker $USER && newgrp docker'
 # Planutils container
 alias plan='docker run -it --privileged planutils-dev:latest bash'
 
-# ── Planning / Research Tools ─────────────────────────────────────────────
+# Planning 
 alias pddl="python3 /home/subhajitp/util/downward/fast-downward.py"
 alias ai="npx https://github.com/google-gemini/gemini-cli"
 
-# ── Process hunting ────────────────────────────────────────────────────────
+# Process hunting
 alias psg='ps aux | grep -v grep | grep -i'       # psg nginx
 alias psport='ss -tlnp | grep'                     # psport 8080
 pskill() {                                         # pskill nginx
   local pids
   pids=$(ps aux | grep -v grep | grep -i "$1" | awk '{print $2}')
   [ -z "$pids" ] && { echo "No process matching: $1"; return 1; }
-  echo "$pids" | xargs kill -9 && echo "✓ Killed: $pids"
+  echo "$pids" | xargs kill -9 && echo "Killed: $pids"
 }
 portpid() { lsof -ti:"$1" || echo "Nothing on port $1"; }  # portpid 8080
 
-# ── Network ────────────────────────────────────────────────────────────────
+# Network
 alias bw='sudo bandwhich'                         # network monitor
 alias pingg='ping -c 5 8.8.8.8'                  # quick connectivity check
 alias dns='cat /etc/resolv.conf'
 alias listening='ss -tlnp'
 alias established='ss -tnp state established'
 
-# ── Files & Disk ───────────────────────────────────────────────────────────
+# Files & Disk
 alias duh='du -h --max-depth=1 | sort -hr'       # disk usage current dir
 alias duf='du -sh *'                              # size of each item here
 alias largest='find . -type f -printf "%s %p\n" | sort -rn | head -20'
@@ -1258,12 +1261,12 @@ alias newest='find . -type f -newer . -maxdepth 2'
 alias mkdirp='mkdir -p'                           # always create parents
 alias cpv='cp -v'
 alias mvv='mv -v'
-# Safe rm — move to trash instead of immediate delete
-trash() { mkdir -p "$HOME/.trash" && mv "$@" "$HOME/.trash/" && echo "✓ Moved to ~/.trash"; }
+# Safe rm - move to trash instead of immediate delete
+trash() { mkdir -p "$HOME/.trash" && mv "$@" "$HOME/.trash/" && echo "Moved to ~/.trash"; }
 alias trashls='ls -lA "$HOME/.trash"'
-alias trashempty='rm -rf "$HOME/.trash"/*  && echo "✓ Trash emptied"'
+alias trashempty='rm -rf "$HOME/.trash"/*  && echo "Trash emptied"'
 
-# ── Archives ───────────────────────────────────────────────────────────────
+# Archives
 alias mktar='tar -czvf'                           # mktar archive.tar.gz dir/
 alias untar='tar -xzvf'                           # untar archive.tar.gz
 alias mkzip='zip -r'                              # mkzip archive.zip dir/
@@ -1283,7 +1286,7 @@ extract() {                                       # extract any archive format
   esac
 }
 
-# ── Clipboard (works on X11 + Wayland) ────────────────────────────────────
+# Clipboard
 if command -v xclip &>/dev/null; then
   alias copy='xclip -selection clipboard'
   alias paste='xclip -selection clipboard -o'
@@ -1295,22 +1298,22 @@ elif command -v wl-copy &>/dev/null; then
   alias paste='wl-paste'
 fi
 
-# ── tmux shortcuts ─────────────────────────────────────────────────────────
+# tmux shortcuts
 alias tns='tmux new-session -s'                  # tns work
 alias ta='tmux attach -t'                         # ta work
 alias tls='tmux list-sessions'
 alias tkill='tmux kill-session -t'               # tkill work
 alias treload='tmux source-file ~/.tmux.conf'
 
-# ── Quick edits ────────────────────────────────────────────────────────────
+# Quick edits
 alias zshrc='nvim ~/.zshrc'
-alias zshrcs='source ~/.zshrc && echo "✓ .zshrc reloaded"'
+alias soz='source ~/.zshrc && echo ".zshrc reloaded"'
 alias vimrc='nvim ~/.config/nvim/init.lua'
 alias tmuxconf='nvim ~/.tmux.conf'
 alias hosts='sudo nvim /etc/hosts'
 alias crontab_edit='EDITOR=nvim crontab -e'
 
-# ── Misc productivity ──────────────────────────────────────────────────────
+# Misc productivity
 alias now='date +"%T"'
 alias today='date +"%Y-%m-%d"'
 alias week='date +%V'
@@ -1329,13 +1332,12 @@ alias timer='echo "Timer started. Press ctrl+c to stop." && date && time cat'
 alias countf='find . -maxdepth 1 -type f | wc -l'
 alias countd='find . -maxdepth 1 -type d | wc -l'
 
-# ── Audio ──────────────────────────────────────────────────────────────────
+# Audio
 alias volfix="$HOME/dotfiles/scripts/bin/volfix"
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  STRING OPERATION UTILITIES
 #  All tools accept:  tool [file]   OR   echo "text" | tool
-# ─────────────────────────────────────────────────────────────────────────────
+
 alias cc='charcount'     # character count
 alias ww='wordcount'     # word count (wc is taken)
 alias sc='sentcount'     # sentence count
@@ -1343,11 +1345,11 @@ alias pc='paracount'     # paragraph count
 alias rone='replaceone'  # replace first occurrence
 alias rall='replaceall'  # replace all occurrences
 
-# Combined text stats — all in one
+# Combined text stats - all in one
 textstats() {
   local input
   input=$([ -n "${1:-}" ] && cat "$1" || cat)
-  echo -e "\033[1m\033[0;36m── Text Statistics ──\033[0m"
+  echo -e "\033[1m\033[0;36m-- Text Statistics --\033[0m"
   echo "$input" | charcount
   echo ""
   echo "$input" | wordcount
@@ -1357,124 +1359,121 @@ textstats() {
   echo "$input" | paracount
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  Powerlevel10k
-# ─────────────────────────────────────────────────────────────────────────────
+
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  Tip of the Day  (source last, after p10k, so it prints below the prompt)
-# ─────────────────────────────────────────────────────────────────────────────
+
 [[ -f "$HOME/dotfiles/zsh/tips.zsh" ]] && source "$HOME/dotfiles/zsh/tips.zsh" && show_tip
 ZSHRC
 
 success ".zshrc written."
 
-# ── tips.zsh — Tip of the Day engine ──────────────────────────────────────
+# tips.zsh : Tip of the Day engine
 cat > "$DOTFILES/zsh/tips.zsh" <<'TIPS'
-# ─────────────────────────────────────────────────────────────────────────────
-#  Tip of the Day — sourced at shell start via .zshrc
+#  Tip of the Day - sourced at shell start via .zshrc
 #  Run anytime:  tip
-# ─────────────────────────────────────────────────────────────────────────────
+
 
 _TIPS=(
-  # ── fzf ──
+  # -- fzf --
   "fzf: Press \033[1mCtrl+T\033[0m to fuzzy-search files in any directory and paste the path."
-  "fzf: Press \033[1mCtrl+R\033[0m to fuzzy-search your shell history — way faster than scrolling."
+  "fzf: Press \033[1mCtrl+R\033[0m to fuzzy-search your shell history - way faster than scrolling."
   "fzf: Press \033[1mAlt+C\033[0m to fuzzy-jump into any subdirectory instantly."
   "fzf: Use \033[1mCtrl+/\033[0m to toggle the bat preview pane while searching files."
   "fzf: Pipe to fzf and select multiple items with \033[1mTab\033[0m:  ls | fzf -m"
   "fzf: Kill a process interactively:  kill \$(ps aux | fzf | awk '{print \$2}')"
 
-  # ── zoxide ──
-  "zoxide: Just type \033[1mcd project\033[0m — zoxide jumps to the most frecent match, no full path needed."
+  # -- zoxide --
+  "zoxide: Just type \033[1mcd project\033[0m - zoxide jumps to the most frecent match, no full path needed."
   "zoxide: Use \033[1mzi\033[0m for an interactive fzf-powered directory picker from your history."
   "zoxide: \033[1mzoxide query -l\033[0m lists all directories in your jump database by score."
   "zoxide: Run \033[1mzoxide add .\033[0m to manually add the current dir to your jump database."
 
-  # ── tmux ──
+  # -- tmux --
   "tmux: \033[1mCtrl+A |\033[0m splits the pane vertically,  \033[1mCtrl+A -\033[0m splits it horizontally."
   "tmux: \033[1mCtrl+A h/j/k/l\033[0m navigates between panes vim-style."
   "tmux: \033[1mCtrl+A r\033[0m reloads your tmux config without restarting."
   "tmux: Use \033[1mCtrl+A [\033[0m to enter copy mode, then vim keys to scroll and select."
   "tmux: \033[1mtns work\033[0m creates a new named session. \033[1mta work\033[0m re-attaches to it later."
-  "tmux: \033[1mCtrl+A d\033[0m detaches from a session — it keeps running in the background."
+  "tmux: \033[1mCtrl+A d\033[0m detaches from a session - it keeps running in the background."
   "tmux: \033[1mtls\033[0m lists all running sessions. Never lose work again."
-  "tmux: Mouse mode is on — you can click panes and scroll with the trackpad."
+  "tmux: Mouse mode is on - you can click panes and scroll with the trackpad."
 
-  # ── git ──
+  # -- git --
   "git: \033[1mglog\033[0m shows a beautiful graph of your entire branch history."
   "git: \033[1mgundo\033[0m (git reset --soft HEAD~1) undoes the last commit but keeps your changes staged."
-  "git: \033[1mgstash\033[0m saves dirty work, \033[1mgpop\033[0m brings it back — great for switching branches mid-task."
+  "git: \033[1mgstash\033[0m saves dirty work, \033[1mgpop\033[0m brings it back - great for switching branches mid-task."
   "git: \033[1mglast\033[0m shows a summary of what changed in the most recent commit."
-  "git: \033[1mlg\033[0m opens lazygit — a full TUI git client. Faster than typing git commands."
+  "git: \033[1mlg\033[0m opens lazygit - a full TUI git client. Faster than typing git commands."
   "git: \033[1mgdiff\033[0m shows a compact stat of what files changed and by how much."
   "git: Use \033[1mgit commit --amend --no-edit\033[0m to add a forgotten file to the last commit."
   "git: \033[1mgit bisect\033[0m binary-searches your history to find which commit introduced a bug."
 
-  # ── neovim / nvchad ──
+  # -- neovim / nvchad --
   "nvim: Press \033[1mSpace\033[0m to open NVChad's command palette (which-key menu)."
   "nvim: \033[1m<Space>ff\033[0m opens the Telescope file finder. \033[1m<Space>fw\033[0m searches text in project."
   "nvim: \033[1mCtrl+n\033[0m opens NvimTree file explorer. Press \033[1ma\033[0m to create a new file."
-  "nvim: \033[1m<Space>th\033[0m lets you switch themes live — NVChad ships with dozens."
+  "nvim: \033[1m<Space>th\033[0m lets you switch themes live - NVChad ships with dozens."
   "nvim: In normal mode, \033[1mciw\033[0m deletes the current word and drops you into insert mode."
   "nvim: \033[1m<Space>ch\033[0m toggles line comment on the current line or visual selection."
   "nvim: \033[1mgg=G\033[0m auto-indents the entire file according to the language's rules."
   "nvim: Use \033[1m:s/old/new/g\033[0m to find-and-replace on the current line; \033[1m:%s/old/new/g\033[0m for the whole file."
-  "nvim: \033[1mCtrl+o\033[0m jumps back to where you were — great after following a definition."
+  "nvim: \033[1mCtrl+o\033[0m jumps back to where you were - great after following a definition."
 
-  # ── uv / python ──
-  "uv: \033[1muvsync\033[0m creates a venv, activates it, and installs all deps from pyproject.toml — one command."
+  # -- python --
+  "uv: \033[1muvsync\033[0m creates a venv, activates it, and installs all deps from pyproject.toml - one command."
   "uv: \033[1muv run script.py\033[0m runs a script in an isolated env without manually activating anything."
-  "uv: \033[1muv add requests\033[0m adds a package and updates pyproject.toml — no manual pip install."
+  "uv: \033[1muv add requests\033[0m adds a package and updates pyproject.toml - no manual pip install."
   "uv: \033[1muv python install 3.12\033[0m installs a new Python version. \033[1muv python list\033[0m shows all available."
   "uv: \033[1muvfreeze\033[0m dumps your current env to requirements.txt in one shot."
 
-  # ── rust / cargo ──
-  "rust: \033[1mcargo check\033[0m is much faster than \033[1mcargo build\033[0m — use it during development to catch errors."
+  # -- rust / cargo --
+  "rust: \033[1mcargo check\033[0m is much faster than \033[1mcargo build\033[0m - use it during development to catch errors."
   "rust: \033[1mcargo clippy\033[0m is a linter that catches common mistakes and suggests idiomatic code."
   "rust: \033[1mcargo doc --open\033[0m builds and opens docs for all your dependencies in the browser."
-  "rust: \033[1mcargo add serde\033[0m adds a crate directly from the CLI — no need to edit Cargo.toml manually."
+  "rust: \033[1mcargo add serde\033[0m adds a crate directly from the CLI - no need to edit Cargo.toml manually."
 
-  # ── nvm / node ──
+  # -- nvm / node --
   "nvm: \033[1mnvm ls\033[0m shows all installed Node versions. \033[1mnvm use 20\033[0m switches to Node 20."
   "nvm: \033[1mnvm install --lts\033[0m always installs the latest Long Term Support version."
   "nvm: Create a \033[1m.nvmrc\033[0m file in a project with just '20' and nvm will auto-switch when you enter it."
 
-  # ── bat ──
+  # -- bat --
   "bat: \033[1mb file\033[0m shows files with syntax highlighting, line numbers, and git change markers."
   "bat: The \033[1m-h\033[0m and \033[1m--help\033[0m global aliases pipe any command's help text through bat for coloured output."
-  "bat: \033[1mbat --list-themes\033[0m shows all available themes — you can change BAT_THEME in .zshrc."
+  "bat: \033[1mbat --list-themes\033[0m shows all available themes - you can change BAT_THEME in .zshrc."
 
-  # ── string tools ──
-  "strings: \033[1mcc\033[0m counts characters,  \033[1mww\033[0m counts words,  \033[1msc\033[0m counts sentences — all support stdin or a file."
+  # -- string tools --
+  "strings: \033[1mcc\033[0m counts characters,  \033[1mww\033[0m counts words,  \033[1msc\033[0m counts sentences - all support stdin or a file."
   "strings: \033[1mrone 'old' 'new' file.txt\033[0m replaces only the FIRST occurrence. \033[1mrall\033[0m replaces ALL."
   "strings: \033[1mtextstats essay.txt\033[0m shows a complete breakdown: chars, words, sentences, paragraphs."
-  "strings: Pipe into string tools:  \033[1mecho 'Hello world.' | sc\033[0m  — works with any text source."
+  "strings: Pipe into string tools:  \033[1mecho 'Hello world.' | sc\033[0m  - works with any text source."
 
-  # ── productivity ──
-  "productivity: \033[1mextract archive.tar.gz\033[0m handles any archive format — tar, zip, gz, bz2, xz, rar, 7z."
+  # -- productivity --
+  "productivity: \033[1mextract archive.tar.gz\033[0m handles any archive format - tar, zip, gz, bz2, xz, rar, 7z."
   "productivity: \033[1mtrash file\033[0m moves files to ~/.trash instead of deleting permanently. \033[1mtrashempty\033[0m clears it."
   "productivity: \033[1mserve\033[0m starts a Python HTTP server on port 8000 in the current directory."
   "productivity: \033[1mgenpass\033[0m generates a cryptographically secure random password via openssl."
   "productivity: \033[1mhg docker\033[0m searches your shell history for any command containing 'docker'."
   "productivity: \033[1mduh\033[0m shows disk usage for each item in the current directory, sorted by size."
   "productivity: \033[1mjson\033[0m (pipe to it) pretty-prints any JSON:  curl api.example.com | json"
-  "productivity: \033[1murlencode\033[0m and \033[1murldecode\033[0m work from stdin — great for working with URLs in scripts."
+  "productivity: \033[1murlencode\033[0m and \033[1murldecode\033[0m work from stdin - great for working with URLs in scripts."
   "productivity: \033[1mzshrcs\033[0m reloads your .zshrc without opening a new shell."
-  "productivity: \033[1mbw\033[0m (bandwhich) shows live per-process network bandwidth — run with sudo."
+  "productivity: \033[1mbw\033[0m (bandwhich) shows live per-process network bandwidth - run with sudo."
   "productivity: \033[1mlargest\033[0m lists the 20 biggest files in the current directory tree."
   "productivity: \033[1mcountf\033[0m counts files,  \033[1mcountd\033[0m counts directories in the current folder."
 
-  # ── shell tricks ──
-  "shell: \033[1m!!\033[0m repeats the last command.  \033[1msudo !!\033[0m re-runs it with sudo — classic."
+  # -- shell tricks --
+  "shell: \033[1m!!\033[0m repeats the last command.  \033[1msudo !!\033[0m re-runs it with sudo - classic."
   "shell: \033[1mCtrl+Z\033[0m suspends a running process. \033[1mfg\033[0m brings it back. \033[1mbg\033[0m runs it in background."
   "shell: \033[1mCtrl+W\033[0m deletes the previous word.  \033[1mCtrl+U\033[0m clears the entire line."
   "shell: \033[1mCtrl+A\033[0m jumps to start of line.  \033[1mCtrl+E\033[0m jumps to end."
-  "shell: \033[1mAlt+.\033[0m pastes the last argument of the previous command — very handy."
+  "shell: \033[1mAlt+.\033[0m pastes the last argument of the previous command - very handy."
   "shell: Append \033[1m2>&1 | tee output.log\033[0m to any command to see output AND save it to a file."
   "shell: \033[1mcd -\033[0m (or just type the alias \033[1m-\033[0m) jumps back to the previous directory."
-  "shell: Use \033[1m{old,new}\033[0m brace expansion to rename:  \033[1mmv file.{txt,md}\033[0m renames file.txt → file.md"
+  "shell: Use \033[1m{old,new}\033[0m brace expansion to rename:  \033[1mmv file.{txt,md}\033[0m renames file.txt : file.md"
 )
 
 show_tip() {
@@ -1492,31 +1491,31 @@ show_tip() {
   local category="${tip%%:*}"
   local body="${tip#*: }"
 
-  printf "\n${DIM}╭─────────────────────────────────────────╮${NC}\n"
-  printf "${DIM}│${NC} ${CYAN}${BOLD}💡 Tip${NC} ${DIM}[${category}]${NC}\n"
-  printf "${DIM}│${NC}\n"
+  printf "\n${DIM}--------------------------------------------------${NC}\n"
+  printf "${DIM}${NC} ${CYAN}${BOLD}💡 Tip${NC} ${DIM}[${category}]${NC}\n"
+  printf "${DIM}${NC}\n"
   # Word-wrap body at ~60 chars
-  echo -e "${DIM}│${NC}  ${YELLOW}${body}${NC}" | fold -s -w 62 | while IFS= read -r line; do
-    printf "${DIM}│${NC}  %b\n" "$line"
+  echo -e "${DIM}${NC}  ${YELLOW}${body}${NC}" | fold -s -w 62 | while IFS= read -r line; do
+    printf "${DIM}${NC}  %b\n" "$line"
   done
-  printf "${DIM}│${NC}\n"
-  printf "${DIM}│${NC}  ${DIM}Run 'tip' for another tip anytime.${NC}\n"
-  printf "${DIM}╰─────────────────────────────────────────╯${NC}\n\n"
+  printf "${DIM}${NC}\n"
+  printf "${DIM}${NC}  ${DIM}Run 'tip' for another tip anytime.${NC}\n"
+  printf "${DIM}--------------------------------------------------${NC}\n\n"
 }
 
-# 'tip' command — show a fresh random tip anytime
+# 'tip' command - show a fresh random tip anytime
 alias tip='show_tip'
 TIPS
 success "tips.zsh written ($(grep -c '  "' "$DOTFILES/zsh/tips.zsh") tips across fzf, tmux, git, nvim, uv, rust, shell tricks & more)."
 
-# ── .tmux.conf ────────────────────────────────────────────────────────────
+# .tmux.conf
 cat > "$DOTFILES/tmux/.tmux.conf" <<'TMUX'
-# ─── Prefix ────────────────────────────────────────────────────────────────
+# Prefix
 unbind C-b
 set -g prefix C-a
 bind C-a send-prefix
 
-# ─── General ───────────────────────────────────────────────────────────────
+# General
 set -g default-terminal "screen-256color"
 set -ga terminal-overrides ",*256col*:Tc"
 set -g history-limit 50000
@@ -1528,7 +1527,7 @@ set -g renumber-windows on
 set -g status-interval 5
 set -g focus-events on
 
-# ─── Key Bindings ──────────────────────────────────────────────────────────
+# Key Bindings
 bind r source-file ~/.tmux.conf \; display "Reloaded!"
 bind | split-window -h -c "#{pane_current_path}"
 bind - split-window -v -c "#{pane_current_path}"
@@ -1546,7 +1545,7 @@ bind -r J resize-pane -D 5
 bind -r K resize-pane -U 5
 bind -r L resize-pane -R 5
 
-# ─── Status Bar (Catppuccin Mocha) ─────────────────────────────────────────
+# Status Bar
 set -g status-position bottom
 set -g status-style bg='#1e1e2e',fg='#cdd6f4'
 set -g status-left-length 30
@@ -1557,7 +1556,7 @@ setw -g window-status-current-style fg='#f38ba8',bold
 set -g pane-border-style fg='#45475a'
 set -g pane-active-border-style fg='#89b4fa'
 
-# ─── Copy Mode (vi keys) ───────────────────────────────────────────────────
+# Copy Mode
 setw -g mode-keys vi
 bind Enter copy-mode
 bind -T copy-mode-vi v send -X begin-selection
@@ -1565,7 +1564,7 @@ bind -T copy-mode-vi y send -X copy-selection-and-cancel
 TMUX
 success ".tmux.conf written."
 
-# ── .gitconfig ────────────────────────────────────────────────────────────
+# .gitconfig
 cat > "$DOTFILES/git/.gitconfig" <<'GITCONFIG'
 [core]
   editor = nvim
@@ -1593,7 +1592,7 @@ cat > "$DOTFILES/git/.gitconfig" <<'GITCONFIG'
 GITCONFIG
 success ".gitconfig written."
 
-# ── README ────────────────────────────────────────────────────────────────
+# README
 cat > "$DOTFILES/README.md" <<'README'
 # dotfiles
 
@@ -1603,12 +1602,12 @@ Managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ```
 dotfiles/
-├── zsh/             → ~/.zshrc
-├── tmux/            → ~/.tmux.conf
-├── git/             → ~/.gitconfig
-├── nvim/            → ~/.config/nvim/
-└── scripts/bin/     → personal scripts (on PATH)
-    └── volfix       → restart PipeWire / PulseAudio
+├── zsh/             : ~/.zshrc
+├── tmux/            : ~/.tmux.conf
+├── git/             : ~/.gitconfig
+├── nvim/            : ~/.config/nvim/
+└── scripts/bin/     : personal scripts (on PATH)
+    └── volfix       : restart PipeWire / PulseAudio
 ```
 
 ## Apply
@@ -1621,6 +1620,7 @@ stow zsh tmux git nvim
 
 ## Alias Quick Reference
 
+------------------------------------------------------------------
 | Alias         | What it does                                   |
 |---------------|------------------------------------------------|
 | `stfu`        | Shutdown immediately (`sudo shutdown -h now`)  |
@@ -1642,18 +1642,19 @@ stow zsh tmux git nvim
 | `ai`          | Gemini CLI via npx                             |
 | `pddl`        | Fast-Downward PDDL planner                     |
 | `plan`        | planutils Docker container                     |
+------------------------------------------------------------------
 README
 
-# ─── Symlink Configs ──────────────────────────────────────────────────────────
+# Symlink Configs
 header "Linking Configs"
 
-# .zshrc — back up OMZ default, link ours
+# .zshrc - back up OMZ default, link ours
 if [ ! -f "$HOME/.zshrc" ] || grep -q "# Path to your oh-my-zsh installation" "$HOME/.zshrc" 2>/dev/null; then
   [ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc.bak.$(date +%s)"
   ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
-  success ".zshrc → ~/dotfiles/zsh/.zshrc"
+  success ".zshrc : ~/dotfiles/zsh/.zshrc"
 else
-  skip ".zshrc (already customised — merge ~/dotfiles/zsh/.zshrc manually)"
+  skip ".zshrc (already customised - merge ~/dotfiles/zsh/.zshrc manually)"
 fi
 
 # .tmux.conf
@@ -1661,18 +1662,18 @@ if [ ! -f "$HOME/.tmux.conf" ]; then
   ln -sf "$DOTFILES/tmux/.tmux.conf" "$HOME/.tmux.conf"
   success ".tmux.conf symlinked."
 else
-  skip ".tmux.conf (exists — merge ~/dotfiles/tmux/.tmux.conf manually)"
+  skip ".tmux.conf (exists - merge ~/dotfiles/tmux/.tmux.conf manually)"
 fi
 
-# .gitconfig — preserve existing identity
+# .gitconfig - preserve existing identity
 if [ ! -f "$HOME/.gitconfig" ]; then
   ln -sf "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
   success ".gitconfig symlinked."
 else
-  skip ".gitconfig (exists — merge ~/dotfiles/git/.gitconfig manually)"
+  skip ".gitconfig (exists - merge ~/dotfiles/git/.gitconfig manually)"
 fi
 
-# ─── Final Summary ───────────────────────────────────────────────────────────
+# Final Summary
 echo ""
 echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 echo -e "${BOLD}${GREEN}  ✓  All done!${NC}"
@@ -1712,13 +1713,13 @@ printf "   %-18s %s\n" "zshrcs"           "--> reload .zshrc live"
 printf "   %-18s %s\n" "tip"              "--> random shell/tool tip"
 echo ""
 echo -e "  ${BOLD}${CYAN}Remaining steps (after shell loads):${NC}"
-echo -e "   1. ${BOLD}p10k configure${NC}         — Powerlevel10k setup wizard"
-echo -e "   2. ${BOLD}nvim${NC}                   — auto-install NVChad plugins on first launch"
+echo -e "   1. ${BOLD}p10k configure${NC}         - Powerlevel10k setup wizard"
+echo -e "   2. ${BOLD}nvim${NC}                   - auto-install NVChad plugins on first launch"
 echo -e "   3. Set terminal font:  ${BOLD}JetBrainsMono Nerd Font${NC}  or  ${BOLD}MesloLGS NF${NC}"
 echo -e "   4. Add git identity:   ${BOLD}~/.gitconfig${NC}  (user.name + user.email)"
 echo ""
 
-# ─── Hand off to Zsh ─────────────────────────────────────────────────────────
+# Hand off to Zsh
 # Export everything the new shell needs so it inherits a sane environment,
 # then replace the current bash process with a fresh login zsh session.
 # This is why aliases and tools are immediately available after install.
@@ -1732,11 +1733,11 @@ export NVM_DIR="$HOME/.nvm"
 ZSH_BIN="$(command -v zsh 2>/dev/null || true)"
 
 if [ -n "$ZSH_BIN" ]; then
-  echo -e "${BOLD}${GREEN}  Launching Zsh — your new shell is ready. Enjoy!${NC}"
+  echo -e "${BOLD}${GREEN}  Launching Zsh - your new shell is ready. Enjoy!${NC}"
   echo ""
   # -l = login shell so /etc/zsh/zprofile and ~/.zprofile are sourced
   # This makes all aliases, tools, and the tip-of-the-day available immediately
   exec "$ZSH_BIN" -l
 else
-  warn "zsh binary not found on PATH — run 'exec zsh -l' manually after install."
+  warn "zsh binary not found on PATH - run 'exec zsh -l' manually after install."
 fi
