@@ -234,9 +234,8 @@ case "$PKG_MANAGER" in
       curl wget git unzip zip tar xz-utils ca-certificates gnupg \
       build-essential cmake make clang gcc g++ \
       libssl-dev libffi-dev zlib1g-dev libbz2-dev libreadline-dev \
-      libsqlite3-dev libncursesw5-dev libxml2-dev libxmlsec1-dev \
-      liblzma-dev tk-dev llvm net-tools lsof \
-      software-properties-common apt-transport-https \
+      libsqlite3-dev libxml2-dev libxmlsec1-dev \
+      liblzma-dev tk-dev llvm net-tools lsof apt-transport-https \
       stow fontconfig
     # PipeWire audio (best-effort; may already be installed)
     pkg_install pipewire-audio pulseaudio-utils 2>/dev/null || true
