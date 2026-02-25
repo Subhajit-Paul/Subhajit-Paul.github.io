@@ -1,0 +1,19 @@
+set -e
+
+IMAGE=subhajit/devbox
+TMPDIR=$(mktemp -d)
+
+cat > $TMPDIR/Dockerfile <<'EOF'
+FROM debian:bookworm
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y python3 python3-pip build-essential sudo passwd ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN useradd -m -s /bin/bash devuser
+RUN echo devuser:devpass | chpasswd
+RUN usermod -aG sudo devuser
+USER devuser
+WORKDIR /home/devuser
+CMD ["/bin/bash"]
+EOF
+
+docker build -t $IMAGE $TMPDIR >/dev/null
+docker run -it --rm $IMAGE
