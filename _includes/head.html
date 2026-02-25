@@ -1,41 +1,24 @@
 <head>
-  {% if page.title %} {% assign title = page.title | append: " - " | append:
-  site.title %} {% assign desc = page.subtitle %} {% else %} {% assign title =
-  site.title %} {% assign desc = site.subtitle %} {% endif %} {% assign sitedir
-  = site.url | append: site.baseurl | append: "/" %} {% assign favicon_location
-  = sitedir | append: site.favicon_location %}
-
-  <title>{{ title }}</title>
-
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta
-    name="keywords"
-    content="blog, {{ site.author }}, {{ site.title }}, jekyll"
-  />
-  <meta name="author" content="{{ site.author }}" />
-  <meta name="description" content="{% if page.excerpt %}{{ page.excerpt | strip_html | truncatewords: 20 }}{% else %}{{ site.subtitle }}{% endif %}" />
 
-  <meta name="description" content="{{ desc }}" />
+  {% seo %}
+
+  {% if page.tags %}
+  <meta name="keywords" content="{{ page.tags | join: ', ' }}, {{ site.title }}, {{ site.author }}" />
+  {% else %}
+  <meta name="keywords" content="formal verification, generative AI, EDA, research, {{ site.author }}, {{ site.title }}" />
+  {% endif %}
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap"
-    rel="stylesheet"
-  />
-  <link rel="stylesheet" href="{{ sitedir }}css/main.css" />
-  <link rel="icon" type="image/ico" href="{{ favicon_location }}" />
-  <link rel="shortcut-icon" type="image/ico" href="{{ favicon_location }}" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="{{ '/css/main.css' | relative_url }}" />
+  <link rel="icon" type="image/ico" href="{{ site.favicon_location | relative_url }}" />
+  <link rel="shortcut-icon" type="image/ico" href="{{ site.favicon_location | relative_url }}" />
 
-  <!-- For Facebook -->
-  <meta property="og:title" content="{{ title }}" />
-  <meta property="og:description" content="{{ desc }}" />
-  <meta property="og:image" content="{% if page.image %}{{ site.url }}/assets/images/{{ page.image }}{% else %}{{ site.url }}/default-preview.jpg{% endif %}" />
-  
-  
-  <!-- For Twitter -->
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="{{ title }}" />
-  <meta name="twitter:description" content="{{ desc }}" />
-  <meta property="twitter:image" content="{% if page.image %}{{ site.url }}/assets/images/{{ page.image }}{% else %}{{ site.url }}/default-preview.jpg{% endif %}" />
+  <!-- Social Media Previews -->
+  <meta property="og:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/profile.png' | absolute_url }}{% endif %}" />
+  <meta name="twitter:image" content="{% if page.image %}{{ page.image | absolute_url }}{% else %}{{ '/assets/profile.png' | absolute_url }}{% endif %}" />
 </head>

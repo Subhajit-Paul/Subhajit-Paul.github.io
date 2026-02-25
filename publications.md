@@ -21,9 +21,21 @@ title: Publications
 *Subhajit Paul, Ansuman Banerjee*  
 **Accepted at IEEE Autonomic Computing and Self-Organizing Systems (ACSOS 2025)**  
 *Indian Statistical Institute, Kolkata*  
-**Status**: To Appear
 
 **Abstract**: This work explores the application of Large Language Models in model reconciliation for robotic path planning, providing explainable solutions for autonomous navigation systems.
+
+---
+
+### 2026
+
+---
+
+**SuperSAGA: A Supervisor-Subordinate Agentic workflow for the Generation of Assertions**
+*Subhajit Paul, Ansuman Banerjee, Sumana Ghosh*  
+**Accepted at 31st Asia and South Pacific Design Automation Conference Special Sessions (ASPDAC 2026)**  
+*Indian Statistical Institute, Kolkata*
+
+**Abstract**: SuperSAGA combines Large Language Models (LLMs) with Retrieval-Augmented Generation (RAG) to guide assertion development based on human-reviewed verification plans using an agentic workflow. The framework translates specifications into syntactically correct assertions, integrates feedback from formal verification tools, and supports iterative refinement using an orchestration of supervisor and subordinate agents.
 
 ---
 

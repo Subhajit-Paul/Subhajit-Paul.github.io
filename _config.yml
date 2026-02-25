@@ -21,6 +21,11 @@ include:
   - setup.sh
   - debian.up
 
+plugins:
+  - jekyll-seo-tag
+  - jekyll-paginate
+  - jekyll-sitemap
+
 navbar:
  - name: "About"
    link: "about"
@@ -28,5 +33,7 @@ navbar:
    link: "publications"
  - name: "Download CV"
    link: "cv"
+ - name: "Lintools"
+   link: "lintools"
  - name: "Portfolio"
    absolute-link: "https://subhajit-paul.vercel.app/about"
