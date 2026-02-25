@@ -12,9 +12,9 @@ RUN echo devuser:devpass | chpasswd
 RUN usermod -aG sudo devuser
 USER devuser
 WORKDIR /home/devuser
-CMD ["/bin/bash"]
+CMD bash -c 'echo ""; echo "Container ready"; echo "username: devuser"; echo "password: devpass"; echo ""; exec bash'
 EOF
 
-docker build -t $IMAGE "$TMPDIR"
+docker build -t $IMAGE "$TMPDIR" >/dev/null
 
 docker run -it --rm $IMAGE < /dev/tty
