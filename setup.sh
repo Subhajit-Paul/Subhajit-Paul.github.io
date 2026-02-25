@@ -271,15 +271,29 @@ else
   skip "zsh"
 fi
 
-if [ "${SHELL}" != "$(command -v zsh)" ]; then
+ZSH_BIN="$(command -v zsh)"
+if [ "${SHELL}" != "${ZSH_BIN}" ]; then
   if [ "${USER}" = "root" ]; then
-    info "Running as root — skipping chsh (set shell manually if needed)."
-  elif command_exists chsh; then
-    chsh -s "$(command -v zsh)" "${USER}" \
+    # Root: just write directly to /etc/passwd via usermod, no password needed
+    if command_exists usermod; then
+      usermod -s "${ZSH_BIN}" root \
+        && success "Default shell → Zsh." \
+        || warn "usermod failed — run manually: sudo usermod -s ${ZSH_BIN} root"
+    else
+      warn "usermod not found — run manually: chsh -s ${ZSH_BIN}"
+    fi
+  elif command_exists usermod; then
+    # usermod requires no password prompt, just sudo (already active)
+    sudo usermod -s "${ZSH_BIN}" "${USER}" \
       && success "Default shell → Zsh (re-login required)." \
-      || warn "chsh failed (common in containers) — run manually: chsh -s $(command -v zsh)"
+      || warn "usermod failed — run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
+  elif command_exists chsh; then
+    # Fallback: sudo chsh avoids the interactive password prompt
+    sudo chsh -s "${ZSH_BIN}" "${USER}" \
+      && success "Default shell → Zsh (re-login required)." \
+      || warn "chsh failed — run manually: sudo chsh -s ${ZSH_BIN} ${USER}"
   else
-    warn "chsh not found — run manually: chsh -s $(command -v zsh)"
+    warn "Neither usermod nor chsh found — run manually: sudo usermod -s ${ZSH_BIN} ${USER}"
   fi
 else
   skip "Zsh default shell"
@@ -1698,10 +1712,32 @@ printf "   %-18s %s\n" "json"             "--> prettify JSON from stdin"
 printf "   %-18s %s\n" "zshrcs"           "--> reload .zshrc live"
 printf "   %-18s %s\n" "tip"              "--> random shell/tool tip"
 echo ""
-echo -e "  ${BOLD}${CYAN}Next steps:${NC}"
-echo -e "   1. ${BOLD}exec zsh${NC}               reload shell -- first tip will appear!"
-echo -e "   2. ${BOLD}p10k configure${NC}         Powerlevel10k setup wizard"
-echo -e "   3. ${BOLD}nvim${NC}                   auto-install NVChad plugins on first launch"
-echo -e "   4. Set terminal font:  ${BOLD}JetBrainsMono Nerd Font${NC}  or  ${BOLD}MesloLGS NF${NC}"
-echo -e "   5. Add git identity:   ${BOLD}~/.gitconfig${NC}  (user.name + user.email)"
+echo -e "  ${BOLD}${CYAN}Remaining steps (after shell loads):${NC}"
+echo -e "   1. ${BOLD}p10k configure${NC}         — Powerlevel10k setup wizard"
+echo -e "   2. ${BOLD}nvim${NC}                   — auto-install NVChad plugins on first launch"
+echo -e "   3. Set terminal font:  ${BOLD}JetBrainsMono Nerd Font${NC}  or  ${BOLD}MesloLGS NF${NC}"
+echo -e "   4. Add git identity:   ${BOLD}~/.gitconfig${NC}  (user.name + user.email)"
 echo ""
+
+# ─── Hand off to Zsh ─────────────────────────────────────────────────────────
+# Export everything the new shell needs so it inherits a sane environment,
+# then replace the current bash process with a fresh login zsh session.
+# This is why aliases and tools are immediately available after install.
+
+export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/dotfiles/scripts/bin:$PATH"
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+[ -f "$HOME/.local/bin/env" ] && source "$HOME/.local/bin/env"
+
+ZSH_BIN="$(command -v zsh 2>/dev/null || true)"
+
+if [ -n "$ZSH_BIN" ]; then
+  echo -e "${BOLD}${GREEN}  Launching Zsh — your new shell is ready. Enjoy!${NC}"
+  echo ""
+  # -l = login shell so /etc/zsh/zprofile and ~/.zprofile are sourced
+  # This makes all aliases, tools, and the tip-of-the-day available immediately
+  exec "$ZSH_BIN" -l
+else
+  warn "zsh binary not found on PATH — run 'exec zsh -l' manually after install."
+fi
