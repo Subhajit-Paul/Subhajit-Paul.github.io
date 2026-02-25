@@ -2,7 +2,7 @@
 layout: default
 title: About
 description: "Learn more about Subhajit Paul, researcher at ISI Kolkata working on Formal Verification and Generative AI."
-image: "/assets/about-bg.jpg"
+image: "/assets/profile.png"
 ---
 
 I am **Subhajit Paul**, a researcher at the **Indian Statistical Institute (ISI) Kolkata**, where I work as a Project Linked Person.
