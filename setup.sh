@@ -41,20 +41,50 @@ skip()    { echo -e "${YELLOW}[→]${NC} $* already installed, skipping."; }
 command_exists() { command -v "$1" &>/dev/null; }
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
-echo -e "${BOLD}${CYAN}"
-cat <<'EOF'
-  ███████╗███████╗████████╗██╗   ██╗██████╗
-  ██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗
-  ███████╗█████╗     ██║   ██║   ██║██████╔╝
-  ╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝
-  ███████║███████╗   ██║   ╚██████╔╝██║
-  ╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝
-       Subhajit Paul's Linux Setup Script
-EOF
-echo -e "${NC}"
+print_banner() {
+  # Get terminal width, fall back to 80
+  local tw
+  tw=$(tput cols 2>/dev/null || echo 80)
+
+  # Center-pad a single line of text (strips ANSI for length calc)
+  center() {
+    local text="$1"
+    local visible
+    # Strip ANSI escape codes to measure printable width
+    visible=$(echo -e "$text" | sed 's/\x1b\[[0-9;]*m//g')
+    local len=${#visible}
+    local pad=$(( (tw - len) / 2 ))
+    [ $pad -lt 0 ] && pad=0
+    printf "%${pad}s%b\n" "" "$text"
+  }
+
+  local logo=(
+    "███████╗███████╗████████╗██╗   ██╗██████╗ "
+    "██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔══██╗"
+    "███████╗█████╗     ██║   ██║   ██║██████╔╝"
+    "╚════██║██╔══╝     ██║   ██║   ██║██╔═══╝ "
+    "███████║███████╗   ██║   ╚██████╔╝██║     "
+    "╚══════╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝     "
+  )
+
+  echo ""
+  echo -e "${BOLD}${CYAN}"
+  for line in "${logo[@]}"; do
+    center "$line"
+  done
+  center "Subhajit Paul's Linux Setup Script"
+  echo ""
+  center "──────────────────────────────────────────"
+  center "🐙 github.com/Subhajit-Paul"
+  center "🌐 subhajit-paul.github.io"
+  center "──────────────────────────────────────────"
+  echo -e "${NC}"
+}
+print_banner
 
 # ─── Interactive Multi-Select Menu ───────────────────────────────────────────
-# Sets SELECTED=() with 0-based indices of chosen options
+# Sets SELECTED=() with 0-based indices of chosen options.
+# Reads from /dev/tty directly so it works even when stdin is a curl pipe.
 SELECTED=()
 prompt_choices() {
   local title="$1"; shift
@@ -70,18 +100,20 @@ prompt_choices() {
   echo -e "  ${BLUE}Enter numbers separated by spaces, ${BOLD}a${NC}${BLUE} = all, Enter = skip:${NC}"
   printf "  ${BOLD}> ${NC}"
 
-  # Non-interactive (piped via curl | sh) — skip optional installs
-  if [ ! -t 0 ]; then
+  # Always read from /dev/tty — works whether piped (curl|bash) or run directly
+  if [ ! -e /dev/tty ]; then
     echo ""
-    warn "Non-interactive mode detected (piped shell). Skipping optional installs."
-    warn "Run the script directly to choose: bash setup.sh"
+    warn "/dev/tty not available. Skipping optional selections."
+    warn "Re-run directly with: bash setup.sh"
     return
   fi
 
-  read -r input
+  local input
+  read -r input < /dev/tty
+
   if [[ "${input,,}" == "a" ]]; then
     for i in "${!options[@]}"; do SELECTED+=("$i"); done
-  else
+  elif [[ -n "$input" ]]; then
     for s in $input; do
       if [[ "$s" =~ ^[0-9]+$ ]] && [ "$s" -ge 1 ] && [ "$s" -le "${#options[@]}" ]; then
         SELECTED+=("$((s-1))")
