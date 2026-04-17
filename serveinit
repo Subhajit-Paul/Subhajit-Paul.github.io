@@ -1,0 +1,351 @@
+#!/usr/bin/env bash
+# serveinit - Production server hardening script
+#
+# Hardens a fresh VPS/server: firewall, fail2ban, SSH hardening,
+# automatic security updates, sysctl tweaks, and server essentials.
+#
+# Supports Debian/Ubuntu (apt) and Fedora/RHEL (dnf).
+#
+# Usage:
+#   curl -fsSL https://subhajit-paul.github.io/serveinit | bash
+#   curl -fsSL https://subhajit-paul.github.io/serveinit | bash -s -- --ssh-port 2222
+#   curl -fsSL https://subhajit-paul.github.io/serveinit | bash -s -- --user deploy --ssh-port 2222
+
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
+
+info()    { echo -e "${BLUE}[·]${NC} $*"; }
+success() { echo -e "${GREEN}[✓]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
+error()   { echo -e "${RED}[✗]${NC} $*" >&2; exit 1; }
+header()  { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
+skip()    { echo -e "\033[2m[–]${NC} $* — skipping"; }
+
+# ── Must run as root ──────────────────────────────────────────────────────────
+
+[ "$(id -u)" -eq 0 ] || error "Must run as root. Try: sudo bash"
+
+# ── Arguments ─────────────────────────────────────────────────────────────────
+
+NEW_USER=""
+SSH_PORT="22"
+HTTP_ALLOW=true
+HTTPS_ALLOW=true
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --user)      NEW_USER="$2"; shift 2 ;;
+    --ssh-port)  SSH_PORT="$2"; shift 2 ;;
+    --no-http)   HTTP_ALLOW=false; shift ;;
+    *)           shift ;;
+  esac
+done
+
+# ── OS Detection ──────────────────────────────────────────────────────────────
+
+header "Detecting OS"
+
+[ -f /etc/os-release ] || error "Cannot detect OS."
+. /etc/os-release
+OS_ID="${ID:-unknown}"
+
+case "$OS_ID" in
+  ubuntu|debian|linuxmint|pop) PKG_MANAGER="apt" ;;
+  fedora|rhel|centos|rocky|almalinux|nobara) PKG_MANAGER="dnf" ;;
+  *)
+    if echo "${ID_LIKE:-}" | grep -qE "debian|ubuntu"; then PKG_MANAGER="apt"
+    elif echo "${ID_LIKE:-}" | grep -qE "fedora|rhel"; then PKG_MANAGER="dnf"
+    else error "Unsupported OS: $OS_ID (supports Debian/Ubuntu and Fedora/RHEL)"
+    fi ;;
+esac
+
+success "OS: ${PRETTY_NAME:-$OS_ID}  →  ${PKG_MANAGER}"
+
+LOG_FILE="/var/log/serveinit-$(date +%s).log"
+info "Log: ${LOG_FILE}"
+
+# ── Create non-root user ──────────────────────────────────────────────────────
+
+if [ -n "$NEW_USER" ]; then
+  header "Creating User: ${NEW_USER}"
+  if id "$NEW_USER" >/dev/null 2>&1; then
+    skip "User '${NEW_USER}' already exists"
+  else
+    useradd -m -s /bin/bash "$NEW_USER"
+    case "$PKG_MANAGER" in
+      apt) usermod -aG sudo "$NEW_USER" ;;
+      dnf) usermod -aG wheel "$NEW_USER" ;;
+    esac
+    # Prompt for password from /dev/tty
+    if [ -e /dev/tty ]; then
+      passwd "$NEW_USER" < /dev/tty
+    else
+      # Generate random password
+      PASS=$(openssl rand -base64 16)
+      echo "${NEW_USER}:${PASS}" | chpasswd
+      success "User '${NEW_USER}' created — password: ${BOLD}${PASS}${NC}"
+      warn "Change this password immediately!"
+    fi
+    success "User '${NEW_USER}' created with sudo access"
+  fi
+fi
+
+# ── Update system ─────────────────────────────────────────────────────────────
+
+header "Updating System"
+
+case "$PKG_MANAGER" in
+  apt)
+    apt-get update -qq >>"$LOG_FILE" 2>&1
+    apt-get upgrade -y -qq >>"$LOG_FILE" 2>&1
+    apt-get autoremove -y -qq >>"$LOG_FILE" 2>&1
+    ;;
+  dnf)
+    dnf upgrade -y -q >>"$LOG_FILE" 2>&1
+    ;;
+esac
+success "System packages updated"
+
+# ── Install essentials ────────────────────────────────────────────────────────
+
+header "Installing Server Essentials"
+
+case "$PKG_MANAGER" in
+  apt)
+    apt-get install -y -qq --no-install-recommends \
+      curl wget git unzip tmux htop btop \
+      ufw fail2ban \
+      unattended-upgrades \
+      logwatch \
+      >>"$LOG_FILE" 2>&1
+    ;;
+  dnf)
+    dnf install -y -q \
+      curl wget git unzip tmux htop \
+      firewalld fail2ban \
+      dnf-automatic \
+      >>"$LOG_FILE" 2>&1
+    ;;
+esac
+success "Server essentials installed"
+
+# ── Firewall ──────────────────────────────────────────────────────────────────
+
+header "Configuring Firewall"
+
+case "$PKG_MANAGER" in
+  apt)
+    # UFW
+    ufw --force reset >>"$LOG_FILE" 2>&1
+    ufw default deny incoming >>"$LOG_FILE" 2>&1
+    ufw default allow outgoing >>"$LOG_FILE" 2>&1
+    ufw allow "$SSH_PORT/tcp" comment 'SSH' >>"$LOG_FILE" 2>&1
+    $HTTP_ALLOW  && ufw allow 80/tcp  comment 'HTTP'  >>"$LOG_FILE" 2>&1
+    $HTTPS_ALLOW && ufw allow 443/tcp comment 'HTTPS' >>"$LOG_FILE" 2>&1
+    ufw --force enable >>"$LOG_FILE" 2>&1
+    success "UFW enabled: SSH(${SSH_PORT})$(${HTTP_ALLOW} && echo ', HTTP(80)')$(${HTTPS_ALLOW} && echo ', HTTPS(443)') allowed; all else denied"
+    ;;
+  dnf)
+    systemctl enable --now firewalld >>"$LOG_FILE" 2>&1
+    firewall-cmd --permanent --set-default-zone=drop >>"$LOG_FILE" 2>&1
+    firewall-cmd --permanent --add-port="${SSH_PORT}/tcp" >>"$LOG_FILE" 2>&1
+    $HTTP_ALLOW  && firewall-cmd --permanent --add-service=http  >>"$LOG_FILE" 2>&1
+    $HTTPS_ALLOW && firewall-cmd --permanent --add-service=https >>"$LOG_FILE" 2>&1
+    firewall-cmd --reload >>"$LOG_FILE" 2>&1
+    success "firewalld enabled: SSH(${SSH_PORT})$(${HTTP_ALLOW} && echo ', HTTP'), HTTPS) allowed"
+    ;;
+esac
+
+# ── fail2ban ──────────────────────────────────────────────────────────────────
+
+header "Configuring fail2ban"
+
+cat > /etc/fail2ban/jail.local << FAIL2BAN
+[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+destemail = root@localhost
+action = %(action_mw)s
+
+[sshd]
+enabled = true
+port    = ${SSH_PORT}
+logpath = %(sshd_log)s
+maxretry = 3
+bantime  = 24h
+FAIL2BAN
+
+systemctl enable fail2ban >>"$LOG_FILE" 2>&1
+systemctl restart fail2ban >>"$LOG_FILE" 2>&1
+success "fail2ban: SSH jail active (3 failures → 24h ban)"
+
+# ── SSH hardening ─────────────────────────────────────────────────────────────
+
+header "Hardening SSH"
+
+SSHD_CONFIG="/etc/ssh/sshd_config"
+SSHD_BACKUP="${SSHD_CONFIG}.bak.$(date +%s)"
+cp "$SSHD_CONFIG" "$SSHD_BACKUP"
+info "Backed up sshd_config to ${SSHD_BACKUP}"
+
+sshd_set() {
+  local key="$1" val="$2"
+  if grep -qE "^#?${key}" "$SSHD_CONFIG"; then
+    sed -i -E "s|^#?${key}.*|${key} ${val}|" "$SSHD_CONFIG"
+  else
+    echo "${key} ${val}" >> "$SSHD_CONFIG"
+  fi
+}
+
+# Always-safe hardening
+sshd_set "Protocol"           "2"
+sshd_set "LoginGraceTime"     "30"
+sshd_set "MaxAuthTries"       "3"
+sshd_set "MaxSessions"        "5"
+sshd_set "PermitRootLogin"    "no"
+sshd_set "X11Forwarding"      "no"
+sshd_set "AllowAgentForwarding" "no"
+sshd_set "AllowTcpForwarding" "no"
+sshd_set "PrintLastLog"       "yes"
+
+# Change port if requested
+[ "$SSH_PORT" != "22" ] && sshd_set "Port" "$SSH_PORT"
+
+# Disable password auth ONLY if the current user has authorized_keys
+# (prevents lockout on password-only servers)
+HAS_KEYS=false
+for homedir in /root /home/*/; do
+  if [ -f "${homedir}/.ssh/authorized_keys" ] && \
+     [ -s "${homedir}/.ssh/authorized_keys" ]; then
+    HAS_KEYS=true
+    break
+  fi
+done
+
+if $HAS_KEYS; then
+  sshd_set "PasswordAuthentication" "no"
+  sshd_set "PubkeyAuthentication"   "yes"
+  success "PasswordAuthentication disabled (SSH keys detected)"
+else
+  warn "No SSH authorized_keys found — keeping PasswordAuthentication enabled"
+  warn "To disable password auth later, add your public key, then:"
+  warn "  sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config"
+  warn "  systemctl restart sshd"
+fi
+
+# Validate config before restarting
+if sshd -t >>"$LOG_FILE" 2>&1; then
+  systemctl restart sshd >>"$LOG_FILE" 2>&1
+  success "sshd restarted with hardened config"
+else
+  warn "sshd config validation failed — restoring backup"
+  cp "$SSHD_BACKUP" "$SSHD_CONFIG"
+  systemctl restart sshd >>"$LOG_FILE" 2>&1
+fi
+
+# ── Automatic security updates ────────────────────────────────────────────────
+
+header "Automatic Security Updates"
+
+case "$PKG_MANAGER" in
+  apt)
+    cat > /etc/apt/apt.conf.d/50unattended-upgrades << 'APT_CONF'
+Unattended-Upgrade::Allowed-Origins {
+  "${distro_id}:${distro_codename}";
+  "${distro_id}:${distro_codename}-security";
+  "${distro_id}ESMApps:${distro_codename}-apps-security";
+  "${distro_id}ESM:${distro_codename}-infra-security";
+};
+Unattended-Upgrade::AutoFixInterruptedDpkg "true";
+Unattended-Upgrade::MinimalSteps "true";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Remove-New-Unused-Dependencies "true";
+Unattended-Upgrade::Automatic-Reboot "false";
+APT_CONF
+
+    cat > /etc/apt/apt.conf.d/20auto-upgrades << 'APT_CONF'
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Download-Upgradeable-Packages "1";
+APT::Periodic::AutocleanInterval "7";
+APT::Periodic::Unattended-Upgrade "1";
+APT_CONF
+    systemctl enable --now unattended-upgrades >>"$LOG_FILE" 2>&1
+    success "unattended-upgrades enabled (security patches applied daily)"
+    ;;
+  dnf)
+    sed -i 's/^apply_updates.*/apply_updates = yes/' /etc/dnf/automatic.conf
+    sed -i 's/^upgrade_type.*/upgrade_type = security/' /etc/dnf/automatic.conf
+    systemctl enable --now dnf-automatic.timer >>"$LOG_FILE" 2>&1
+    success "dnf-automatic enabled (security patches applied daily)"
+    ;;
+esac
+
+# ── sysctl hardening ──────────────────────────────────────────────────────────
+
+header "sysctl Network Hardening"
+
+cat > /etc/sysctl.d/99-serveinit.conf << 'SYSCTL'
+# IP Spoofing protection
+net.ipv4.conf.all.rp_filter = 1
+net.ipv4.conf.default.rp_filter = 1
+
+# SYN flood protection
+net.ipv4.tcp_syncookies = 1
+net.ipv4.tcp_syn_retries = 2
+net.ipv4.tcp_synack_retries = 2
+net.ipv4.tcp_max_syn_backlog = 4096
+
+# Disable IP source routing
+net.ipv4.conf.all.accept_source_route = 0
+net.ipv4.conf.default.accept_source_route = 0
+
+# Ignore ICMP redirects
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.default.accept_redirects = 0
+net.ipv6.conf.all.accept_redirects = 0
+
+# Disable IP forwarding (not a router)
+net.ipv4.ip_forward = 0
+
+# Ignore broadcast pings
+net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+# Log suspicious packets
+net.ipv4.conf.all.log_martians = 1
+
+# TIME_WAIT reuse (improves connection handling under load)
+net.ipv4.tcp_tw_reuse = 1
+
+# Increase file descriptor limits
+fs.file-max = 100000
+SYSCTL
+
+sysctl -p /etc/sysctl.d/99-serveinit.conf >>"$LOG_FILE" 2>&1
+success "sysctl: SYN flood protection, IP spoofing, source routing disabled"
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BOLD}${GREEN}  ✓  Server hardened${NC}"
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+printf "   %-28s %s\n" "Firewall"              "enabled (SSH:${SSH_PORT}, HTTP, HTTPS)"
+printf "   %-28s %s\n" "fail2ban"              "SSH jail: 3 failures → 24h ban"
+printf "   %-28s %s\n" "SSH"                   "hardened, root login disabled"
+printf "   %-28s %s\n" "Automatic updates"     "security patches (daily)"
+printf "   %-28s %s\n" "sysctl"               "SYN cookies, no IP forwarding"
+echo ""
+echo -e "  ${YELLOW}Remaining manual steps:${NC}"
+echo -e "   1. Add your SSH public key:   ${BOLD}ssh-copy-id user@server${NC}"
+echo -e "   2. Test SSH login in a new terminal before closing this session"
+[ "$SSH_PORT" != "22" ] && \
+  echo -e "   3. Connect on new port:       ${BOLD}ssh -p ${SSH_PORT} user@server${NC}"
+echo -e "   4. Review fail2ban:           ${BOLD}fail2ban-client status sshd${NC}"
+echo -e "   5. Check firewall rules:      ${BOLD}ufw status verbose${NC}"
+echo ""
+echo -e "  ${CYAN}Log: ${LOG_FILE}${NC}"
+echo ""

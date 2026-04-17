@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+# fedora.up - Disposable Fedora development container
+# Usage: curl -fsSL https://subhajit-paul.github.io/fedora.up | sh
+set -e
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
+info()    { printf "${BLUE}[·]${NC} %s\n" "$*"; }
+success() { printf "${GREEN}[✓]${NC} %s\n" "$*"; }
+error()   { printf "${RED}[✗]${NC} %s\n" "$*" >&2; exit 1; }
+
+if ! command -v docker >/dev/null 2>&1; then
+  error "Docker not found. Install Docker and try again."
+fi
+
+IMAGE=subhajit/fedorabox
+BUILDDIR=$(mktemp -d)
+trap 'rm -rf "$BUILDDIR"' EXIT INT TERM
+
+cat > "$BUILDDIR/Dockerfile" <<'DOCKERFILE'
+FROM fedora:latest
+RUN dnf install -y \
+      python3 python3-pip \
+      gcc gcc-c++ make \
+      git curl vim nano sudo \
+    && dnf clean all
+RUN useradd -m -s /bin/bash devuser && \
+    echo "devuser:devpass" | chpasswd && \
+    usermod -aG wheel devuser && \
+    echo '%wheel ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+USER devuser
+WORKDIR /home/devuser
+CMD bash -c 'printf "\n\033[1m\033[0;36m  ── Fedora container ready ──\033[0m\n  user: \033[1mdevuser\033[0m  |  pass: \033[1mdevpass\033[0m\n  sudo: passwordless via wheel group\n\n"; exec bash'
+DOCKERFILE
+
+info "Building Fedora container (this may take a minute on first run)..."
+docker build --quiet -t "$IMAGE" "$BUILDDIR"
+success "Container ready. Launching shell..."
+printf "\n"
+exec docker run -it --rm "$IMAGE" < /dev/tty

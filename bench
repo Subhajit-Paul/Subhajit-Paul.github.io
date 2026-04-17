@@ -1,0 +1,226 @@
+#!/usr/bin/env bash
+# bench - CPU, memory, and disk benchmark
+#
+# Runs a fast, dependency-free benchmark and scores results against
+# reference baselines. Uses only coreutils, dd, and python3.
+#
+# Usage:
+#   curl -fsSL https://subhajit-paul.github.io/bench | bash
+#   curl -fsSL https://subhajit-paul.github.io/bench | bash -s -- --no-disk   # skip disk test
+#   curl -fsSL https://subhajit-paul.github.io/bench | bash -s -- --no-net    # skip network test
+
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; DIM='\033[2m'; NC='\033[0m'
+
+header() { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
+
+score_label() {
+  local val="$1" low="$2" high="$3"
+  if awk "BEGIN {exit !($val >= $high)}"; then
+    echo -e "${GREEN}excellent${NC}"
+  elif awk "BEGIN {exit !($val >= $low)}"; then
+    echo -e "${YELLOW}average${NC}"
+  else
+    echo -e "${RED}poor${NC}"
+  fi
+}
+
+# ── Arguments ─────────────────────────────────────────────────────────────────
+
+SKIP_DISK=false
+SKIP_NET=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --no-disk) SKIP_DISK=true ;;
+    --no-net)  SKIP_NET=true ;;
+  esac
+done
+
+# ── Banner ────────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════╗${NC}"
+printf  "${BOLD}${CYAN}║${NC}  %-44s${BOLD}${CYAN}║${NC}\n" "bench — $(date '+%Y-%m-%d %H:%M:%S')"
+printf  "${BOLD}${CYAN}║${NC}  %-44s${BOLD}${CYAN}║${NC}\n" "$(hostname) | $(uname -r | cut -d- -f1)"
+echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════╝${NC}"
+
+# ── System info ───────────────────────────────────────────────────────────────
+
+header "System"
+
+CPU_MODEL=$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ //' || echo "unknown")
+CPU_CORES=$(nproc 2>/dev/null || echo "?")
+MEM_GB=$(awk '/^MemTotal/ {printf "%.1f GiB", $2/1048576}' /proc/meminfo 2>/dev/null || echo "?")
+
+printf "  ${CYAN}%-14s${NC} %s\n" "CPU"    "$CPU_MODEL"
+printf "  ${CYAN}%-14s${NC} %s\n" "Cores"  "$CPU_CORES logical"
+printf "  ${CYAN}%-14s${NC} %s\n" "Memory" "$MEM_GB"
+
+# ── CPU benchmark ─────────────────────────────────────────────────────────────
+# Measure SHA-256 throughput for 5 seconds using Python's hashlib.
+# Baseline: ~5000 H/s is typical for a modern laptop core.
+
+header "CPU  (SHA-256 throughput, 5s)"
+
+echo -e "  ${DIM}Running...${NC}"
+
+CPU_HASHES=$(python3 - << 'PYEOF'
+import hashlib, time, os, sys
+
+data = os.urandom(4096)
+count = 0
+end = time.monotonic() + 5.0
+while time.monotonic() < end:
+    for _ in range(100):
+        hashlib.sha256(data).digest()
+    count += 100
+
+rate = count / 5
+print(f"{rate:.0f}")
+PYEOF
+)
+
+CPU_K=$(awk "BEGIN {printf \"%.1f\", $CPU_HASHES/1000}")
+CPU_SCORE=$(score_label "$CPU_HASHES" 3000 8000)
+
+printf "  ${CYAN}%-20s${NC} %s kH/s  %s\n" "SHA-256 throughput" "$CPU_K" "$CPU_SCORE"
+printf "  ${DIM}%-20s (poor <3k  average 3–8k  excellent >8k)${NC}\n" ""
+
+# ── Multi-core CPU ────────────────────────────────────────────────────────────
+
+if [ "$CPU_CORES" -gt 1 ] && command -v python3 >/dev/null 2>&1; then
+  MULTI_HASHES=$(python3 - << PYEOF
+import hashlib, time, os, concurrent.futures
+
+CORES = $CPU_CORES
+data = os.urandom(4096)
+
+def worker(_):
+    count = 0
+    end = time.monotonic() + 3.0
+    while time.monotonic() < end:
+        for _ in range(100):
+            hashlib.sha256(data).digest()
+        count += 100
+    return count
+
+with concurrent.futures.ProcessPoolExecutor(max_workers=CORES) as ex:
+    results = list(ex.map(worker, range(CORES)))
+
+total = sum(results) / 3
+print(f"{total:.0f}")
+PYEOF
+  )
+  MULTI_K=$(awk "BEGIN {printf \"%.1f\", $MULTI_HASHES/1000}")
+  MULTI_SCORE=$(score_label "$MULTI_HASHES" "$((CPU_CORES * 2000))" "$((CPU_CORES * 6000))")
+  printf "  ${CYAN}%-20s${NC} %s kH/s  %s\n" "Multi-core (${CPU_CORES}c)" "$MULTI_K" "$MULTI_SCORE"
+fi
+
+# ── Memory bandwidth ──────────────────────────────────────────────────────────
+# Sequential read/write: pipe /dev/zero through dd into /dev/null.
+# Baseline: >5 GiB/s is good for modern DDR4.
+
+header "Memory  (sequential bandwidth, 2GiB)"
+
+echo -e "  ${DIM}Running...${NC}"
+
+MEM_BW=$(dd if=/dev/zero bs=1M count=2048 2>&1 | tee /dev/null \
+  | dd of=/dev/null bs=1M 2>&1 \
+  | grep -oP '[0-9.]+ [KMGT]?B/s' | tail -1 || echo "")
+
+# More reliable approach: time it ourselves
+MEM_START=$(date +%s%N)
+dd if=/dev/zero bs=64M count=32 2>/dev/null | dd of=/dev/null bs=64M 2>/dev/null
+MEM_END=$(date +%s%N)
+MEM_NS=$(( MEM_END - MEM_START ))
+MEM_GBS=$(awk "BEGIN {printf \"%.2f\", (32*64*1024*1024) / ($MEM_NS / 1e9) / (1024^3)}")
+MEM_SCORE=$(score_label "$MEM_GBS" 3 8)
+
+printf "  ${CYAN}%-20s${NC} %s GiB/s  %s\n" "Read bandwidth" "$MEM_GBS" "$MEM_SCORE"
+printf "  ${DIM}%-20s (poor <3  average 3–8  excellent >8)${NC}\n" ""
+
+# ── Disk benchmark ────────────────────────────────────────────────────────────
+
+if ! $SKIP_DISK; then
+  header "Disk  (256 MiB sequential)"
+
+  DISK_TMP=$(mktemp /tmp/bench_XXXXXX)
+  trap 'rm -f "$DISK_TMP"' EXIT
+
+  echo -e "  ${DIM}Writing...${NC}"
+
+  WRITE_START=$(date +%s%N)
+  dd if=/dev/zero of="$DISK_TMP" bs=4M count=64 conv=fdatasync 2>/dev/null
+  WRITE_END=$(date +%s%N)
+  WRITE_NS=$(( WRITE_END - WRITE_START ))
+  WRITE_MBS=$(awk "BEGIN {printf \"%.0f\", (64*4*1024*1024) / ($WRITE_NS / 1e9) / (1024*1024)}")
+  WRITE_SCORE=$(score_label "$WRITE_MBS" 100 400)
+
+  echo -e "  ${DIM}Reading...${NC}"
+
+  # Drop page cache if possible (best-effort, no error on failure)
+  sync
+  echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true
+
+  READ_START=$(date +%s%N)
+  dd if="$DISK_TMP" of=/dev/null bs=4M 2>/dev/null
+  READ_END=$(date +%s%N)
+  READ_NS=$(( READ_END - READ_START ))
+  READ_MBS=$(awk "BEGIN {printf \"%.0f\", (64*4*1024*1024) / ($READ_NS / 1e9) / (1024*1024)}")
+  READ_SCORE=$(score_label "$READ_MBS" 100 400)
+
+  rm -f "$DISK_TMP"
+  trap - EXIT
+
+  printf "  ${CYAN}%-20s${NC} %s MB/s  %s\n" "Sequential write" "$WRITE_MBS" "$WRITE_SCORE"
+  printf "  ${CYAN}%-20s${NC} %s MB/s  %s\n" "Sequential read"  "$READ_MBS"  "$READ_SCORE"
+  printf "  ${DIM}%-20s (poor <100  average 100–400  excellent >400 MB/s)${NC}\n" ""
+fi
+
+# ── Network latency ───────────────────────────────────────────────────────────
+
+if ! $SKIP_NET; then
+  header "Network"
+
+  # DNS resolution time
+  DNS_START=$(date +%s%N)
+  getent hosts github.com >/dev/null 2>&1 || nslookup github.com >/dev/null 2>&1 || true
+  DNS_END=$(date +%s%N)
+  DNS_MS=$(awk "BEGIN {printf \"%.0f\", (${DNS_END} - ${DNS_START}) / 1e6}")
+  DNS_SCORE=$(score_label "$(awk "BEGIN {print 200 - $DNS_MS}")" 0 150)
+
+  printf "  ${CYAN}%-20s${NC} %s ms  %s\n" "DNS lookup" "$DNS_MS" "$DNS_SCORE"
+
+  # HTTP latency to well-known endpoints
+  for host in "https://1.1.1.1" "https://8.8.8.8"; do
+    LATENCY=$(curl -fsSL --max-time 5 -o /dev/null -w "%{time_total}" "$host" 2>/dev/null \
+      | awk '{printf "%.0f", $1*1000}' || echo "timeout")
+    if [ "$LATENCY" != "timeout" ]; then
+      NET_SCORE=$(score_label "$(awk "BEGIN {print 500 - $LATENCY}")" 0 400)
+      printf "  ${CYAN}%-20s${NC} %s ms  %s\n" "HTTPS ${host##*/}" "$LATENCY" "$NET_SCORE"
+    fi
+  done
+fi
+
+# ── Summary table ─────────────────────────────────────────────────────────────
+
+header "Summary"
+
+echo ""
+echo -e "  ${BOLD}${CYAN}Benchmark Results${NC}"
+echo -e "  ──────────────────────────────────────────────"
+printf  "  ${BOLD}%-20s %-15s %-10s${NC}\n" "Test" "Result" "Score"
+echo -e "  ──────────────────────────────────────────────"
+printf  "  %-20s %-15s %b\n" "CPU (single core)"  "${CPU_K} kH/s"   "$(score_label "$CPU_HASHES" 3000 8000)"
+[ "${MULTI_HASHES:-0}" -gt 0 ] && \
+printf  "  %-20s %-15s %b\n" "CPU (${CPU_CORES} cores)" "${MULTI_K} kH/s" "$(score_label "$MULTI_HASHES" "$((CPU_CORES * 2000))" "$((CPU_CORES * 6000))")"
+printf  "  %-20s %-15s %b\n" "Memory bandwidth"   "${MEM_GBS} GiB/s" "$(score_label "$MEM_GBS" 3 8)"
+$SKIP_DISK || printf "  %-20s %-15s %b\n" "Disk write"      "${WRITE_MBS} MB/s"  "$(score_label "$WRITE_MBS" 100 400)"
+$SKIP_DISK || printf "  %-20s %-15s %b\n" "Disk read"       "${READ_MBS} MB/s"   "$(score_label "$READ_MBS"  100 400)"
+echo -e "  ──────────────────────────────────────────────"
+echo ""
+printf  "  ${DIM}%s: %s${NC}\n" "Run on" "$(uname -n) @ $(date)"
+echo ""

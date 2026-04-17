@@ -1,0 +1,307 @@
+#!/usr/bin/env bash
+# pyinit - Scaffold a modern Python project
+# Usage:
+#   curl -fsSL https://subhajit-paul.github.io/pyinit | bash
+#   curl -fsSL https://subhajit-paul.github.io/pyinit | bash -s -- myproject
+#   curl -fsSL https://subhajit-paul.github.io/pyinit | bash -s -- myproject 3.12
+
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
+
+info()    { echo -e "${BLUE}[·]${NC} $*"; }
+success() { echo -e "${GREEN}[✓]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
+error()   { echo -e "${RED}[✗]${NC} $*" >&2; exit 1; }
+header()  { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
+
+# ── Arguments ──────────────────────────────────────────────────────────────────
+
+PROJECT_NAME="${1:-}"
+PYTHON_VER="${2:-3.11}"
+
+if [ -z "$PROJECT_NAME" ]; then
+  if [ -e /dev/tty ]; then
+    printf "${BOLD}  Project name: ${NC}"
+    read -r PROJECT_NAME < /dev/tty
+    [ -z "$PROJECT_NAME" ] && PROJECT_NAME="myproject"
+  else
+    PROJECT_NAME="myproject"
+    warn "No project name given — using 'myproject'"
+  fi
+fi
+
+# Normalize: lowercase, replace spaces/hyphens with underscores for import name
+IMPORT_NAME=$(echo "$PROJECT_NAME" | tr '[:upper:]' '[:lower:]' | tr ' -' '__' | tr -cd '[:alnum:]_')
+[ -z "$IMPORT_NAME" ] && error "Invalid project name: '$PROJECT_NAME'"
+
+# ── Guard ──────────────────────────────────────────────────────────────────────
+
+if [ -d "$PROJECT_NAME" ]; then
+  error "Directory '$PROJECT_NAME' already exists."
+fi
+
+header "Creating Python project: ${PROJECT_NAME}"
+info "Import name : ${IMPORT_NAME}"
+info "Python      : ${PYTHON_VER}+"
+
+# ── Directory structure ────────────────────────────────────────────────────────
+
+mkdir -p "${PROJECT_NAME}/src/${IMPORT_NAME}"
+mkdir -p "${PROJECT_NAME}/tests"
+
+cd "$PROJECT_NAME"
+
+# ── pyproject.toml ─────────────────────────────────────────────────────────────
+
+cat > pyproject.toml << PYPROJECT
+[project]
+name = "${PROJECT_NAME}"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=${PYTHON_VER}"
+license = { text = "MIT" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov",
+  "ruff",
+  "mypy",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/${IMPORT_NAME}"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py${PYTHON_VER/./}"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
+
+[tool.mypy]
+python_version = "${PYTHON_VER}"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short"
+
+[tool.coverage.run]
+source = ["src"]
+PYPROJECT
+
+success "pyproject.toml"
+
+# ── Source package ─────────────────────────────────────────────────────────────
+
+cat > "src/${IMPORT_NAME}/__init__.py" << INIT
+"""${PROJECT_NAME}"""
+
+__version__ = "0.1.0"
+INIT
+
+success "src/${IMPORT_NAME}/__init__.py"
+
+# ── Tests ──────────────────────────────────────────────────────────────────────
+
+cat > tests/__init__.py << 'EOF'
+EOF
+
+cat > "tests/test_${IMPORT_NAME}.py" << TESTFILE
+from ${IMPORT_NAME} import __version__
+
+
+def test_version():
+    assert __version__ == "0.1.0"
+TESTFILE
+
+success "tests/test_${IMPORT_NAME}.py"
+
+# ── .gitignore ─────────────────────────────────────────────────────────────────
+
+cat > .gitignore << 'EOF'
+# Byte-compiled
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / build
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Testing & coverage
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.pytest_cache/
+
+# Type checkers
+.mypy_cache/
+.pyre/
+
+# Linters
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv / pip
+.python-version
+uv.lock
+
+# Logs & artifacts
+*.log
+logs/
+data/
+artifacts/
+checkpoints/
+
+# Secrets
+*.pem
+*.key
+secrets.json
+EOF
+
+success ".gitignore"
+
+# ── .env.example ───────────────────────────────────────────────────────────────
+
+cat > .env.example << 'EOF'
+# Copy to .env and fill in values
+APP_ENV=development
+DEBUG=true
+LOG_LEVEL=info
+
+# Database
+DATABASE_URL=
+
+# API Keys
+API_KEY=
+
+# Feature flags
+ENABLE_METRICS=false
+EOF
+
+success ".env.example"
+
+# ── .python-version ───────────────────────────────────────────────────────────
+
+echo "$PYTHON_VER" > .python-version
+success ".python-version (${PYTHON_VER})"
+
+# ── README.md ─────────────────────────────────────────────────────────────────
+
+cat > README.md << READMEEOF
+# ${PROJECT_NAME}
+
+> Short description of what this project does.
+
+## Setup
+
+\`\`\`bash
+uv venv && source .venv/bin/activate
+uv sync --extra dev
+\`\`\`
+
+Or with pip:
+
+\`\`\`bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev]"
+\`\`\`
+
+## Usage
+
+\`\`\`python
+from ${IMPORT_NAME} import __version__
+print(__version__)
+\`\`\`
+
+## Development
+
+\`\`\`bash
+pytest                  # run tests
+ruff check src tests    # lint
+mypy src                # type-check
+\`\`\`
+READMEEOF
+
+success "README.md"
+
+# ── Git init ───────────────────────────────────────────────────────────────────
+
+if command -v git >/dev/null 2>&1; then
+  git init -q
+  git add -A
+  git commit -q -m "chore: init ${PROJECT_NAME}"
+  success "git init + initial commit"
+else
+  warn "git not found — skipping repo init"
+fi
+
+# ── uv venv ────────────────────────────────────────────────────────────────────
+
+if command -v uv >/dev/null 2>&1; then
+  uv venv --quiet
+  uv sync --extra dev --quiet 2>/dev/null || uv sync --quiet
+  success "uv venv created + dev deps installed"
+else
+  warn "uv not found — create venv manually: python -m venv .venv"
+fi
+
+# ── Summary ────────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BOLD}${GREEN}  ✓  ${PROJECT_NAME} ready${NC}"
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+echo -e "  ${CYAN}Layout${NC}"
+printf "   %-32s %s\n" "src/${IMPORT_NAME}/__init__.py"   "package root"
+printf "   %-32s %s\n" "tests/test_${IMPORT_NAME}.py"     "starter test"
+printf "   %-32s %s\n" "pyproject.toml"                   "deps + tool config"
+printf "   %-32s %s\n" ".gitignore / .env.example"        "sane defaults"
+echo ""
+echo -e "  ${CYAN}Next steps${NC}"
+echo -e "   cd ${PROJECT_NAME}"
+if command -v uv >/dev/null 2>&1; then
+  echo -e "   source .venv/bin/activate"
+  echo -e "   uv add <package>            # add a dependency"
+else
+  echo -e "   python -m venv .venv && source .venv/bin/activate"
+  echo -e "   pip install -e '.[dev]'"
+fi
+echo -e "   pytest                      # run tests"
+echo ""

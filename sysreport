@@ -1,0 +1,232 @@
+#!/usr/bin/env bash
+# sysreport - System health snapshot
+# Usage: curl -fsSL https://subhajit-paul.github.io/sysreport | bash
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; DIM='\033[2m'; NC='\033[0m'
+
+header()  { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
+row()     { printf "  ${CYAN}%-20s${NC} %s\n" "$1" "$2"; }
+warn_row(){ printf "  ${YELLOW}%-20s${NC} %s\n" "$1" "$2"; }
+ok_row()  { printf "  ${GREEN}%-20s${NC} %s\n" "$1" "$2"; }
+
+# ── Banner ─────────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════╗${NC}"
+printf  "${BOLD}${CYAN}║${NC}  %-44s${BOLD}${CYAN}║${NC}\n" "System Report — $(date '+%Y-%m-%d %H:%M:%S')"
+echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════╝${NC}"
+
+# ── System ─────────────────────────────────────────────────────────────────────
+
+header "System"
+
+HOSTNAME=$(hostname 2>/dev/null || echo "unknown")
+KERNEL=$(uname -r 2>/dev/null || echo "unknown")
+ARCH=$(uname -m 2>/dev/null || echo "unknown")
+
+OS_NAME="unknown"
+[ -f /etc/os-release ] && OS_NAME=$(. /etc/os-release; echo "${PRETTY_NAME:-$NAME}")
+
+UPTIME_STR=$(uptime -p 2>/dev/null || uptime 2>/dev/null | awk -F'up ' '{print $2}' | cut -d',' -f1,2 || echo "unknown")
+
+row "Hostname"   "$HOSTNAME"
+row "OS"         "$OS_NAME"
+row "Kernel"     "$KERNEL ($ARCH)"
+row "Uptime"     "$UPTIME_STR"
+
+# Shell & user
+row "User"       "$(id -un) (uid=$(id -u))"
+row "Shell"      "${SHELL:-unknown}"
+
+# ── CPU ────────────────────────────────────────────────────────────────────────
+
+header "CPU"
+
+CPU_MODEL=$(grep -m1 'model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2 | sed 's/^ //' || echo "unknown")
+CPU_CORES=$(nproc 2>/dev/null || grep -c '^processor' /proc/cpuinfo 2>/dev/null || echo "?")
+CPU_FREQ=$(grep -m1 'cpu MHz' /proc/cpuinfo 2>/dev/null | awk '{printf "%.0f MHz", $4}' || echo "")
+
+row "Model"      "$CPU_MODEL"
+row "Cores"      "$CPU_CORES logical"
+[ -n "$CPU_FREQ" ] && row "Frequency" "$CPU_FREQ"
+
+# 1-second CPU usage sample via /proc/stat
+read -r _ u1 n1 s1 i1 rest1 < /proc/stat 2>/dev/null || { u1=0; n1=0; s1=0; i1=0; rest1=0; }
+sleep 1
+read -r _ u2 n2 s2 i2 rest2 < /proc/stat 2>/dev/null || { u2=0; n2=0; s2=0; i2=0; rest2=0; }
+IDLE_DELTA=$(( i2 - i1 ))
+TOTAL_DELTA=$(( (u2+n2+s2+i2) - (u1+n1+s1+i1) ))
+if [ "$TOTAL_DELTA" -gt 0 ]; then
+  CPU_USAGE=$(awk "BEGIN {printf \"%.1f%%\", 100*(1 - $IDLE_DELTA/$TOTAL_DELTA)}")
+  if awk "BEGIN {exit !($CPU_USAGE > 80)}"; then
+    warn_row "Usage (1s)" "$CPU_USAGE  ⚠ high"
+  else
+    ok_row   "Usage (1s)" "$CPU_USAGE"
+  fi
+fi
+
+# Load average
+LOAD=$(cat /proc/loadavg 2>/dev/null | awk '{print $1, $2, $3}' || uptime | awk -F'load average:' '{print $2}')
+row "Load avg"   "$LOAD  (1m 5m 15m)"
+
+# CPU temperature (best-effort)
+TEMP=""
+if [ -f /sys/class/thermal/thermal_zone0/temp ]; then
+  RAW=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null || echo 0)
+  TEMP=$(awk "BEGIN {printf \"%.1f°C\", $RAW/1000}")
+elif command -v sensors >/dev/null 2>&1; then
+  TEMP=$(sensors 2>/dev/null | grep -E 'Package|Core 0' | head -1 | grep -oP '[+-]?\d+\.\d+°C' | head -1 || echo "")
+fi
+[ -n "$TEMP" ] && row "Temperature" "$TEMP"
+
+# ── Memory ─────────────────────────────────────────────────────────────────────
+
+header "Memory"
+
+MEM_INFO=$(awk '
+  /^MemTotal:/     { total=$2 }
+  /^MemAvailable:/ { avail=$2 }
+  /^Cached:/       { cached=$2 }
+  /^SwapTotal:/    { stotal=$2 }
+  /^SwapFree:/     { sfree=$2 }
+  END {
+    used = total - avail
+    pct  = (used/total)*100
+    printf "%.0f %.0f %.0f %.1f %.0f %.0f\n", total, used, avail, pct, stotal, sfree
+  }' /proc/meminfo 2>/dev/null)
+
+read -r MEM_TOTAL MEM_USED MEM_AVAIL MEM_PCT SWAP_TOTAL SWAP_FREE <<< "$MEM_INFO"
+
+human_kb() { awk "BEGIN {
+  b=$1*1024
+  if (b>=1073741824) printf \"%.1f GiB\", b/1073741824
+  else if (b>=1048576) printf \"%.1f MiB\", b/1048576
+  else printf \"%.0f KiB\", b
+}"; }
+
+MEM_TOTAL_H=$(human_kb "$MEM_TOTAL")
+MEM_USED_H=$(human_kb "$MEM_USED")
+MEM_AVAIL_H=$(human_kb "$MEM_AVAIL")
+
+if awk "BEGIN {exit !($MEM_PCT > 85)}"; then
+  warn_row "RAM" "${MEM_USED_H} / ${MEM_TOTAL_H}  (${MEM_PCT}% used)  ⚠ high"
+else
+  ok_row   "RAM" "${MEM_USED_H} / ${MEM_TOTAL_H}  (${MEM_PCT}% used)"
+fi
+
+row "Available"  "$MEM_AVAIL_H"
+
+SWAP_USED=$((SWAP_TOTAL - SWAP_FREE))
+if [ "$SWAP_TOTAL" -gt 0 ]; then
+  SWAP_USED_H=$(human_kb "$SWAP_USED")
+  SWAP_TOTAL_H=$(human_kb "$SWAP_TOTAL")
+  row "Swap"      "${SWAP_USED_H} / ${SWAP_TOTAL_H}"
+else
+  row "Swap"      "none"
+fi
+
+# ── Disk ───────────────────────────────────────────────────────────────────────
+
+header "Disk"
+
+df -h --output=target,size,used,avail,pcent 2>/dev/null \
+  | grep -v "^tmpfs\|^udev\|^/dev/loop\|Filesystem\|overlay\|shm" \
+  | while IFS= read -r line; do
+      PCT=$(echo "$line" | awk '{gsub(/%/,""); print $NF}')
+      if [ -n "$PCT" ] && [ "$PCT" -ge 85 ] 2>/dev/null; then
+        echo -e "  ${YELLOW}${line}  ⚠${NC}"
+      else
+        echo -e "  ${GREEN}${line}${NC}"
+      fi
+    done
+
+# ── Network ────────────────────────────────────────────────────────────────────
+
+header "Network Interfaces"
+
+if command -v ip >/dev/null 2>&1; then
+  ip -brief addr 2>/dev/null | grep -v '^lo' | while IFS= read -r line; do
+    printf "  %s\n" "$line"
+  done
+elif command -v ifconfig >/dev/null 2>&1; then
+  ifconfig 2>/dev/null | grep -E '^[a-z]|inet ' | grep -v 'inet6\|127.0.0.1' | \
+    awk '/^[a-z]/{iface=$1} /inet /{print "  " iface, $2}'
+fi
+
+# External IP (best-effort, silently skip on failure)
+EXT_IP=$(curl -fsSL --max-time 3 https://api.ipify.org 2>/dev/null || echo "")
+[ -n "$EXT_IP" ] && row "External IP" "$EXT_IP"
+
+# ── Listening ports ────────────────────────────────────────────────────────────
+
+header "Listening Ports"
+
+if command -v ss >/dev/null 2>&1; then
+  ss -tlnp 2>/dev/null | grep LISTEN | awk '{printf "  %-30s %s\n", $4, $6}' | head -20 || true
+elif command -v netstat >/dev/null 2>&1; then
+  netstat -tlnp 2>/dev/null | grep LISTEN | awk '{printf "  %-30s %s\n", $4, $7}' | head -20 || true
+else
+  echo -e "  ${DIM}ss/netstat not available${NC}"
+fi
+
+# ── Top processes ──────────────────────────────────────────────────────────────
+
+header "Top Processes (CPU)"
+
+ps aux --sort=-%cpu 2>/dev/null | awk 'NR>1 && NR<=8 {
+  printf "  %-8s %-5s %-5s  %s\n", $1, $3"%", $4"%", substr($11,1,40)
+}' || true
+
+header "Top Processes (Memory)"
+
+ps aux --sort=-%mem 2>/dev/null | awk 'NR>1 && NR<=6 {
+  printf "  %-8s %-5s %-5s  %s\n", $1, $3"%", $4"%", substr($11,1,40)
+}' || true
+
+# ── Services ───────────────────────────────────────────────────────────────────
+
+if command -v systemctl >/dev/null 2>&1 && systemctl is-system-running >/dev/null 2>&1; then
+  header "Failed Services"
+  FAILED=$(systemctl --failed --no-legend 2>/dev/null | head -10)
+  if [ -z "$FAILED" ]; then
+    echo -e "  ${GREEN}[✓] No failed services${NC}"
+  else
+    echo -e "${RED}$FAILED${NC}"
+  fi
+fi
+
+# ── Recent errors ──────────────────────────────────────────────────────────────
+
+if command -v journalctl >/dev/null 2>&1; then
+  header "Recent Errors (last 24h)"
+  journalctl -p err -S "24h ago" --no-pager --no-hostname -q 2>/dev/null | tail -8 | \
+    while IFS= read -r line; do echo -e "  ${RED}${line}${NC}"; done || true
+  ERRCOUNT=$(journalctl -p err -S "24h ago" --no-pager -q 2>/dev/null | wc -l || echo 0)
+  [ "$ERRCOUNT" -gt 8 ] && echo -e "  ${DIM}... ${ERRCOUNT} total errors in the last 24h${NC}"
+  [ "$ERRCOUNT" -eq 0 ] && echo -e "  ${GREEN}[✓] No errors in the last 24h${NC}"
+fi
+
+# ── Docker ─────────────────────────────────────────────────────────────────────
+
+if command -v docker >/dev/null 2>&1 && docker info >/dev/null 2>&1; then
+  header "Docker"
+  RUNNING=$(docker ps --format '  {{.Names}}\t{{.Status}}\t{{.Image}}' 2>/dev/null | head -10)
+  if [ -z "$RUNNING" ]; then
+    echo -e "  ${DIM}No running containers${NC}"
+  else
+    echo -e "$RUNNING"
+  fi
+  echo ""
+  docker system df 2>/dev/null | grep -v "^$" | while IFS= read -r line; do
+    echo "  $line"
+  done
+fi
+
+# ── Footer ─────────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${DIM}Report generated: $(date)${NC}"
+echo ""

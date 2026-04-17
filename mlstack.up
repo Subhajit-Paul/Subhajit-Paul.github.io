@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+# mlstack.up - Local AI/LLM development stack
+#
+# Launches Ollama + Open WebUI (+ optional ChromaDB for RAG) via Docker Compose.
+# GPU passthrough is enabled automatically when an NVIDIA GPU is detected.
+#
+# Usage:
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash -s -- --model llama3.2
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash -s -- --model llama3.2 --chroma
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash -s -- --down     # stop stack
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash -s -- --logs     # follow logs
+#   curl -fsSL https://subhajit-paul.github.io/mlstack.up | bash -s -- --status   # show running containers
+
+set -euo pipefail
+
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+BLUE='\033[0;34m'; CYAN='\033[0;36m'; BOLD='\033[1m'; NC='\033[0m'
+
+info()    { echo -e "${BLUE}[·]${NC} $*"; }
+success() { echo -e "${GREEN}[✓]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[!]${NC} $*"; }
+error()   { echo -e "${RED}[✗]${NC} $*" >&2; exit 1; }
+header()  { echo -e "\n${BOLD}${CYAN}━━━  $*  ━━━${NC}"; }
+
+# ── Argument parsing ──────────────────────────────────────────────────────────
+
+MODEL=""
+WITH_CHROMA=false
+STACK_DOWN=false
+STACK_LOGS=false
+STACK_STATUS=false
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --model)   MODEL="$2"; shift 2 ;;
+    --chroma)  WITH_CHROMA=true; shift ;;
+    --down)    STACK_DOWN=true; shift ;;
+    --logs)    STACK_LOGS=true; shift ;;
+    --status)  STACK_STATUS=true; shift ;;
+    *)         shift ;;
+  esac
+done
+
+# ── Prerequisites ─────────────────────────────────────────────────────────────
+
+command -v docker >/dev/null 2>&1 || error "Docker not found. Install it first."
+
+# Prefer 'docker compose' (v2 plugin) over 'docker-compose' (v1 standalone)
+if docker compose version >/dev/null 2>&1; then
+  DC="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  DC="docker-compose"
+else
+  error "Docker Compose not found. Install docker-compose-plugin or docker-compose."
+fi
+
+docker info >/dev/null 2>&1 || error "Docker daemon not running. Start it first."
+
+# ── Stack directory ───────────────────────────────────────────────────────────
+
+STACK_DIR="$HOME/.mlstack"
+mkdir -p "$STACK_DIR"
+
+# ── Lifecycle commands ────────────────────────────────────────────────────────
+
+if $STACK_DOWN; then
+  info "Stopping ML stack..."
+  $DC -f "$STACK_DIR/docker-compose.yml" down
+  success "Stack stopped. Data volumes preserved in ~/.mlstack/"
+  exit 0
+fi
+
+if $STACK_LOGS; then
+  exec $DC -f "$STACK_DIR/docker-compose.yml" logs -f
+fi
+
+if $STACK_STATUS; then
+  $DC -f "$STACK_DIR/docker-compose.yml" ps 2>/dev/null || echo "Stack not running."
+  exit 0
+fi
+
+# ── GPU detection ─────────────────────────────────────────────────────────────
+
+header "Detecting Hardware"
+
+GPU_DEPLOY=""
+GPU_RUNTIME=""
+if command -v nvidia-smi >/dev/null 2>&1 && nvidia-smi >/dev/null 2>&1; then
+  GPU_NAME=$(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1 || echo "NVIDIA GPU")
+  success "GPU detected: ${GPU_NAME}"
+  info "Enabling NVIDIA GPU passthrough for Ollama"
+  GPU_DEPLOY="
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]"
+  GPU_RUNTIME="
+    runtime: nvidia"
+else
+  warn "No NVIDIA GPU detected — running Ollama on CPU"
+  warn "Inference will be slower. Use a smaller model (e.g. --model tinyllama)"
+fi
+
+# ── Compose file generation ───────────────────────────────────────────────────
+
+header "Generating docker-compose.yml"
+
+CHROMA_SERVICE=""
+CHROMA_DEPENDS=""
+CHROMA_ENV=""
+
+if $WITH_CHROMA; then
+  CHROMA_SERVICE='
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: mlstack-chromadb
+    ports:
+      - "8001:8000"
+    volumes:
+      - chromadb_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+    restart: unless-stopped'
+
+  CHROMA_DEPENDS='
+    - chromadb'
+
+  CHROMA_ENV='
+      - CHROMA_HTTP_HOST=chromadb
+      - CHROMA_HTTP_PORT=8000'
+fi
+
+CHROMA_VOLUME=""
+$WITH_CHROMA && CHROMA_VOLUME="  chromadb_data:"
+
+cat > "$STACK_DIR/docker-compose.yml" << COMPOSEFILE
+# ML Stack — managed by mlstack.up
+# Stop:   docker compose -f ~/.mlstack/docker-compose.yml down
+# Logs:   docker compose -f ~/.mlstack/docker-compose.yml logs -f
+
+services:
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: mlstack-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_ORIGINS=*
+    restart: unless-stopped${GPU_DEPLOY}${GPU_RUNTIME}
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: mlstack-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - webui_data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - WEBUI_AUTH=False${CHROMA_ENV}
+    depends_on:
+      - ollama${CHROMA_DEPENDS}
+    restart: unless-stopped
+${CHROMA_SERVICE}
+
+volumes:
+  ollama_data:
+  webui_data:
+${CHROMA_VOLUME}
+COMPOSEFILE
+
+success "docker-compose.yml written to ~/.mlstack/"
+
+# ── Launch ────────────────────────────────────────────────────────────────────
+
+header "Starting Stack"
+
+$DC -f "$STACK_DIR/docker-compose.yml" pull --quiet
+$DC -f "$STACK_DIR/docker-compose.yml" up -d
+
+success "Stack started"
+
+# ── Pull model ────────────────────────────────────────────────────────────────
+
+if [ -n "$MODEL" ]; then
+  header "Pulling model: ${MODEL}"
+  info "This may take several minutes depending on model size..."
+  # Wait for Ollama to be ready
+  MAX_WAIT=30
+  for i in $(seq 1 $MAX_WAIT); do
+    if curl -fsSL --max-time 2 http://localhost:11434/api/tags >/dev/null 2>&1; then
+      break
+    fi
+    [ "$i" -eq "$MAX_WAIT" ] && error "Ollama did not start in time. Check: docker logs mlstack-ollama"
+    sleep 2
+  done
+  docker exec mlstack-ollama ollama pull "$MODEL" && success "Model '${MODEL}' ready"
+fi
+
+# ── Summary ───────────────────────────────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "${BOLD}${GREEN}  ✓  ML Stack is running${NC}"
+echo -e "${BOLD}${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+echo -e "  ${CYAN}Services${NC}"
+printf "   %-22s %s\n" "Open WebUI"  "http://localhost:3000"
+printf "   %-22s %s\n" "Ollama API"  "http://localhost:11434"
+$WITH_CHROMA && printf "   %-22s %s\n" "ChromaDB"  "http://localhost:8001"
+echo ""
+echo -e "  ${CYAN}Quick start${NC}"
+[ -z "$MODEL" ] && echo -e "   Pull a model first:"
+[ -z "$MODEL" ] && echo -e "   ${BOLD}docker exec mlstack-ollama ollama pull llama3.2${NC}"
+echo -e "   Then open ${BOLD}http://localhost:3000${NC} in your browser"
+echo ""
+echo -e "  ${CYAN}Manage${NC}"
+printf "   %-42s %s\n" "curl ... | bash -s -- --logs"    "follow container logs"
+printf "   %-42s %s\n" "curl ... | bash -s -- --status"  "show running containers"
+printf "   %-42s %s\n" "curl ... | bash -s -- --down"    "stop the stack"
+echo ""
+echo -e "  ${CYAN}Data${NC}  ~/.mlstack/  (volumes persist across restarts)"
+echo ""
