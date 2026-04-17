@@ -61,6 +61,49 @@ skip()    { echo -e "${YELLOW}[:]${NC} $* already installed, skipping."; }
 
 command_exists() { command -v "$1" &>/dev/null; }
 
+# Logging - all verbose output goes here; shown only on failure
+LOG_FILE="/tmp/linuxsetup-$(date +%s).log"
+
+# GitHub release tag helper with hardcoded fallback for API failures/rate-limits
+fetch_release_tag() {
+  local repo="$1" fallback="${2:-}"
+  local tag
+  tag=$(curl -fsSL --retry 3 --retry-delay 1 \
+    "https://api.github.com/repos/${repo}/releases/latest" 2>/dev/null \
+    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/') || true
+  if [ -z "$tag" ]; then
+    if [ -n "$fallback" ]; then
+      warn "GitHub API unavailable for ${repo} — using fallback: ${fallback}"
+      echo "$fallback"; return
+    fi
+    error "Cannot fetch release tag for ${repo} and no fallback provided."
+  fi
+  echo "$tag"
+}
+
+# Cleanup on interrupt — removes temp files and restores .zshrc if needed
+SETUP_ZSHRC_BACKUP=""
+
+_cleanup() {
+  rm -f /tmp/lazygit /tmp/fastfetch.deb /tmp/zoom.deb /tmp/zoom.rpm \
+        /tmp/JetBrainsMono.zip /tmp/zoxide-install.sh 2>/dev/null || true
+  if [ -n "${SETUP_ZSHRC_BACKUP:-}" ] && [ -f "${SETUP_ZSHRC_BACKUP}" ]; then
+    rm -f "$HOME/.zshrc"
+    mv "${SETUP_ZSHRC_BACKUP}" "$HOME/.zshrc"
+    info "Restored original ~/.zshrc"
+  fi
+}
+
+_trap_handler() {
+  echo ""
+  warn "Setup interrupted. Cleaning up..."
+  _cleanup
+  exit 130
+}
+
+trap '_trap_handler' INT TERM
+trap '_cleanup' EXIT
+
 print_banner() {
 
 local tw
@@ -110,7 +153,7 @@ echo
 }
 
 print_banner
-
+info "Full installation log: ${LOG_FILE}"
 
 # Interactive Multi-Select Menu 
 # Sets SELECTED=() with 0-based indices of chosen options.
@@ -187,7 +230,7 @@ detect_os
 # Upfront Optional Selections
 header "Optional Tool Selection"
 
-OPTIONAL_TOOLS=("LazyGit" "ffmpeg" "git-lfs" "ripgrep-all (rga)" "fastfetch" "bandwhich (network monitor)")
+OPTIONAL_TOOLS=("LazyGit" "ffmpeg" "git-lfs" "ripgrep-all (rga)" "fastfetch" "bandwhich (network monitor)" "Rust (rustup)")
 prompt_choices "Extra CLI Tools" "${OPTIONAL_TOOLS[@]}"
 OPT_TOOLS_SEL=("${SELECTED[@]:-}")
 
@@ -199,33 +242,36 @@ OPT_APPS_SEL=("${SELECTED[@]:-}")
 pkg_update() {
   info "Updating package index..."
   case "$PKG_MANAGER" in
-    apt)    sudo apt-get update -qq ;;
-    pacman) sudo pacman -Sy --noconfirm ;;
-    dnf)    sudo dnf check-update -q || true ;;
+    apt)    sudo apt-get update -qq >>"$LOG_FILE" 2>&1 ;;
+    pacman) sudo pacman -Sy --noconfirm >>"$LOG_FILE" 2>&1 ;;
+    dnf)    sudo dnf check-update -q >>"$LOG_FILE" 2>&1 || true ;;
   esac
 }
 
 pkg_install() {
+  local ret=0
   case "$PKG_MANAGER" in
-    apt)    sudo apt-get install -y --no-install-recommends "$@" ;;
-    pacman) sudo pacman -S --noconfirm --needed "$@" ;;
-    dnf)    sudo dnf install -y "$@" ;;
+    apt)    sudo apt-get install -y --no-install-recommends "$@" >>"$LOG_FILE" 2>&1 || ret=$? ;;
+    pacman) sudo pacman -S --noconfirm --needed "$@" >>"$LOG_FILE" 2>&1 || ret=$? ;;
+    dnf)    sudo dnf install -y "$@" >>"$LOG_FILE" 2>&1 || ret=$? ;;
   esac
+  [ $ret -ne 0 ] && warn "Package install failed for: $*  (see $LOG_FILE)"
+  return $ret
 }
 
 aur_install() {
-  if   command_exists yay;  then yay  -S --noconfirm --needed "$@"
-  elif command_exists paru; then paru -S --noconfirm --needed "$@"
+  if   command_exists yay;  then yay  -S --noconfirm --needed "$@" >>"$LOG_FILE" 2>&1
+  elif command_exists paru; then paru -S --noconfirm --needed "$@" >>"$LOG_FILE" 2>&1
   else warn "No AUR helper found (yay/paru). Cannot install: $*"; fi
 }
 
 enable_rpmfusion() {
-  if ! dnf repolist | grep -q rpmfusion; then
+  if ! dnf repolist 2>/dev/null | grep -q rpmfusion; then
     info "Enabling RPM Fusion..."
     sudo dnf install -y \
       "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
       "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" \
-      2>/dev/null || true
+      >>"$LOG_FILE" 2>&1 || true
   fi
 }
 
@@ -309,7 +355,9 @@ header "Installing Oh My Zsh"
 
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    sh -c "$(curl -fsSL --retry 3 --retry-delay 1 \
+      https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+    >>"$LOG_FILE" 2>&1
   success "Oh My Zsh installed."
 else
   skip "Oh My Zsh"
@@ -322,7 +370,7 @@ header "Installing Powerlevel10k"
 
 P10K_DIR="${OMZ_CUSTOM}/themes/powerlevel10k"
 if [ ! -d "$P10K_DIR" ]; then
-  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR"
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$P10K_DIR" >>"$LOG_FILE" 2>&1
   success "Powerlevel10k installed."
 else
   skip "Powerlevel10k"
@@ -336,7 +384,7 @@ install_omz_plugin() {
   local dir="${OMZ_CUSTOM}/plugins/${name}"
   if [ ! -d "$dir" ]; then
     info "Plugin: ${name}..."
-    git clone --depth=1 "$repo" "$dir"
+    git clone --depth=1 "$repo" "$dir" >>"$LOG_FILE" 2>&1
     success "Plugin '${name}' installed."
   else
     skip "Plugin '${name}'"
@@ -358,7 +406,7 @@ install_font() {
   local name="$1" url="$2"
   if [ ! -f "${FONT_DIR}/${name}" ]; then
     info "Downloading: ${name}..."
-    curl -fsSL "$url" -o "${FONT_DIR}/${name}"
+    curl -fsSL --retry 3 --retry-delay 1 "$url" -o "${FONT_DIR}/${name}"
     success "Font: ${name}"
   else
     skip "Font '${name}'"
@@ -375,21 +423,21 @@ install_font "MesloLGS NF Bold Italic.ttf" "${P10K_BASE}/MesloLGS%20NF%20Bold%20
 # JetBrainsMono Nerd Font - primary coding font
 info "Installing JetBrainsMono Nerd Font..."
 if ! find "$FONT_DIR" -name "JetBrainsMonoNerdFont*" 2>/dev/null | grep -q .; then
-  JB_VER=$(curl -s "https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest" \
-    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+  JB_VER=$(fetch_release_tag "ryanoasis/nerd-fonts" "v3.2.1")
   JB_ZIP="/tmp/JetBrainsMono.zip"
-  curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/${JB_VER}/JetBrainsMono.zip" \
+  curl -fsSL --retry 3 --retry-delay 1 \
+    "https://github.com/ryanoasis/nerd-fonts/releases/download/${JB_VER}/JetBrainsMono.zip" \
     -o "$JB_ZIP"
   mkdir -p "$FONT_DIR/JetBrainsMono"
-  unzip -oq "$JB_ZIP" -d "$FONT_DIR/JetBrainsMono" -x '*Windows*' 2>/dev/null \
-    || unzip -oq "$JB_ZIP" -d "$FONT_DIR/JetBrainsMono" 2>/dev/null
+  unzip -oq "$JB_ZIP" -d "$FONT_DIR/JetBrainsMono" -x '*Windows*' >>"$LOG_FILE" 2>/dev/null \
+    || unzip -oq "$JB_ZIP" -d "$FONT_DIR/JetBrainsMono" >>"$LOG_FILE" 2>/dev/null
   rm -f "$JB_ZIP"
   success "JetBrainsMono Nerd Font installed."
 else
   skip "JetBrainsMono Nerd Font"
 fi
 
-fc-cache -fv && success "Font cache refreshed."
+fc-cache -fv >>"$LOG_FILE" 2>&1 && success "Font cache refreshed."
 
 # CLI Essentials
 header "Installing CLI Essentials"
@@ -397,8 +445,8 @@ header "Installing CLI Essentials"
 # fzf
 if ! command_exists fzf; then
   info "Installing fzf..."
-  git clone --depth=1 https://github.com/junegunn/fzf.git "$HOME/.fzf"
-  "$HOME/.fzf/install" --all --no-bash --no-fish
+  git clone --depth=1 https://github.com/junegunn/fzf.git "$HOME/.fzf" >>"$LOG_FILE" 2>&1
+  "$HOME/.fzf/install" --all --no-bash --no-fish >>"$LOG_FILE" 2>&1
   success "fzf installed."
 else
   skip "fzf"
@@ -449,7 +497,11 @@ fi
 # zoxide
 if ! command_exists zoxide; then
   info "Installing zoxide..."
-  curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+  curl -sSfL --retry 3 --retry-delay 1 \
+    https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh \
+    -o /tmp/zoxide-install.sh
+  sh /tmp/zoxide-install.sh >>"$LOG_FILE" 2>&1
+  rm -f /tmp/zoxide-install.sh
   success "zoxide installed."
 else
   skip "zoxide"
@@ -467,11 +519,13 @@ if is_selected 0; then
     case "$PKG_MANAGER" in
       pacman) pkg_install lazygit ;;
       apt|dnf)
-        LG_VER=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" \
-          | grep '"tag_name"' | sed -E 's/.*"v*([^"]+)".*/\1/')
-        curl -fsSL "https://github.com/jesseduffield/lazygit/releases/download/v${LG_VER}/lazygit_${LG_VER}_Linux_x86_64.tar.gz" \
-          | tar -xz -C /tmp lazygit
-        sudo install /tmp/lazygit /usr/local/bin
+        LG_TAG=$(fetch_release_tag "jesseduffield/lazygit" "v0.44.1")
+        LG_VER="${LG_TAG#v}"
+        curl -fsSL --retry 3 --retry-delay 1 \
+          "https://github.com/jesseduffield/lazygit/releases/download/${LG_TAG}/lazygit_${LG_VER}_Linux_x86_64.tar.gz" \
+          | tar -xz -C /tmp lazygit >>"$LOG_FILE" 2>&1
+        sudo install /tmp/lazygit /usr/local/bin >>"$LOG_FILE" 2>&1
+        rm -f /tmp/lazygit
         ;;
     esac
     success "LazyGit installed."
@@ -524,12 +578,14 @@ if is_selected 3; then
     case "$PKG_MANAGER" in
       pacman) aur_install ripgrep-all ;;
       apt|dnf)
-        RGA_VER=$(curl -s "https://api.github.com/repos/phiresky/ripgrep-all/releases/latest" \
-          | grep '"tag_name"' | sed -E 's/.*"v*([^"]+)".*/\1/')
+        RGA_TAG=$(fetch_release_tag "phiresky/ripgrep-all" "v0.10.6")
+        RGA_VER="${RGA_TAG#v}"
         RGA_TARBALL="ripgrep_all-v${RGA_VER}-x86_64-unknown-linux-musl"
-        curl -fsSL "https://github.com/phiresky/ripgrep-all/releases/download/v${RGA_VER}/${RGA_TARBALL}.tar.gz" \
-          | tar -xz -C /tmp
-        sudo install "/tmp/${RGA_TARBALL}/rga" "/tmp/${RGA_TARBALL}/rga-preproc" /usr/local/bin/
+        curl -fsSL --retry 3 --retry-delay 1 \
+          "https://github.com/phiresky/ripgrep-all/releases/download/${RGA_TAG}/${RGA_TARBALL}.tar.gz" \
+          | tar -xz -C /tmp >>"$LOG_FILE" 2>&1
+        sudo install "/tmp/${RGA_TARBALL}/rga" "/tmp/${RGA_TARBALL}/rga-preproc" /usr/local/bin/ \
+          >>"$LOG_FILE" 2>&1
         ;;
     esac
     success "ripgrep-all (rga) installed."
@@ -544,11 +600,11 @@ if is_selected 4; then
     info "Installing fastfetch..."
     case "$PKG_MANAGER" in
       apt)
-        FF_VER=$(curl -s "https://api.github.com/repos/fastfetch-cli/fastfetch/releases/latest" \
-          | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-        curl -fsSL "https://github.com/fastfetch-cli/fastfetch/releases/download/${FF_VER}/fastfetch-linux-amd64.deb" \
+        FF_VER=$(fetch_release_tag "fastfetch-cli/fastfetch" "2.26.0")
+        curl -fsSL --retry 3 --retry-delay 1 \
+          "https://github.com/fastfetch-cli/fastfetch/releases/download/${FF_VER}/fastfetch-linux-amd64.deb" \
           -o /tmp/fastfetch.deb
-        sudo dpkg -i /tmp/fastfetch.deb && rm /tmp/fastfetch.deb
+        sudo dpkg -i /tmp/fastfetch.deb >>"$LOG_FILE" 2>&1 && rm /tmp/fastfetch.deb
         ;;
       pacman) pkg_install fastfetch ;;
       dnf)    pkg_install fastfetch ;;
@@ -565,12 +621,14 @@ if is_selected 5; then
     info "Installing bandwhich (network monitor)..."
     case "$PKG_MANAGER" in
       apt|dnf)
-        # Build from source via cargo (most reliable cross-distro)
-        if command_exists cargo; then
-          cargo install bandwhich
-        else
-          warn "cargo not found yet. Source ~/.cargo/env and run: cargo install bandwhich"
+        if ! command_exists cargo; then
+          info "Rust/cargo required for bandwhich — installing..."
+          curl --proto '=https' --tlsv1.2 -sSf --retry 3 --retry-delay 1 \
+            https://sh.rustup.rs | sh -s -- -y --no-modify-path >>"$LOG_FILE" 2>&1
+          # shellcheck source=/dev/null
+          [ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
         fi
+        cargo install bandwhich >>"$LOG_FILE" 2>&1
         ;;
       pacman) pkg_install bandwhich ;;
     esac
@@ -580,6 +638,20 @@ if is_selected 5; then
   fi
 fi
 
+# [6] Rust (rustup)
+if is_selected 6; then
+  if ! command_exists rustup; then
+    info "Installing Rust (rustup)..."
+    curl --proto '=https' --tlsv1.2 -sSf --retry 3 --retry-delay 1 \
+      https://sh.rustup.rs | sh -s -- -y --no-modify-path >>"$LOG_FILE" 2>&1
+    success "Rust + cargo installed."
+  else
+    skip "rustup"
+  fi
+fi
+# Source cargo env if installed (optional or as bandwhich dependency)
+[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
+
 # Neovim + NVChad
 header "Installing Neovim + NVChad"
 
@@ -587,8 +659,9 @@ if ! command_exists nvim; then
   info "Installing Neovim (latest stable binary)..."
   case "$PKG_MANAGER" in
     apt)
-      curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" \
-        | sudo tar -xz -C /opt
+      curl -fsSL --retry 3 --retry-delay 1 \
+        "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" \
+        | sudo tar -xz -C /opt >>"$LOG_FILE" 2>&1
       sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
       ;;
     pacman) pkg_install neovim ;;
@@ -603,7 +676,7 @@ NVIM_CONFIG="$HOME/.config/nvim"
 if [ ! -d "$NVIM_CONFIG" ] || [ -z "$(ls -A "$NVIM_CONFIG" 2>/dev/null)" ]; then
   info "Setting up NVChad starter..."
   rm -rf "$NVIM_CONFIG"
-  git clone https://github.com/NvChad/starter "$NVIM_CONFIG"
+  git clone https://github.com/NvChad/starter "$NVIM_CONFIG" >>"$LOG_FILE" 2>&1
   success "NVChad config at ~/.config/nvim - run 'nvim' once to auto-install plugins."
 else
   skip "NVChad (nvim config already exists)"
@@ -622,7 +695,7 @@ if ! command_exists code; then
       echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft-archive-keyring.gpg] \
         https://packages.microsoft.com/repos/code stable main" \
         | sudo tee /etc/apt/sources.list.d/vscode.list
-      sudo apt-get update -qq && pkg_install code
+      sudo apt-get update -qq >>"$LOG_FILE" 2>&1 && pkg_install code
       ;;
     pacman) aur_install visual-studio-code-bin ;;
     dnf)
@@ -648,7 +721,7 @@ fi
 # uv (Python)
 header "Installing uv (Python toolchain)"
 if ! command_exists uv; then
-  curl -LsSf https://astral.sh/uv/install.sh | sh
+  curl -LsSf --retry 3 --retry-delay 1 https://astral.sh/uv/install.sh | sh >>"$LOG_FILE" 2>&1
   success "uv installed."
 else
   skip "uv"
@@ -658,9 +731,9 @@ fi
 header "Installing nvm + Node.js LTS"
 if [ ! -d "$HOME/.nvm" ]; then
   info "Installing nvm..."
-  NVM_VER=$(curl -s "https://api.github.com/repos/nvm-sh/nvm/releases/latest" \
-    | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-  curl -fsSL "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VER}/install.sh" | bash
+  NVM_VER=$(fetch_release_tag "nvm-sh/nvm" "v0.40.1")
+  curl -fsSL --retry 3 --retry-delay 1 \
+    "https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VER}/install.sh" | bash >>"$LOG_FILE" 2>&1
   success "nvm ${NVM_VER} installed."
 else
   skip "nvm"
@@ -680,29 +753,19 @@ else
   warn "nvm not in current session - Node.js installs on next login."
 fi
 
-# Rust
-header "Installing Rust (rustup)"
-if ! command_exists rustup; then
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-  success "Rust + cargo installed."
-else
-  skip "rustup"
-fi
-[ -f "$HOME/.cargo/env" ] && source "$HOME/.cargo/env"
-
 # Java (Temurin 21 LTS)
 header "Installing Java 21 LTS (Temurin)"
 if ! command_exists java; then
   info "Installing Temurin JDK 21..."
   case "$PKG_MANAGER" in
     apt)
-      wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public \
+      wget -qO - --tries=3 https://packages.adoptium.net/artifactory/api/gpg/key/public \
         | gpg --dearmor \
         | sudo tee /usr/share/keyrings/adoptium-keyring.gpg >/dev/null
       echo "deb [signed-by=/usr/share/keyrings/adoptium-keyring.gpg] \
         https://packages.adoptium.net/artifactory/deb $(. /etc/os-release; echo "$VERSION_CODENAME") main" \
-        | sudo tee /etc/apt/sources.list.d/adoptium.list
-      sudo apt-get update -qq && pkg_install temurin-21-jdk
+        | sudo tee /etc/apt/sources.list.d/adoptium.list >/dev/null
+      sudo apt-get update -qq >>"$LOG_FILE" 2>&1 && pkg_install temurin-21-jdk
       ;;
     pacman)
       pkg_install jdk21-temurin 2>/dev/null || aur_install jdk21-temurin ;;
@@ -747,7 +810,7 @@ if is_selected 0; then
         echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
           https://brave-browser-apt-release.s3.brave.com/ stable main" \
           | sudo tee /etc/apt/sources.list.d/brave-browser-release.list
-        sudo apt-get update -qq && pkg_install brave-browser
+        sudo apt-get update -qq >>"$LOG_FILE" 2>&1 && pkg_install brave-browser
         ;;
       pacman) aur_install brave-bin ;;
       dnf)
@@ -784,7 +847,7 @@ if is_selected 1; then
           https://download.docker.com/linux/ubuntu \
           $(. /etc/os-release && echo "$VERSION_CODENAME") stable" \
           | sudo tee /etc/apt/sources.list.d/docker.list
-        sudo apt-get update -qq
+        sudo apt-get update -qq >>"$LOG_FILE" 2>&1
         pkg_install docker-ce docker-ce-cli containerd.io \
           docker-buildx-plugin docker-compose-plugin
         ;;
@@ -867,8 +930,8 @@ if is_selected 5; then
     case "$PKG_MANAGER" in
       apt)
         tmp="$(mktemp -d)"
-        curl -L https://zoom.us/client/latest/zoom_amd64.deb -o "$tmp/zoom.deb"
-        sudo apt install -y "$tmp/zoom.deb"
+        curl -L --retry 3 --retry-delay 1 https://zoom.us/client/latest/zoom_amd64.deb -o "$tmp/zoom.deb"
+        sudo apt install -y "$tmp/zoom.deb" >>"$LOG_FILE" 2>&1
         rm -rf "$tmp"
         ;;
       pacman)
@@ -876,8 +939,8 @@ if is_selected 5; then
         ;;
       dnf)
         tmp="$(mktemp -d)"
-        curl -L https://zoom.us/client/latest/zoom_x86_64.rpm -o "$tmp/zoom.rpm"
-        sudo dnf install -y "$tmp/zoom.rpm"
+        curl -L --retry 3 --retry-delay 1 https://zoom.us/client/latest/zoom_x86_64.rpm -o "$tmp/zoom.rpm"
+        sudo dnf install -y "$tmp/zoom.rpm" >>"$LOG_FILE" 2>&1
         rm -rf "$tmp"
         ;;
     esac
@@ -895,8 +958,8 @@ if is_selected 6; then
 
     case "$PKG_MANAGER" in
       apt)
-        sudo add-apt-repository -y ppa:obsproject/obs-studio
-        sudo apt-get update -qq
+        sudo add-apt-repository -y ppa:obsproject/obs-studio >>"$LOG_FILE" 2>&1
+        sudo apt-get update -qq >>"$LOG_FILE" 2>&1
         pkg_install obs-studio
         ;;
       pacman)
@@ -918,7 +981,7 @@ if is_selected 7; then
   if ! command_exists ollama; then
     info "Installing Ollama..."
 
-    curl -fsSL https://ollama.com/install.sh | sh
+    curl -fsSL --retry 3 --retry-delay 1 https://ollama.com/install.sh | sh >>"$LOG_FILE" 2>&1
 
     success "Ollama installed."
   else
@@ -1188,7 +1251,7 @@ export FZF_DEFAULT_OPTS="
   --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc
   --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_CTRL_T_OPTS="--preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 
 # Editor
 export EDITOR='nvim'
@@ -1248,11 +1311,11 @@ fi
 export BAT_THEME="Catppuccin Mocha"
 
 # bat global aliases - pipe any command's help through bat for colour
-alias -g -- -h='-h 2>&1 | batcat --language=help --style=plain'
-alias -g -- --help='--help 2>&1 | batcat --language=help --style=plain'
+alias -g -- -h='-h 2>&1 | bat --language=help --style=plain'
+alias -g -- --help='--help 2>&1 | bat --language=help --style=plain'
 
 # fzf file finder with bat preview
-alias f="fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {}'"
+alias f="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 
 # Git
 alias gs='git status'
@@ -1274,7 +1337,8 @@ alias lg='lazygit'
 alias gundo='git reset --soft HEAD~1'
 # Show what changed in last commit
 alias glast='git show --stat HEAD'
-alias py-gitignore='cat > .gitignore << "EOF"
+py-gitignore() {
+  cat > .gitignore << 'PYGI_EOF'
 # Byte-compiled
 __pycache__/
 *.py[cod]
@@ -1336,7 +1400,9 @@ secrets.json
 # Local configs
 local_settings.py
 settings_local.py
-EOF'
+PYGI_EOF
+  echo "[✓] .gitignore created"
+}
 
 # Python 
 alias py='python3'
@@ -1346,7 +1412,8 @@ alias uvsync='uv venv && source .venv/bin/activate && uv sync'
 alias uvrun='uv run'
 alias uvpkg='uv pip list'
 alias uvfreeze='uv pip freeze > requirements.txt && echo "requirements.txt written"'
-alias pyenv-template='cat > .env << "EOF"
+pyenv-template() {
+  cat > .env << 'PYENV_EOF'
 # ===============================
 # Application
 # ===============================
@@ -1411,7 +1478,9 @@ LOG_DIR=./logs
 # ===============================
 ENABLE_METRICS=false
 ENABLE_TRACING=false
-EOF'
+PYENV_EOF
+  echo "[✓] .env template created"
+}
 
 # Docker
 alias dps='docker ps'
@@ -1848,7 +1917,10 @@ README
 header "Linking Configs"
 
 # .zshrc - back up OMZ default, link ours
-[ -f "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc.bak.$(date +%s)"
+if [ -f "$HOME/.zshrc" ]; then
+  SETUP_ZSHRC_BACKUP="$HOME/.zshrc.bak.$(date +%s)"
+  mv "$HOME/.zshrc" "$SETUP_ZSHRC_BACKUP"
+fi
 ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 success ".zshrc : ~/dotfiles/zsh/.zshrc"
 
